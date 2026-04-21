@@ -7,7 +7,15 @@ description: Build against the paperlesspaper API with authentication guidance, 
 
 Use the paperlesspaper API to integrate devices, papers, organizations, and user data into your own applications and workflows.
 
+It is used in the Open Source [paperlesspaper app](https://web.paperlesspaper.de).
+
+To learn more about [paperlessspaper](https://paperlesspaper.de) and the idea behind it, visit the website or check out the [blog](https://paperlesspaper.de/blog).
+
 ![paperlesspaper device preview](https://res.cloudinary.com/wirewire/image/upload/IMG_5826-Bearbeitet.jpg.jpg?_a=BAMAABeA0)
+
+## Suppport us
+
+If you like what we're building, consider supporting us by buying a device at [paperlessspaper](https://paperlesspaper.de) or sponsoring on [GitHub Sponsors](https://github.com/sponsors/paperlesspaper)
 
 ## What you can do with the API
 
@@ -42,10 +50,6 @@ x-api-key: <your-api-key>
 
 The live schema currently reports the server URL `https://api.paperlesspaper.de/v1`.
 
-That appears to be an internal or development-oriented server entry rather than the public production hostname. When building against the public API, use the endpoint paths from the generated reference together with the publicly reachable API domain you are working against.
-
-Because the API is still evolving, it is a good idea to validate important production flows against real responses instead of relying only on schema assumptions.
-
 ## Main resource groups
 
 The current API surface is centered around these areas:
@@ -77,23 +81,3 @@ Endpoints for creating, listing, and updating organizations.
 ### Users and accounts
 
 Endpoints for user management and account-related lookups, including paginated listing and per-user update flows.
-
-## Suggested integration flow
-
-1. Generate an API key in the paperlesspaper application.
-2. Test a simple read endpoint such as a list or detail route.
-3. Confirm which auth scheme your integration should use.
-4. Move on to the paper or device endpoints that match your use case.
-5. Treat uploads, rendering, and preview flows as behavior to test directly in a staging environment.
-
-## Live reference
-
-The generated reference pages are built directly from the current OpenAPI definition, so they are the best place to inspect:
-
-- request parameters
-- request bodies
-- response schemas
-- per-endpoint auth requirements
-- interactive playground examples
-
-If you already know the resource you need, jump straight into `API Reference` from the sidebar.
