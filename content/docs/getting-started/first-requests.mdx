@@ -1,0 +1,22 @@
+---
+title: First Requests
+description: A practical starting point for exploring the API and the generated endpoint reference.
+---
+
+# First Requests
+
+The fastest way to explore the API is to open the generated reference and start with list endpoints such as `GET /users/` or `GET /organizations/`.
+
+## Suggested workflow
+
+1. Create an API key in the paperlesspaper app.
+2. Open the generated reference pages under `API Reference`.
+3. Inspect required query and path parameters.
+4. Test requests with your preferred tool.
+
+## Example cURL request
+
+```bash
+curl https://api.paperlesspaper.de/v1/organizations/ \
+  -H "x-api-key: <your-api-key>"
+```

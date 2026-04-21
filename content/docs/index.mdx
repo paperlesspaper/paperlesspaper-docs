@@ -1,0 +1,99 @@
+---
+title: Overview
+description: Build against the paperlesspaper API with authentication guidance, resource overview, and live generated reference pages.
+---
+
+# paperlesspaper API
+
+Use the paperlesspaper API to integrate devices, papers, organizations, and user data into your own applications and workflows.
+
+![paperlesspaper device preview](https://res.cloudinary.com/wirewire/image/upload/IMG_5826-Bearbeitet.jpg.jpg?_a=BAMAABeA0)
+
+## What you can do with the API
+
+- Manage organizations and users.
+- Read and update paper entries and rendered content.
+- Work with devices and device images.
+- Connect account-level and application-level integrations.
+
+## Getting started
+
+If you are new to the API, start with these two pages:
+
+1. [Authentication](/getting-started/authentication)
+2. [First Requests](/getting-started/first-requests)
+
+Then continue into the generated endpoint reference under `API Reference`.
+
+## Authentication at a glance
+
+The currently published schema exposes two authentication schemes:
+
+- `x-api-key` for API key authentication
+- `bearerAuth` for JWT bearer authentication
+
+For most first integrations, API key authentication is the simplest place to begin.
+
+```http
+x-api-key: <your-api-key>
+```
+
+## Base URL and schema notes
+
+The live schema currently reports the server URL `https://api.paperlesspaper.de/v1`.
+
+That appears to be an internal or development-oriented server entry rather than the public production hostname. When building against the public API, use the endpoint paths from the generated reference together with the publicly reachable API domain you are working against.
+
+Because the API is still evolving, it is a good idea to validate important production flows against real responses instead of relying only on schema assumptions.
+
+## Main resource groups
+
+The current API surface is centered around these areas:
+
+### Papers
+
+Endpoints for reading, updating, previewing, and generating content for paperlesspaper screens.
+
+Typical examples include:
+
+- paper entry retrieval
+- calendar preview generation
+- signed upload URLs for paper images
+
+### Devices
+
+Endpoints for device-linked media and image lifecycle operations.
+
+Typical examples include:
+
+- retrieving device image URLs
+- uploading images for a device
+- updating image metadata
+
+### Organizations
+
+Endpoints for creating, listing, and updating organizations.
+
+### Users and accounts
+
+Endpoints for user management and account-related lookups, including paginated listing and per-user update flows.
+
+## Suggested integration flow
+
+1. Generate an API key in the paperlesspaper application.
+2. Test a simple read endpoint such as a list or detail route.
+3. Confirm which auth scheme your integration should use.
+4. Move on to the paper or device endpoints that match your use case.
+5. Treat uploads, rendering, and preview flows as behavior to test directly in a staging environment.
+
+## Live reference
+
+The generated reference pages are built directly from the current OpenAPI definition, so they are the best place to inspect:
+
+- request parameters
+- request bodies
+- response schemas
+- per-endpoint auth requirements
+- interactive playground examples
+
+If you already know the resource you need, jump straight into `API Reference` from the sidebar.
