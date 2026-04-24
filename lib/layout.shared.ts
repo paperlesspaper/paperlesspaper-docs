@@ -1,4 +1,4 @@
-import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
+import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
 
 export function baseOptions(): BaseLayoutProps {
   return {
@@ -6,20 +6,15 @@ export function baseOptions(): BaseLayoutProps {
       enabled: false,
     },
     nav: {
-      title: 'paperlesspaper API',
+      title: "paperlesspaper API",
     },
     links: [
       {
-        type: 'main',
-        text: 'Schema',
-        url: 'https://api.paperlesspaper.de/openapi.json',
-      },
-      {
-        type: 'main',
-        text: 'paperlesspaper',
-        url: 'https://paperlesspaper.de/en/posts/api',
+        type: "main",
+        text: "paperlesspaper Website",
+        url: "https://paperlesspaper.de/en",
       },
     ],
-    githubUrl: 'https://github.com/paperlesspaper',
+    githubUrl: "https://github.com/paperlesspaper",
   };
 }
