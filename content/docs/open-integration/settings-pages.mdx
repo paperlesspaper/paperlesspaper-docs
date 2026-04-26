@@ -1,0 +1,184 @@
+---
+title: Open Integration Settings Pages
+description: Build a custom iframe settings UI for a paperlesspaper Open Integration.
+---
+
+The settings page is the optional iframe-based part of an Open Integration. Use it when `formSchema` is not enough and you need a richer configuration UI, previews, or an external auth flow.
+
+The current public reference implementation lives in the `open-integration-example` inside `paperlesspaper-apps`.
+
+## When to use a settings page
+
+Use a settings page when your integration needs:
+
+- custom form layout or validation
+- live previews or contextual help
+- multi-step configuration
+- OAuth or other redirect-based account linking
+
+If plain fields are enough, prefer `formSchema` alone because it keeps the provider simpler.
+
+## Runtime model
+
+The settings UI runs inside an iframe embedded by the paperlesspaper host app.
+
+Communication happens through `window.postMessage`, so your page should:
+
+- listen for host messages after load
+- initialize its UI from the incoming payload
+- send settings patches back to the host
+- report iframe height when the layout changes
+
+## Host to plugin messages
+
+The preferred protocol uses a structured message envelope:
+
+```ts
+type OpenIntegrationAppToPluginMessage =
+  | {
+      source: "wirewire-app";
+      type: "INIT";
+      payload: {
+        settings: Record<string, unknown>;
+        nativeSettings: Record<string, unknown>;
+        device: { deviceId?: string; kind?: string };
+        app: { language?: string };
+      };
+    }
+  | {
+      source: "wirewire-app";
+      type: "REDIRECT";
+      payload: {
+        redirectUrl: string;
+        tempToken: string;
+      };
+    };
+```
+
+`INIT` is sent after the iframe loads and contains the current settings plus some host context.
+
+`REDIRECT` is optional and is used for OAuth-style flows where the host needs your provider to send the user through an external authorization step.
+
+## Plugin to host messages
+
+Your settings page replies to the host with messages like these:
+
+```ts
+type OpenIntegrationPluginToAppMessage =
+  | {
+      source: "wirewire-plugin";
+      type: "UPDATE_SETTINGS";
+      payload: Record<string, unknown>;
+    }
+  | {
+      source: "wirewire-plugin";
+      type: "SET_HEIGHT";
+      payload: { height: number };
+    }
+  | {
+      source: "wirewire-plugin";
+      type: "INFO";
+      payload: Record<string, unknown>;
+    };
+```
+
+`UPDATE_SETTINGS` sends a patch that the host merges into the stored integration settings.
+
+`SET_HEIGHT` lets the host resize the iframe to match your content.
+
+`INFO` is optional and can be used for non-critical hints such as opening a connect flow.
+
+## Legacy compatibility
+
+The public example also supports older message shapes. That matters if you want compatibility with older hosts or renderers.
+
+Legacy host to plugin messages:
+
+```js
+{ cmd: "message", data: payload }
+```
+
+```js
+{ cmd: "redirect", data: { redirectUrl, tempToken } }
+```
+
+Legacy plugin to host messages:
+
+```js
+{ cmd: "message", data: patch }
+```
+
+```js
+{
+  height: 520;
+}
+```
+
+If you are starting from scratch, implement the structured protocol first, then add legacy support only if you need it.
+
+## Height and iframe sizing
+
+The host sizes the iframe based on messages from your page. The example provider uses a simple pattern:
+
+1. measure `document.documentElement.scrollHeight`
+2. clamp it to a reasonable range
+3. send `SET_HEIGHT`
+4. repeat after state or layout changes
+
+This keeps the settings UI compact while avoiding clipped controls.
+
+## Security recommendations
+
+Because the page is cross-window and can be cross-origin, keep the message bridge strict:
+
+- learn the host origin from the first trusted message
+- store `event.source` and reply to that window only
+- use a strict `targetOrigin` instead of `*` when replying
+- treat incoming settings and redirect data as untrusted input
+- avoid sending secrets in plain settings payloads when possible
+
+## Redirect and OAuth-style flows
+
+If the host sends `REDIRECT`, your settings page can start an external auth flow.
+
+The example provider builds a URL to its own helper page, passes along the host-provided `redirectUrl` and `tempToken`, and then redirects the user back to the host after approval.
+
+In practice the host looks for query parameters such as:
+
+- `tempToken`
+- `settings`
+
+The returned `settings` value is usually a JSON string that the host merges into stored integration settings.
+
+Practical constraints:
+
+- keep the returned payload small
+- URL-encode it correctly
+- do not rely on query parameters for sensitive long-term secrets
+
+## Implementation pattern
+
+A good baseline flow for a React settings page is:
+
+1. wait for the first host message
+2. capture host origin and host window
+3. parse `INIT` into local component state
+4. render your UI
+5. send `UPDATE_SETTINGS` when state changes
+6. send `SET_HEIGHT` after render and after layout changes
+7. optionally react to `REDIRECT` by exposing a connect button
+
+## Checklist
+
+Before shipping a settings page, verify all of these are true:
+
+- it handles `INIT`
+- it can optionally handle `REDIRECT`
+- it sends `UPDATE_SETTINGS`
+- it sends `SET_HEIGHT`
+- it replies to the correct host origin and window
+- it still works if the host sends existing stored settings on first load
+
+## Related guide
+
+For the full provider model, manifest, and render-page contract, go back to [Open Integrations](/open-integration).

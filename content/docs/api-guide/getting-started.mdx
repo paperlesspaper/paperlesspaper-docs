@@ -1,0 +1,49 @@
+---
+title: Getting Started
+description: Use the paperlesspaper API to integrate devices, papers, organizations, and user data into your own applications and workflows.
+---
+
+The API is used in the Open Source [paperlesspaper app](https://web.paperlesspaper.de).
+
+## What you can do with the API
+
+- Read and update paper entries and rendered content.
+- Manage organizations and users.
+- Work with devices and device images.
+- Connect account-level and application-level integrations.
+
+## Base URL and schema notes
+
+The live schema currently reports the server URL `https://api.paperlesspaper.de/v1`.
+
+## Main resource groups
+
+The current API surface is centered around these areas:
+
+### Papers
+
+Endpoints for reading, updating, previewing, and generating content for paperlesspaper screens.
+
+Typical examples include:
+
+- paper entry retrieval
+- calendar preview generation
+- signed upload URLs for paper images
+
+### Devices
+
+Endpoints for device-linked media and image lifecycle operations.
+
+Typical examples include:
+
+- retrieving device image URLs
+- uploading images for a device
+- updating image metadata
+
+### Organizations
+
+Endpoints for creating, listing, and updating organizations.
+
+### Users and accounts
+
+Endpoints for user management and account-related lookups, including paginated listing and per-user update flows.

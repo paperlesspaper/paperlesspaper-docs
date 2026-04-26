@@ -1,0 +1,158 @@
+---
+title: Introduction
+description: Build and host an installable paperlesspaper Open Integration with a manifest, optional settings UI, and a render page.
+---
+
+import { GithubInfo } from "fumadocs-ui/components/github-info";
+
+<Callout type="idea" title="Work in Progress">
+  This is currently a work in progress and subject to change. We welcome
+  feedback!
+</Callout>
+
+# Open Integrations
+
+paperlesspaper supports installable Open Integrations hosted outside the main app. An integration provider is a web app that exposes a small manifest, a render page for screenshot generation, and optionally a settings page.
+
+The current public reference points are the Open Integration documentation and example provider in `paperlesspaper-apps`, plus the minimal `openintegration-xkcd` sample.
+
+## What an Open Integration is
+
+An Open Integration lets you ship a custom integration without contributing directly to the main paperlesspaper application by simply providing a small JSON manifest and a render page.
+
+The host app installs your integration from a public config URL. After that it can:
+
+- read your manifest
+- show your settings UI in an iframe
+- open your render page in a renderer and create the ePaper screenshot
+
+## Provider architecture
+
+The contract is intentionally small. A provider exposes up to three public URLs:
+
+1. `config.json` or another manifest URL
+2. a render page
+3. an optional settings page
+
+The paperlesspaper app fetches the manifest in the browser, so the manifest endpoint must be publicly reachable and return correct CORS headers.
+
+## Manifest requirements
+
+The manifest contract, example payload, and CORS requirements are documented in [Open Integration Manifest](/open-integration/manifest).
+
+## Settings page
+
+If your integration needs a custom iframe UI, message-based settings updates, or an OAuth-style connection flow, continue with [Open Integration Settings Pages](/open-integration/settings-pages).
+
+## Render page contract
+
+The render page is the screen that paperlesspaper screenshots for the device. It receives runtime data through `window.postMessage`.
+
+Supported payload envelopes today:
+
+```js
+{ cmd: "message", data: payload }
+```
+
+```js
+{ source: "wirewire-app", type: "INIT", payload }
+```
+
+Typical payload shape:
+
+```ts
+type RenderPayload = {
+  settings?: Record<string, unknown>;
+  nativeSettings?: Record<string, unknown>;
+  device?: { deviceId?: string; kind?: string };
+  app?: { language?: string };
+  paper?: Record<string, unknown>;
+};
+```
+
+Your render page should behave like a deterministic display surface:
+
+- render within `100vw` by `100vh`
+- avoid interactive chrome that only makes sense in a browser
+- wait for async data before marking the page as ready
+- keep the layout stable so screenshots are predictable
+
+paperlesspaper also expects loading markers for reliable screenshot timing:
+
+```html
+<div id="website-has-loading-element" style="display:none"></div>
+<div id="website-has-loaded">ready</div>
+```
+
+If you fetch remote data before rendering, create the loading element immediately and only add `#website-has-loaded` when the page is ready for capture.
+
+## Development approaches
+
+The public repos show two practical approaches:
+
+### Next.js provider
+
+`paperlesspaper-apps` includes a full example provider with:
+
+- a dynamic manifest route
+- a React-based settings iframe
+- a React render page
+- an optional mock auth flow
+
+Use this shape if your integration needs richer UI, reuse of existing components, or server routes.
+
+### Static HTML plus serverless API
+
+`openintegration-xkcd` is much smaller:
+
+- `config.json` as a static manifest
+- `render.html` as the screenshot target
+- `api/xkcd.js` as a minimal proxy
+- `vercel.json` for routing and deployment
+
+Use this approach when the integration is mostly a single rendered page with a tiny amount of server logic.
+
+## Local development workflow
+
+For a Next.js-based provider, the public example uses:
+
+```bash
+npm install
+npm run dev
+```
+
+The example provider then exposes its manifest at:
+
+```text
+http://localhost:3001/open-integration-example/config.json
+```
+
+For the XKCD sample, local development is done with `vercel dev`, and the install URL is `/config.json`.
+
+In the paperlesspaper host app, install the integration by pasting the public config URL into the Integration Plugin flow.
+
+## Minimal build checklist
+
+Before deploying, verify all of these are true:
+
+- your manifest URL is public and fetchable from the browser
+- the manifest returns correct CORS headers
+- the render page listens for `postMessage`
+- the render page exposes `#website-has-loading-element`
+- the render page exposes `#website-has-loaded` when ready
+- the settings page, if present, follows the iframe message contract
+
+## Choosing the right level of complexity
+
+Start with the smallest working provider:
+
+- use `formSchema` only when plain fields are enough
+- add `settingsPage` when you need custom UI, previews, or auth flows
+- add server routes only when the render page cannot call the upstream service directly
+
+That is the pattern the public paperlesspaper examples already follow: keep the install contract stable, and move complexity into your own provider only when the use case needs it.
+
+### Example projects
+
+<GithubInfo owner="paperlesspaper" repo="openintegration-xkcd" />
+<GithubInfo owner="paperlesspaper" repo="paperlesspaper-apps" />

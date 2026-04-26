@@ -1,83 +1,110 @@
 ---
-title: Overview
-description: Build against the paperlesspaper API with authentication guidance, resource overview, and live generated reference pages.
+title: paperlesspaper Developer Guide
+description: Learn how to build with the paperlesspaper API and Open Integration platform, including authentication, endpoint reference, and integration development guides.
 ---
 
-# paperlesspaper API
-
-Use the paperlesspaper API to integrate devices, papers, organizations, and user data into your own applications and workflows.
-
-It is used in the Open Source [paperlesspaper app](https://web.paperlesspaper.de).
-
-To learn more about [paperlessspaper](https://paperlesspaper.de) and the idea behind it, visit the website or check out the [blog](https://paperlesspaper.de/blog).
+import { Card, Cards } from "fumadocs-ui/components/card";
+import {
+  BookOpenText,
+  CreditCard,
+  Crown,
+  Hammer,
+  Image,
+  Infinity,
+  KeyRound,
+  MessagesSquare,
+  PlugZap,
+  Rocket,
+  Users,
+} from "lucide-react";
 
 ![paperlesspaper device preview](https://res.cloudinary.com/wirewire/image/upload/IMG_5826-Bearbeitet.jpg.jpg?_a=BAMAABeA0)
+
+<Cards>
+  <Card
+    title="API Guide"
+    description="Get oriented with the request flow, required credentials, and the core concepts behind device updates."
+    href="/api-guide/getting-started"
+    icon={<BookOpenText />}
+  />
+  <Card
+    title="Authentication"
+    description="Set up your API key and learn how authenticated requests are expected to look."
+    href="/api-guide/authentication"
+    icon={<KeyRound />}
+  />
+  <Card
+    title="First Requests"
+    description="Send your first payloads and understand the request patterns used in day-to-day integrations."
+    href="/api-guide/first-requests"
+    icon={<MessagesSquare />}
+  />
+  <Card
+    title="Open Integration"
+    description="Build an installable provider with a manifest, render page, and optional settings UI."
+    href="/open-integration/overview"
+    icon={<PlugZap />}
+  />
+</Cards>
+
+### Why Open Source?
+
+We are committed to release every part of the [paperlesspaper](https://paperlesspaper.de/en) under Open Source licenses. Here are a few reasons why Open Source hardware (and buying a frame or sponsoring) might be a good idea:
+
+<Cards className="[&>[data-card]]:border-0 [&>[data-card]]:bg-emerald-50/80 dark:[&>[data-card]]:bg-emerald-950/30 [&>[data-card]>div:first-child]:border-0 [&>[data-card]>div:first-child]:bg-transparent [&>[data-card]>div:first-child]:shadow-none [&>[data-card]>div:first-child]:p-0 [&>[data-card]>div:first-child_svg]:!size-8">
+  <Card
+    title="No Surprise Subscriptions 💸"
+    description="Premium Sepia Mode should not cost €4.99/month. Showing a JPEG should not require a billing portal."
+    icon={
+      <CreditCard className="!size-6 !text-emerald-700 dark:!text-emerald-300" />
+    }
+  />
+  <Card
+    title="Built To Outlive Startups 🪦"
+    description="The frame should survive longer than the average smart-home company. If we pivot to AI-powered kettles, your frame still works."
+    icon={
+      <Rocket className="!size-6 !text-emerald-700 dark:!text-emerald-300" />
+    }
+  />
+  <Card
+    title="Repair, Don’t Replace 🔧"
+    description="If something breaks, you can fix it. If something is ugly, you can fix that too. And if we made something wrong, you can fix it too."
+    icon={
+      <Hammer className="!size-6 !text-emerald-700 dark:!text-emerald-300" />
+    }
+  />
+  <Card
+    title="Community = Strange But Wonderful 🦄"
+    description="Someone will definitely add a dogs-wearing-hats mode. Someone else will make it show only frogs. Both people are important."
+    icon={
+      <Users className="!size-6 !text-emerald-700 dark:!text-emerald-300" />
+    }
+  />
+  <Card
+    title="You Own The Device 👑"
+    description="You own the frame. Including everything."
+    icon={
+      <Crown className="!size-6 !text-emerald-700 dark:!text-emerald-300" />
+    }
+  />
+  <Card
+    title="More Than A Picture Frame 🖼️"
+    description="Today: family photos. Tomorrow: calendar, weather, to-do list, art display, poetry machine, passive-aggressive chore reminder."
+    icon={
+      <Image className="!size-6 !text-emerald-700 dark:!text-emerald-300" />
+    }
+  />
+  <Card
+    title="Open Source Means Forever ♾️"
+    description="Every screw, line of code, and weird little hack in paperlesspaper can live forever on the internet. The frame can keep improving long after the original version exists."
+    icon={
+      <Infinity className="!size-6 !text-emerald-700 dark:!text-emerald-300" />
+    }
+  />
+</Cards>
+
+To learn more about [paperlessspaper](https://paperlesspaper.de) and the idea behind it, visit the website or check out the [blog](https://paperlesspaper.de/blog).
 
 ## Support the project
 
 If you like what we're building, consider supporting us by buying a device at [paperlessspaper](https://paperlesspaper.de) or sponsoring on [GitHub Sponsors](https://github.com/sponsors/paperlesspaper)
-
-## What you can do with the API
-
-- Manage organizations and users.
-- Read and update paper entries and rendered content.
-- Work with devices and device images.
-- Connect account-level and application-level integrations.
-
-## Getting started
-
-If you are new to the API, start with these two pages:
-
-1. [Authentication](/getting-started/authentication)
-2. [First Requests](/getting-started/first-requests)
-
-Then continue into the generated endpoint reference under `API Reference`.
-
-## Authentication at a glance
-
-The currently published schema exposes two authentication schemes:
-
-- `x-api-key` for API key authentication
-- `bearerAuth` for JWT bearer authentication
-
-For most first integrations, API key authentication is the simplest place to begin.
-
-```http
-x-api-key: <your-api-key>
-```
-
-## Base URL and schema notes
-
-The live schema currently reports the server URL `https://api.paperlesspaper.de/v1`.
-
-## Main resource groups
-
-The current API surface is centered around these areas:
-
-### Papers
-
-Endpoints for reading, updating, previewing, and generating content for paperlesspaper screens.
-
-Typical examples include:
-
-- paper entry retrieval
-- calendar preview generation
-- signed upload URLs for paper images
-
-### Devices
-
-Endpoints for device-linked media and image lifecycle operations.
-
-Typical examples include:
-
-- retrieving device image URLs
-- uploading images for a device
-- updating image metadata
-
-### Organizations
-
-Endpoints for creating, listing, and updating organizations.
-
-### Users and accounts
-
-Endpoints for user management and account-related lookups, including paginated listing and per-user update flows.

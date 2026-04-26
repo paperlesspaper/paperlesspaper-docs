@@ -1,0 +1,66 @@
+---
+title: Manifest
+description: Define the install manifest for a paperlesspaper Open Integration provider.
+---
+
+The Open Integration manifest is the install contract between your hosted provider and the paperlesspaper app.
+
+The manifest only requires two fields:
+
+- `name`
+- `version`
+
+You may also define:
+
+- `description`
+- `icon`
+- `nativeSettings`
+- `formSchema`
+- `settingsPage`
+- `renderPage`
+
+`formSchema` is useful when simple host-rendered fields are enough and you do not need a custom iframe UI.
+
+`nativeSettings` is treated by the host as defaults, not forced overrides.
+
+Example manifest:
+
+```json
+{
+  "name": "Example Weather Board",
+  "version": "1.0.0",
+  "description": "Displays a compact daily weather view",
+  "icon": "https://example.com/icon.png",
+  "nativeSettings": {
+    "orientation": "portrait"
+  },
+  "formSchema": {
+    "type": "object",
+    "required": ["location"],
+    "properties": {
+      "location": {
+        "type": "string",
+        "description": "Location name or postal code"
+      },
+      "refreshSeconds": {
+        "type": "integer",
+        "description": "Refresh interval in seconds",
+        "default": 900
+      }
+    }
+  },
+  "settingsPage": "https://example.com/integration/settings",
+  "renderPage": "https://example.com/integration/render"
+}
+```
+
+## CORS and hosting
+
+Because the host fetches the manifest from the browser, your provider should:
+
+- respond to `GET`
+- ideally respond to `OPTIONS`
+- send `Access-Control-Allow-Origin`
+- send `Access-Control-Allow-Methods: GET, OPTIONS`
+
+If you echo the request origin instead of using `*`, also send `Vary: Origin`.

@@ -3,8 +3,47 @@ import { notFound } from 'next/navigation';
 import type { ComponentProps, ComponentType } from 'react';
 import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/page';
 import { APIPage } from 'fumadocs-openapi/ui';
+import { MarkdownCopyButton, ViewOptionsPopover } from '@/components/ai/page-actions';
 import { getMDXComponents } from '@/components/mdx';
 import { source } from '@/lib/source';
+
+const DOCS_GITHUB_BRANCH = 'main';
+
+function getMarkdownUrl(slugs: string[]) {
+  return slugs.length > 0
+    ? `/api/page-markdown/${slugs.map(encodeURIComponent).join('/')}`
+    : '/api/page-markdown';
+}
+
+function getGithubUrl(page: { path: string; absolutePath?: string }) {
+  if (!page.absolutePath?.includes('/content/docs/')) {
+    return undefined;
+  }
+
+  return `https://github.com/paperlesspaper/paperlesspaper-docs/blob/${DOCS_GITHUB_BRANCH}/content/docs/${page.path}`;
+}
+
+function renderPageActions(page: {
+  slugs: string[];
+  path: string;
+  absolutePath?: string;
+}) {
+  const markdownUrl = page.absolutePath && /\.mdx?$/i.test(page.absolutePath)
+    ? getMarkdownUrl(page.slugs)
+    : undefined;
+  const githubUrl = getGithubUrl(page);
+
+  if (!markdownUrl && !githubUrl) {
+    return <ViewOptionsPopover />;
+  }
+
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      {markdownUrl ? <MarkdownCopyButton markdownUrl={markdownUrl} /> : null}
+      <ViewOptionsPopover markdownUrl={markdownUrl} githubUrl={githubUrl} />
+    </div>
+  );
+}
 
 type PageProps = {
   params: Promise<{
@@ -29,6 +68,7 @@ export default async function DocsCatchAllPage({ params }: PageProps) {
       <DocsPage full>
         <DocsTitle>{page.data.title}</DocsTitle>
         <DocsDescription>{page.data.description}</DocsDescription>
+        {renderPageActions(page)}
         <DocsBody>
           <APIPage {...getAPIPageProps()} />
         </DocsBody>
@@ -51,6 +91,7 @@ export default async function DocsCatchAllPage({ params }: PageProps) {
     <DocsPage toc={mdxPage.data.toc} full={mdxPage.data.full}>
       <DocsTitle>{mdxPage.data.title}</DocsTitle>
       <DocsDescription>{mdxPage.data.description}</DocsDescription>
+      {renderPageActions(mdxPage)}
       <DocsBody>
         <MDX components={getMDXComponents()} />
       </DocsBody>
