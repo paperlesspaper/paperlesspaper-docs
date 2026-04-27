@@ -1,0 +1,69 @@
+---
+title: Minimal example
+description: Build the smallest paperlesspaper Open Integration provider with static HTML and a tiny serverless API route.
+---
+
+import { GithubInfo } from "fumadocs-ui/components/github-info";
+import { File, Folder, Files } from "fumadocs-ui/components/files";
+import { Step, Steps } from "fumadocs-ui/components/steps";
+
+<GithubInfo owner="paperlesspaper" repo="openintegration-xkcd" />
+
+`openintegration-xkcd` is a small sample provider built with static HTML and a serverless API route. It includes:
+
+<Files>
+  <File name="config.json (static manifest)" />
+  <File name="render.html (screenshot target)" />
+  <File name="api/xkcd.js (minimal proxy)" />
+  <File name="vercel.json (routing and deployment)" />
+</Files>
+
+Use this approach when the integration is mostly a single rendered page with a tiny amount of server logic.
+
+![Preview of the XKCD integration settings](settings.png)
+
+## Local development workflow
+
+For the [XKCD](https://xkcd.com/) sample, local development is done with `vercel dev`, and the install URL is `https://YOURDOMAIN.COM/config.json`.
+
+In the paperlesspaper app, install the integration by pasting the public config URL into the Integration Plugin flow.
+
+## Minimal build checklist
+
+<Steps>
+  <Step>
+  
+### Public URL
+
+Your manifest URL is public and fetchable from the browser.
+
+</Step>
+  <Step>
+  
+### CORS Headers
+
+The manifest returns correct CORS headers.
+
+</Step>
+<Step>
+  
+### Recieving settings and context
+
+The render page listens for `postMessage`.
+
+    </Step>
+
+  <Step>
+  
+### Loading state
+  
+- the render page exposes `#website-has-loading-element`
+- the render page exposes `#website-has-loaded` when ready
+
+</Step>
+  <Step>
+
+Optional: the settings page, if present, follows the iframe message contract
+
+  </Step>
+</Steps>

@@ -4,6 +4,7 @@ description: Build and host an installable paperlesspaper Open Integration with 
 ---
 
 import { GithubInfo } from "fumadocs-ui/components/github-info";
+import { File, Folder, Files } from "fumadocs-ui/components/files";
 
 <Callout type="idea" title="Work in Progress">
   This is currently a work in progress and subject to change. We welcome
@@ -16,9 +17,9 @@ paperlesspaper supports installable Open Integrations hosted outside the main ap
 
 The current public reference points are the Open Integration documentation and example provider in `paperlesspaper-apps`, plus the minimal `openintegration-xkcd` sample.
 
-## What an Open Integration is
+## What is it?
 
-An Open Integration lets you ship a custom integration without contributing directly to the main paperlesspaper application by simply providing a small JSON manifest and a render page.
+An Integration lets you ship custom content for the epaper display by simply providing a small JSON manifest and a render page.
 
 The host app installs your integration from a public config URL. After that it can:
 
@@ -26,7 +27,7 @@ The host app installs your integration from a public config URL. After that it c
 - show your settings UI in an iframe
 - open your render page in a renderer and create the ePaper screenshot
 
-## Provider architecture
+## Architecture
 
 The contract is intentionally small. A provider exposes up to three public URLs:
 
@@ -34,41 +35,106 @@ The contract is intentionally small. A provider exposes up to three public URLs:
 2. a render page
 3. an optional settings page
 
-The paperlesspaper app fetches the manifest in the browser, so the manifest endpoint must be publicly reachable and return correct CORS headers.
+<Files>
+  <File name="config.json" />
+  <File name="render.html" />
+  <File name="settings.html" />
+</Files>
+
+<Callout type="tip" title="CORS and hosting">
+  The paperlesspaper app fetches the manifest in the browser, so the manifest
+  endpoint must be publicly reachable and return correct CORS headers.
+</Callout>
 
 ## Manifest requirements
 
 The manifest contract, example payload, and CORS requirements are documented in [Open Integration Manifest](/open-integration/manifest).
 
-## Settings page
+## Render page
 
-If your integration needs a custom iframe UI, message-based settings updates, or an OAuth-style connection flow, continue with [Open Integration Settings Pages](/open-integration/settings-pages).
+The render page is the screen that paperlesspaper screenshots for the device. It receives runtime data through `window.postMessage` which will include any settings and meta data.
 
-## Render page contract
-
-The render page is the screen that paperlesspaper screenshots for the device. It receives runtime data through `window.postMessage`.
-
-Supported payload envelopes today:
+Supported payload you can expect:
 
 ```js
 { cmd: "message", data: payload }
 ```
 
-```js
-{ source: "wirewire-app", type: "INIT", payload }
-```
-
 Typical payload shape:
 
-```ts
-type RenderPayload = {
-  settings?: Record<string, unknown>;
-  nativeSettings?: Record<string, unknown>;
-  device?: { deviceId?: string; kind?: string };
-  app?: { language?: string };
-  paper?: Record<string, unknown>;
-};
+```json
+{
+  "pluginConfigUrl": "https://example.com/config.json",
+  "pluginSettings": {
+    "kind": "random",
+    "difference": 999
+  },
+  "language": "de",
+  "id": "7c1d07ef-6b11-4f4f-a254-e91a0ea8b954",
+  "lut": "default",
+  "orientation": "portrait",
+  "frameKind": "epd7",
+  "pluginManifest": {
+    "name": "Daily XKCD",
+    "version": "1.0.0",
+    "description": "Displays the latest XKCD comic with optional random or time-shifted selection.",
+    "nativeSettings": {
+      "kind": "latest",
+      "difference": 0
+    },
+    "formSchema": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "description": "Which comic to show.",
+          "enum": ["latest", "random"],
+          "default": "latest"
+        },
+        "difference": {
+          "type": "integer",
+          "description": "Show the comic from N days ago (e.g. 356 for last year).",
+          "minimum": 0,
+          "maximum": 5000,
+          "default": 0
+        }
+      }
+    },
+    "renderPage": "./render.html"
+  },
+  "pluginName": "Daily XKCD",
+  "pluginVersion": "1.0.0",
+  "pluginRenderPage": "./render.html",
+  "kind": "latest",
+  "difference": 0
+}
 ```
+
+Especially note `pluginSettings`, which contains the configured settings.
+
+<Callout type="tip" title="Testing the render page">
+  You can test your render page by sending a postMessage from the browser
+  console with the expected payload shape. This lets you iterate on the layout
+  and loading behavior before installing the integration in the app.
+</Callout>
+
+#### Receiving settings updates
+
+Use a message listener to receive settings updates whenever the user changes them in the app:
+
+```js
+window.addEventListener("message", (event) => {
+  const data = event.data;
+  if (data.type === "INIT" || data.cmd === "message") {
+    const payload = data.data;
+    console.log("Received message from app:", payload);
+    paper = payload;
+    loadComic();
+  }
+});
+```
+
+### Designing for the render page
 
 Your render page should behave like a deterministic display surface:
 
@@ -77,70 +143,34 @@ Your render page should behave like a deterministic display surface:
 - wait for async data before marking the page as ready
 - keep the layout stable so screenshots are predictable
 
+### Loading and screenshot timing
+
 paperlesspaper also expects loading markers for reliable screenshot timing:
 
 ```html
-<div id="website-has-loading-element" style="display:none"></div>
+<div id="website-has-loading-element"></div>
 <div id="website-has-loaded">ready</div>
 ```
 
-If you fetch remote data before rendering, create the loading element immediately and only add `#website-has-loaded` when the page is ready for capture.
+If you fetch remote data before rendering, create the loading element immediately and only add `#website-has-loaded` when the page is ready for capture. This way the app will wait for your content to load instead of taking a screenshot too early.
+
+<Callout type="warning" title="Timeout">
+  Currently the app waits up to 30 seconds for the page to load. If your page
+  takes longer than that, the screenshot will be taken before your content is
+  ready.
+</Callout>
+
+## Advanced HTML settings page
+
+If your integration needs a custom iframe UI, message-based settings updates, or an OAuth-style connection flow, continue with [Open Integration Settings Pages](/open-integration/settings-pages).
 
 ## Development approaches
 
 The public repos show two practical approaches:
 
-### Next.js provider
+### Minimal example
 
-`paperlesspaper-apps` includes a full example provider with:
-
-- a dynamic manifest route
-- a React-based settings iframe
-- a React render page
-- an optional mock auth flow
-
-Use this shape if your integration needs richer UI, reuse of existing components, or server routes.
-
-### Static HTML plus serverless API
-
-`openintegration-xkcd` is much smaller:
-
-- `config.json` as a static manifest
-- `render.html` as the screenshot target
-- `api/xkcd.js` as a minimal proxy
-- `vercel.json` for routing and deployment
-
-Use this approach when the integration is mostly a single rendered page with a tiny amount of server logic.
-
-## Local development workflow
-
-For a Next.js-based provider, the public example uses:
-
-```bash
-npm install
-npm run dev
-```
-
-The example provider then exposes its manifest at:
-
-```text
-http://localhost:3001/open-integration-example/config.json
-```
-
-For the XKCD sample, local development is done with `vercel dev`, and the install URL is `/config.json`.
-
-In the paperlesspaper host app, install the integration by pasting the public config URL into the Integration Plugin flow.
-
-## Minimal build checklist
-
-Before deploying, verify all of these are true:
-
-- your manifest URL is public and fetchable from the browser
-- the manifest returns correct CORS headers
-- the render page listens for `postMessage`
-- the render page exposes `#website-has-loading-element`
-- the render page exposes `#website-has-loaded` when ready
-- the settings page, if present, follows the iframe message contract
+For a static HTML provider with a tiny serverless API route, continue with [Minimal example](/open-integration/minimal-example).
 
 ## Choosing the right level of complexity
 
@@ -154,5 +184,4 @@ That is the pattern the public paperlesspaper examples already follow: keep the 
 
 ### Example projects
 
-<GithubInfo owner="paperlesspaper" repo="openintegration-xkcd" />
 <GithubInfo owner="paperlesspaper" repo="paperlesspaper-apps" />

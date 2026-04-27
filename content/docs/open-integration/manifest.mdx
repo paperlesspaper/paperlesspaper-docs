@@ -64,3 +64,17 @@ Because the host fetches the manifest from the browser, your provider should:
 - send `Access-Control-Allow-Methods: GET, OPTIONS`
 
 If you echo the request origin instead of using `*`, also send `Vary: Origin`.
+
+```json
+{
+  "headers": [
+    {
+      "source": "/config.json",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS" }
+      ]
+    }
+  ]
+}
+```

@@ -1,5 +1,5 @@
 ---
-title: Open Integration Settings Pages
+title: Advanced HTML Settings
 description: Build a custom iframe settings UI for a paperlesspaper Open Integration.
 ---
 
@@ -87,34 +87,6 @@ type OpenIntegrationPluginToAppMessage =
 `SET_HEIGHT` lets the host resize the iframe to match your content.
 
 `INFO` is optional and can be used for non-critical hints such as opening a connect flow.
-
-## Legacy compatibility
-
-The public example also supports older message shapes. That matters if you want compatibility with older hosts or renderers.
-
-Legacy host to plugin messages:
-
-```js
-{ cmd: "message", data: payload }
-```
-
-```js
-{ cmd: "redirect", data: { redirectUrl, tempToken } }
-```
-
-Legacy plugin to host messages:
-
-```js
-{ cmd: "message", data: patch }
-```
-
-```js
-{
-  height: 520;
-}
-```
-
-If you are starting from scratch, implement the structured protocol first, then add legacy support only if you need it.
 
 ## Height and iframe sizing
 
