@@ -64,49 +64,57 @@ Typical payload shape:
 
 ```json
 {
-  "pluginConfigUrl": "https://example.com/config.json",
-  "pluginSettings": {
-    "kind": "random",
-    "difference": 999
-  },
-  "language": "de",
-  "id": "7c1d07ef-6b11-4f4f-a254-e91a0ea8b954",
-  "lut": "default",
-  "orientation": "portrait",
-  "frameKind": "epd7",
-  "pluginManifest": {
-    "name": "Daily XKCD",
-    "version": "1.0.0",
-    "description": "Displays the latest XKCD comic with optional random or time-shifted selection.",
-    "nativeSettings": {
-      "kind": "latest",
-      "difference": 0
+  "id": "69efdf72d00c2701aff7eb47",
+  "organization": "69a6d7a15aa7a5f58cffa2f7",
+  "draft": false,
+  "createdAt": "2026-04-27T22:13:06.061Z",
+  "updatedAt": "2026-04-27T22:46:45.615Z",
+  "imageUpdatedAt": "2026-04-27T22:46:45.569Z",
+  "meta": {
+    "pluginConfigUrl": "https://example.com/config.json",
+    "pluginSettings": {
+      "kind": "random",
+      "difference": 999
     },
-    "formSchema": {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "type": "string",
-          "description": "Which comic to show.",
-          "enum": ["latest", "random"],
-          "default": "latest"
-        },
-        "difference": {
-          "type": "integer",
-          "description": "Show the comic from N days ago (e.g. 356 for last year).",
-          "minimum": 0,
-          "maximum": 5000,
-          "default": 0
+    "language": "de",
+    "id": "7c1d07ef-6b11-4f4f-a254-e91a0ea8b954",
+    "lut": "default",
+    "orientation": "portrait",
+    "frameKind": "epd7",
+    "pluginManifest": {
+      "name": "Daily XKCD",
+      "version": "1.0.0",
+      "description": "Displays the latest XKCD comic with optional random or time-shifted selection.",
+      "nativeSettings": {
+        "kind": "latest",
+        "difference": 0
+      },
+      "formSchema": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "description": "Which comic to show.",
+            "enum": ["latest", "random"],
+            "default": "latest"
+          },
+          "difference": {
+            "type": "integer",
+            "description": "Show the comic from N days ago (e.g. 356 for last year).",
+            "minimum": 0,
+            "maximum": 5000,
+            "default": 0
+          }
         }
-      }
+      },
+      "renderPage": "./render.html"
     },
-    "renderPage": "./render.html"
-  },
-  "pluginName": "Daily XKCD",
-  "pluginVersion": "1.0.0",
-  "pluginRenderPage": "./render.html",
-  "kind": "latest",
-  "difference": 0
+    "pluginName": "Daily XKCD",
+    "pluginVersion": "1.0.0",
+    "pluginRenderPage": "./render.html",
+    "kind": "latest",
+    "difference": 0
+  }
 }
 ```
 

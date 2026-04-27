@@ -5,8 +5,6 @@ description: Build a custom iframe settings UI for a paperlesspaper Open Integra
 
 The settings page is the optional iframe-based part of an Open Integration. Use it when `formSchema` is not enough and you need a richer configuration UI, previews, or an external auth flow.
 
-The current public reference implementation lives in the `open-integration-example` inside `paperlesspaper-apps`.
-
 ## When to use a settings page
 
 Use a settings page when your integration needs:
@@ -36,7 +34,7 @@ The preferred protocol uses a structured message envelope:
 ```ts
 type OpenIntegrationAppToPluginMessage =
   | {
-      source: "wirewire-app";
+      source: "paperlesspaper-app";
       type: "INIT";
       payload: {
         settings: Record<string, unknown>;
@@ -46,7 +44,7 @@ type OpenIntegrationAppToPluginMessage =
       };
     }
   | {
-      source: "wirewire-app";
+      source: "paperlesspaper-app";
       type: "REDIRECT";
       payload: {
         redirectUrl: string;
@@ -66,17 +64,17 @@ Your settings page replies to the host with messages like these:
 ```ts
 type OpenIntegrationPluginToAppMessage =
   | {
-      source: "wirewire-plugin";
+      source: "paperlesspaper-plugin";
       type: "UPDATE_SETTINGS";
       payload: Record<string, unknown>;
     }
   | {
-      source: "wirewire-plugin";
+      source: "paperlesspaper-plugin";
       type: "SET_HEIGHT";
       payload: { height: number };
     }
   | {
-      source: "wirewire-plugin";
+      source: "paperlesspaper-plugin";
       type: "INFO";
       payload: Record<string, unknown>;
     };
