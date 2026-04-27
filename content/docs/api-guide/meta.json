@@ -1,4 +1,9 @@
 {
   "title": "API Guide",
-  "pages": ["getting-started", "authentication", "first-requests", "updating-an-image"]
+  "pages": [
+    "getting-started",
+    "authentication",
+    "first-requests",
+    "updating-an-image"
+  ]
 }

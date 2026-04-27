@@ -1,22 +1,30 @@
-import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import type { ComponentProps, ComponentType } from 'react';
-import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/page';
-import { APIPage } from 'fumadocs-openapi/ui';
-import { MarkdownCopyButton, ViewOptionsPopover } from '@/components/ai/page-actions';
-import { getMDXComponents } from '@/components/mdx';
-import { source } from '@/lib/source';
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import type { ComponentProps, ComponentType } from "react";
+import {
+  DocsBody,
+  DocsDescription,
+  DocsPage,
+  DocsTitle,
+} from "fumadocs-ui/page";
+import { APIPage } from "fumadocs-openapi/ui";
+import {
+  MarkdownCopyButton,
+  ViewOptionsPopover,
+} from "@/components/ai/page-actions";
+import { getMDXComponents } from "@/components/mdx";
+import { source } from "@/lib/source";
 
-const DOCS_GITHUB_BRANCH = 'main';
+const DOCS_GITHUB_BRANCH = "main";
 
 function getMarkdownUrl(slugs: string[]) {
   return slugs.length > 0
-    ? `/api/page-markdown/${slugs.map(encodeURIComponent).join('/')}`
-    : '/api/page-markdown';
+    ? `/api/page-markdown/${slugs.map(encodeURIComponent).join("/")}`
+    : "/api/page-markdown";
 }
 
 function getGithubUrl(page: { path: string; absolutePath?: string }) {
-  if (!page.absolutePath?.includes('/content/docs/')) {
+  if (!page.absolutePath?.includes("/content/docs/")) {
     return undefined;
   }
 
@@ -28,9 +36,10 @@ function renderPageActions(page: {
   path: string;
   absolutePath?: string;
 }) {
-  const markdownUrl = page.absolutePath && /\.mdx?$/i.test(page.absolutePath)
-    ? getMarkdownUrl(page.slugs)
-    : undefined;
+  const markdownUrl =
+    page.absolutePath && /\.mdx?$/i.test(page.absolutePath)
+      ? getMarkdownUrl(page.slugs)
+      : undefined;
   const githubUrl = getGithubUrl(page);
 
   if (!markdownUrl && !githubUrl) {
@@ -59,11 +68,13 @@ export default async function DocsCatchAllPage({ params }: PageProps) {
     notFound();
   }
 
-  const getAPIPageProps = (page.data as {
-    getAPIPageProps?: () => ComponentProps<typeof APIPage>;
-  }).getAPIPageProps;
+  const getAPIPageProps = (
+    page.data as {
+      getAPIPageProps?: () => ComponentProps<typeof APIPage>;
+    }
+  ).getAPIPageProps;
 
-  if (typeof getAPIPageProps === 'function') {
+  if (typeof getAPIPageProps === "function") {
     return (
       <DocsPage full>
         <DocsTitle>{page.data.title}</DocsTitle>
@@ -79,7 +90,7 @@ export default async function DocsCatchAllPage({ params }: PageProps) {
   const mdxPage = page as typeof page & {
     data: {
       body: ComponentType<{ components?: ReturnType<typeof getMDXComponents> }>;
-      toc?: ComponentProps<typeof DocsPage>['toc'];
+      toc?: ComponentProps<typeof DocsPage>["toc"];
       full?: boolean;
       title?: string;
       description?: string;
@@ -103,7 +114,9 @@ export async function generateStaticParams() {
   return source.generateParams();
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const page = source.getPage(slug);
 

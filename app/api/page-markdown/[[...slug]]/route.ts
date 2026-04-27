@@ -1,6 +1,6 @@
-import { readFile } from 'node:fs/promises';
-import { notFound } from 'next/navigation';
-import { source } from '@/lib/source';
+import { readFile } from "node:fs/promises";
+import { notFound } from "next/navigation";
+import { source } from "@/lib/source";
 
 type RouteContext = {
   params: Promise<{
@@ -17,16 +17,16 @@ export async function GET(_: Request, { params }: RouteContext) {
   }
 
   if (!page.absolutePath || !/\.mdx?$/i.test(page.absolutePath)) {
-    return new Response('Markdown source is not available for this page.', {
+    return new Response("Markdown source is not available for this page.", {
       status: 404,
     });
   }
 
-  const content = await readFile(page.absolutePath, 'utf8');
+  const content = await readFile(page.absolutePath, "utf8");
 
   return new Response(content, {
     headers: {
-      'content-type': 'text/markdown; charset=utf-8',
+      "content-type": "text/markdown; charset=utf-8",
     },
   });
 }
