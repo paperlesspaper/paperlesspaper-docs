@@ -57,7 +57,7 @@ The render page is the screen that paperlesspaper screenshots for the device. It
 Supported payload you can expect:
 
 ```js
-{ cmd: "message", data: payload }
+{ type: "INIT", cmd: "message", data: payload }
 ```
 
 Typical payload shape:
@@ -128,7 +128,7 @@ Use a message listener to receive settings updates whenever the user changes the
 ```js
 window.addEventListener("message", (event) => {
   const data = event.data;
-  if (data.type === "INIT" || data.cmd === "message") {
+  if (data.type === "INIT" && data.cmd === "message") {
     const payload = data.data;
     console.log("Received message from app:", payload);
     paper = payload;
