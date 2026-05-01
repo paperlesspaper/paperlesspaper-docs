@@ -128,7 +128,7 @@ Use a message listener to receive settings updates whenever the user changes the
 ```js
 window.addEventListener("message", (event) => {
   const data = event.data;
-  if (data.type === "INIT" || data.cmd === "message") {
+  if (data.type === "INIT" && data.cmd === "message") {
     const payload = data.data;
     console.log("Received message from app:", payload);
     paper = payload;
