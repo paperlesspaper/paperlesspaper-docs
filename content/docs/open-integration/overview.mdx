@@ -15,7 +15,7 @@ import { File, Folder, Files } from "fumadocs-ui/components/files";
 
 paperlesspaper supports installable Open Integrations hosted outside the main app. An integration provider is a web app that exposes a small manifest, a render page for screenshot generation, and optionally a settings page.
 
-The current public reference points are the Open Integration documentation and example provider in `paperlesspaper-apps`, plus the minimal `openintegration-xkcd` sample.
+![paperlesspaper device preview](./tutorial-thumbnail-wide3.jpg)
 
 ## What is it?
 
@@ -108,7 +108,7 @@ Typical payload shape:
         }
       },
       "renderPage": "./render.html"
-    },
+    }
   }
 }
 ```
@@ -136,6 +136,8 @@ window.addEventListener("message", (event) => {
   }
 });
 ```
+
+![paperlesspaper device preview](./design-html.jpg)
 
 ### Designing for the render page
 
@@ -188,3 +190,15 @@ That is the pattern the public paperlesspaper examples already follow: keep the 
 ### Example projects
 
 <GithubInfo owner="paperlesspaper" repo="paperlesspaper-apps" />
+
+<GithubInfo owner="paperlesspaper" repo="openintegration-helloworld" />
+
+<GithubInfo owner="paperlesspaper" repo="openintegration-xkcd" />
+
+<GithubInfo owner="paperlesspaper" repo="openintegration-github" />
+
+<GithubInfo owner="paperlesspaper" repo="openintegration-tankpreise" />
+
+### Tutorials
+
+- [Hello World: OpenIntegration Tutorial](https://paperlesspaper.de/en/blog/hello-world-eink-openintegration-tutorial)
