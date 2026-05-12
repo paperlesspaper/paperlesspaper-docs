@@ -1,7 +1,7 @@
 import { loader, multiple } from "fumadocs-core/source";
 import { resolveFiles } from "fumadocs-mdx";
 import { openapiPlugin, openapiSource } from "fumadocs-openapi/server";
-import { BookOpen, House, PlugZap, Rocket } from "lucide-react";
+import { BookOpen, House, PlugZap, Rocket, Workflow } from "lucide-react";
 import { createElement } from "react";
 import { docs, meta } from "../.source";
 import { openapi } from "@/lib/openapi";
@@ -16,6 +16,10 @@ function createMenuIcon(Icon: typeof House, className: string) {
 const topLevelFolderIcons = {
   "api-reference": createMenuIcon(BookOpen, "text-sky-600 dark:text-sky-400"),
   "api-guide": createMenuIcon(Rocket, "text-amber-600 dark:text-amber-400"),
+  "how-it-works": createMenuIcon(
+    Workflow,
+    "text-emerald-600 dark:text-emerald-400",
+  ),
   "open-integration": createMenuIcon(
     PlugZap,
     "text-rose-600 dark:text-rose-400",
@@ -25,6 +29,7 @@ const topLevelFolderIcons = {
 const topLevelFolderNames = {
   "api-reference": "API Reference",
   "api-guide": "API Guide",
+  "how-it-works": "How it works",
 } as const;
 
 export const source = loader(
