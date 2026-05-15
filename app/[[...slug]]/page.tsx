@@ -19,8 +19,8 @@ const DOCS_GITHUB_BRANCH = "main";
 
 function getMarkdownUrl(slugs: string[]) {
   return slugs.length > 0
-    ? `/api/page-markdown/${slugs.map(encodeURIComponent).join("/")}`
-    : "/api/page-markdown";
+    ? `/${slugs.map(encodeURIComponent).join("/")}.md`
+    : "/index.md";
 }
 
 function getGithubUrl(page: { path: string; absolutePath?: string }) {

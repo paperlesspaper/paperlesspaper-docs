@@ -1,17 +1,33 @@
-import { createSearchAPI } from 'fumadocs-core/search/server';
 import { source } from '@/lib/source';
+import { createFromSource } from 'fumadocs-core/search/server';
 
-export const { GET } = createSearchAPI('advanced', {
+function getStructuredData(page: { data: unknown }) {
+  const structuredData = (page.data as { structuredData?: unknown }).structuredData;
+
+  if (
+    structuredData &&
+    typeof structuredData === 'object' &&
+    'headings' in structuredData &&
+    'contents' in structuredData
+  ) {
+    return structuredData as never;
+  }
+
+  return {
+    headings: [],
+    contents: [],
+  };
+}
+
+export const { GET } = createFromSource(source, {
   language: 'english',
-  indexes: source
-    .getPages()
-    .filter((page) => 'structuredData' in page.data && page.data.structuredData != null)
-    .map((page) => ({
+  buildIndex(page) {
+    return {
       id: page.url,
       url: page.url,
       title: page.data.title ?? page.url,
       description: page.data.description,
-      structuredData: ((page.data as unknown as { structuredData: unknown }).structuredData ??
-        []) as never,
-    })) as never,
+      structuredData: getStructuredData(page),
+    };
+  },
 });
