@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         footer: (
           <div className="order-first mb-2 mt-2 space-y-2">
             <div className="rounded-md bg-blue-600 p-3 text-sm leading-5 text-white">
-              <p className="font-semibold">Beta Notice</p>
+              <p className="font-semibold">Beta Notice 🎉</p>
               <p>API and Open Integration are in beta and subject to change.</p>
               <a
                 href="https://github.com/paperlesspaper/paperlesspaper-docs/issues"

@@ -42,6 +42,10 @@ At minimum, send `picture`.
 
 If you send only `picture`, the backend treats it as the source image, prepares it for the device, and updates the paper image.
 
+<Callout type="info" title="Preferred flow">
+  Use this flow when your application does not perform its own image processing.
+</Callout>
+
 ### Upload the source image and a device-ready image
 
 If you send both `picture` and `pictureDevice`:
@@ -49,7 +53,12 @@ If you send both `picture` and `pictureDevice`:
 - `pictureDevice` is used as the final image sent to the device.
 - `picture` is kept as the original reference image for the app and later edits.
 
-This is the preferred flow when your application already performs its own resizing, conversion, or dithering.
+<Callout type="info" title="Advanced flow">
+  Use this flow when your application already performs its own resizing,
+  conversion, or dithering.
+</Callout>
+
+![Dithering](./dithering.png)
 
 ### Update paper settings during the upload
 

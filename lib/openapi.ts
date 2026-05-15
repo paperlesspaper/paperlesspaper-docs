@@ -1,5 +1,5 @@
 import { createOpenAPI } from 'fumadocs-openapi/server';
 
 export const openapi = createOpenAPI({
-  input: ['https://api.paperlesspaper.de/openapi.json'],
+  input: [process.env.OPENAPI_JSON_URL ?? 'https://api.paperlesspaper.de/openapi.json'],
 });
