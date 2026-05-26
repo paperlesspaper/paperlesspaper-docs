@@ -7,7 +7,11 @@ import {
   DocsPage,
   DocsTitle,
 } from "fumadocs-ui/page";
-import { APIPage } from "fumadocs-openapi/ui";
+import {
+  API as OpenAPI,
+  APIInfo as OpenAPIInfo,
+  APIPage,
+} from "fumadocs-openapi/ui";
 import {
   MarkdownCopyButton,
   ViewOptionsPopover,
@@ -77,11 +81,30 @@ export default async function DocsCatchAllPage({ params }: PageProps) {
   if (typeof getAPIPageProps === "function") {
     return (
       <DocsPage full>
-        <DocsTitle>{page.data.title}</DocsTitle>
-        <DocsDescription>{page.data.description}</DocsDescription>
-        {renderPageActions(page)}
         <DocsBody>
-          <APIPage {...getAPIPageProps()} />
+          <APIPage
+            {...getAPIPageProps()}
+            hasHead
+            renderer={{
+              API: ({ children, ...props }) => (
+                <OpenAPI
+                  {...props}
+                  className="grid gap-x-6 gap-y-4 xl:grid-cols-[minmax(0,1fr)_400px]"
+                >
+                  {children}
+                </OpenAPI>
+              ),
+              APIInfo: ({ children, head }) => (
+                <>
+                  <div className="min-w-0 xl:col-span-2">
+                    {head}
+                    {renderPageActions(page)}
+                  </div>
+                  <OpenAPIInfo>{children}</OpenAPIInfo>
+                </>
+              ),
+            }}
+          />
         </DocsBody>
       </DocsPage>
     );
