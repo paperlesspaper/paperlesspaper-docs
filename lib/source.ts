@@ -1,7 +1,14 @@
 import { loader, multiple } from "fumadocs-core/source";
 import { resolveFiles } from "fumadocs-mdx";
 import { openapiPlugin, openapiSource } from "fumadocs-openapi/server";
-import { BookOpen, House, PlugZap, Rocket, Workflow } from "lucide-react";
+import {
+  BookOpen,
+  Factory,
+  House,
+  PlugZap,
+  Rocket,
+  Workflow,
+} from "lucide-react";
 import { createElement } from "react";
 import { docs, meta } from "../.source";
 import { openapi } from "@/lib/openapi";
@@ -23,6 +30,10 @@ const topLevelFolderIcons = {
   "open-integration": createMenuIcon(
     PlugZap,
     "text-rose-600 dark:text-rose-400",
+  ),
+  manufacturing: createMenuIcon(
+    Factory,
+    "text-orange-600 dark:text-orange-400",
   ),
 } as const;
 

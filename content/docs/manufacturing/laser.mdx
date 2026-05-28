@@ -1,0 +1,86 @@
+---
+title: Laser
+description: Prepare laser-cut paperlesspaper parts with material, kerf, and finishing notes.
+---
+
+The backpane of the paperlesspaper frame is made from laser-cut pressboard (2mm).
+
+We usually do laser cut them before adding the clamps on the back.
+
+![Laser cut backpanes with clamps](./IMG_0095.jpeg)
+
+Files for laser cutting can be found here:
+
+[Laser cut files](https://github.com/paperlesspaper/paperlesspaper-hardware/tree/main/paper7/lasercut)
+
+For better quality we use mark instead of engrave for the text. This is faster and produces cleaner edges on the pressboard.
+
+#### Process
+
+- Adjust the Z-axis distance
+- Align the X and Y axes
+- Open the laser file in VisiCut
+- Check and adjust the laser settings
+- Laser the first back side
+- Fine-tune the settings
+- Are the cutouts fully cut through?
+- Is the marking easy to read?
+- Adjust if necessary
+
+![Laser cut backpane test](./laser-screenshot.png)
+
+#### Meaning of colors:
+
+- Red: cut
+- Black: mark
+- Green: ignore (for alignment and reference)
+
+<Callout type="tip" title="Kerf and fit">
+  Laser cutting removes material, so the cut lines will be slightly wider than
+  the design. Test your laser's kerf with a sample cut and adjust the design if
+  necessary to ensure parts fit together properly.
+</Callout>
+
+#### Software
+
+[VisiCut](https://visicut.org) is a popular open-source software for controlling laser cutters. It allows you to set different parameters for cutting and marking, and it supports various file formats. It is quite limited, but O.K. for our needs.
+
+#### Lasersaur
+
+We use a [Lasersaur](https://hardware.prototypefund.de/project/lasersaur) at our [local makerspace](https://konglomerat.org). It's an open-source laser cutter that can handle laser cutting multiple backpanes at once, which is great for batch production.
+
+Settings for pressboard:
+
+- Cut: 100% power, 25% speed, 500 PPI
+- Mark: 4% power, 25% speed, 500 PPI
+
+#### Zing
+
+The other laser we use is a Zing, which is faster for single cuts and has a smaller bed.
+
+Settings for pressboard:
+
+- Cut: 100% power, 25% speed, 500 PPI
+- Mark: 15% power, 100% speed, 500 PPI
+
+Always use `NEAREST` for the cut order to optimize for speed.
+
+#### Optimizing for multiple cuts
+
+When cutting multiple backpanes at once, we use a small jig for placing the pressboard sheets in the same position on the bed. This allows us to use the same cut file and settings for each batch, improving consistency and efficiency.
+
+It looks like this and needs to be customized for your specific laser cutter and bed size:
+![Laser cutting jig](./IMG_1017.jpg)
+
+The jigs are good for:
+OpenPaper 7:
+
+- Lasersaur: 12 backpanes at a time (ca. 15 minutes total)
+- Zing: 3 backpane at a time (ca. 3 minutes total)
+
+OpenPaper L:
+
+- Lasersaur: 6 backpanes at a time (ca. 10 minutes total)
+- Zing: 2 backpane at a time (ca. 3 minutes total)
+
+![Laser cut backpanes](./IMG_3099.jpeg)
