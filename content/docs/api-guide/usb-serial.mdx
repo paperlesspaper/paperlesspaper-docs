@@ -1,0 +1,191 @@
+---
+title: USB Serial
+description: Connect to the paperlesspaper display via USB serial console.
+---
+
+Use the USB serial interface when you need low-level logs, boot output, or direct firmware diagnostics from a paperlesspaper device.
+
+This is separate from the HTTP API. The serial console is useful during hardware bring-up, firmware development, and debugging cases where the network stack is not available yet.
+
+## What you need
+
+- a USB data cable, not a charge-only cable
+- a host computer running macOS, Linux, or Windows
+- a terminal program such as `screen`, `picocom`, `minicom`, or PuTTY
+
+If your firmware build exposes a USB CDC serial interface, the operating system will usually create a new serial device as soon as the frame is connected.
+
+## 1. Connect the device
+
+Connect the frame to your computer with a USB data cable.
+
+If you are not sure whether the cable supports data, start by swapping the cable. Charge-only cables are the most common reason the serial port never appears.
+
+## 2. Find the serial port
+
+### macOS
+
+List likely serial devices:
+
+```sh
+ls /dev/cu.usbmodem* /dev/cu.usbserial* /dev/tty.usbserial* 2>/dev/null
+```
+
+The serial console usually appears as a `cu.usbmodem...`, `cu.usbserial...`, or `tty.usbserial...` device.
+
+### Linux
+
+List likely serial devices:
+
+```sh
+ls /dev/ttyACM* /dev/ttyUSB* 2>/dev/null
+```
+
+If the device just connected and you want to see what changed:
+
+```sh
+dmesg | tail -n 30
+```
+
+### Windows
+
+Open Device Manager and look under `Ports (COM & LPT)`.
+
+You should see a new COM port after connecting the device, for example `USB Serial Device (COM5)`.
+
+## 3. Open the serial console
+
+Many firmware builds use `115200` baud with `8N1`. If your firmware uses a different baud rate, use that value instead.
+
+### macOS with `screen`
+
+```sh
+screen /dev/tty.usbserial-10 115200
+```
+
+Replace the path with the serial device you found earlier.
+
+To leave `screen`, press:
+
+```txt
+Ctrl+A, then K
+```
+
+### Linux with `picocom`
+
+```sh
+picocom -b 115200 /dev/ttyACM0
+```
+
+Or with `minicom`:
+
+```sh
+minicom -D /dev/ttyACM0 -b 115200
+```
+
+### Windows with PuTTY
+
+1. Open PuTTY.
+2. Select `Serial`.
+3. Enter the detected COM port, for example `COM5`.
+4. Set the speed to `115200`.
+5. Open the session.
+
+## 4. Capture boot logs
+
+If you want to see the earliest startup messages, open the serial console first and then reset or reconnect the device.
+
+That way you capture logs from the beginning of the boot process instead of only seeing later runtime output.
+
+## Read from your own code
+
+If you want to parse serial output in a tool or test script, use a serial library instead of an interactive terminal.
+
+### Python with `pyserial`
+
+Install the package:
+
+```sh
+pip install pyserial
+```
+
+Example reader:
+
+```python
+import serial
+
+port = "/dev/tty.usbserial-10"
+
+with serial.Serial(port, 115200, timeout=1) as connection:
+    while True:
+        line = connection.readline()
+        if not line:
+            continue
+        print(line.decode("utf-8", errors="replace").rstrip())
+```
+
+On Linux, replace the port with something like `/dev/ttyACM0`. On Windows, use a port such as `COM5`.
+
+### Node.js with `serialport`
+
+Install the package:
+
+```sh
+npm install serialport
+```
+
+Example reader:
+
+```js
+import { SerialPort } from "serialport";
+import { ReadlineParser } from "@serialport/parser-readline";
+
+const port = new SerialPort({
+  path: "/dev/tty.usbserial-10",
+  baudRate: 115200,
+});
+
+const parser = port.pipe(new ReadlineParser({ delimiter: "\n" }));
+
+parser.on("data", (line) => {
+  console.log(line);
+});
+```
+
+## Common problems
+
+### No serial device appears
+
+- use a USB data cable
+- reconnect the device directly instead of through a passive hub
+- try another USB port
+- confirm that the firmware actually exposes a USB serial interface
+
+### The serial port exists but no text appears
+
+- check the baud rate
+- reset the device after opening the terminal
+- make sure another terminal program does not already own the port
+
+### Linux permission denied
+
+Your user may not be in the serial access group.
+
+On many distributions that means adding your user to `dialout`:
+
+```sh
+sudo usermod -aG dialout $USER
+```
+
+After that, log out and back in before trying again.
+
+## When to use serial instead of the API
+
+Use the HTTP API for normal application workflows.
+
+Use USB serial when you need:
+
+- boot and crash logs
+- firmware diagnostics before Wi-Fi or Ethernet is ready
+- local debugging during development or manufacturing
+- raw console output for automated test rigs

@@ -1,0 +1,245 @@
+---
+title: Toolkit
+description: Use the optional @paperlesspaper/openintegration package for scaffolding, previewing, validating, and rendering Open Integrations.
+---
+
+import { File, Folder, Files } from "fumadocs-ui/components/files";
+
+The Open Integration contract does not require a build tool or framework. The optional `@paperlesspaper/openintegration` package is a helper toolkit for local development and static render pages.
+
+Use it when you want scaffolding, a local host simulator, manifest validation, Puppeteer rendering, EPD-optimized PNG output, shared CSS, or browser helpers.
+
+## Related resources
+
+- [`@paperlesspaper/openintegration` on npm](https://www.npmjs.com/package/@paperlesspaper/openintegration)
+- [`paperlesspaper/openintegration` on GitHub](https://github.com/paperlesspaper/openintegration)
+- [`paperlesspaper-apps` examples on GitHub](https://github.com/paperlesspaper/paperlesspaper-apps)
+- [Hosted Quote demo](https://integrations.paperlesspaper.de/quote/run)
+- [`epdoptimize` on npm](https://www.npmjs.com/package/epdoptimize)
+- [`epdoptimize` on GitHub](https://github.com/paperlesspaper/epdoptimize)
+- [`epdoptimize` interactive demo](https://paperlesspaper.github.io/epdoptimize/)
+
+## Package
+
+Install the toolkit in an integration workspace:
+
+```sh
+npm install @paperlesspaper/openintegration
+```
+
+The package exposes:
+
+- `paperlesspaper-openintegration`, the local CLI
+- `@paperlesspaper/openintegration`, the TypeScript/JavaScript helper exports
+- `@paperlesspaper/openintegration/browser`, browser-safe helper exports
+- `@paperlesspaper/openintegration/paperless.css`, the base render stylesheet
+- `@paperlesspaper/openintegration/preview.css`, preview UI styles
+- `@paperlesspaper/openintegration/paperless.js`, an ES module browser bundle
+- `@paperlesspaper/openintegration/paperless.iife.js`, a classic script bundle
+
+For no-build integrations, copy these files from the package `dist/` folder into your integration or public assets folder:
+
+```txt
+paperless.css
+paperless.js
+paperless.iife.js
+```
+
+## CLI workflow
+
+Create a starter integration:
+
+```sh
+paperlesspaper-openintegration scaffold ./applications/example --name "Example"
+```
+
+Use `--no-api` for a static-only starter. By default the scaffold includes `api/data.js`, because most integrations need a small adapter between upstream APIs and the render page.
+
+The scaffold creates:
+
+<Files>
+  <File name="config.json" />
+  <File name="render.html" />
+  <Folder name="languages">
+    <File name="de.json" />
+    <File name="en.json" />
+  </Folder>
+  <Folder name="api">
+    <File name="data.js" />
+  </Folder>
+  <File name="README.md" />
+</Files>
+
+Validate the integration:
+
+```sh
+paperlesspaper-openintegration check ./applications/example/config.json
+```
+
+Use `--json` for machine-readable check output in CI.
+
+Preview it locally:
+
+```sh
+paperlesspaper-openintegration dev ./applications/example/config.json
+```
+
+The preview opens a host page at `http://127.0.0.1:4300/__paperless/preview`, serves the integration folder, validates `config.json`, generates sidebar inputs from `formSchema`, embeds `settingsPage` when configured, sends an `INIT` payload to the render iframe, and watches for `#website-has-loaded`.
+
+Render PNGs for both common orientations:
+
+```sh
+paperlesspaper-openintegration render ./applications/example/config.json --viewport 800x480 --output /tmp/example-landscape.png
+paperlesspaper-openintegration render ./applications/example/config.json --viewport 480x800 --output /tmp/example-portrait.png
+```
+
+Use `--raw` to write the unoptimized Puppeteer screenshot. Without `--raw`, the render command uses `epdoptimize` for production-like ePaper output.
+
+Useful render and preview options include:
+
+- `--settings <json>` to merge preview settings into `nativeSettings`
+- `--language <code>` to set `payload.meta.language`
+- `--orientation <value>` and `--frame-kind <value>` to test host metadata
+- `--color <theme>` to set the initial global color theme
+- `--viewport <WxH>` to set the render size
+- `--ready-timeout <ms>` to control how long rendering waits for the ready marker
+- `--chrome-bin <path>` when Chrome is not in a standard location
+- `--no-watch` to disable live reload in `dev`
+
+## Browser helper flow
+
+Use `paperless.js` from a static render page:
+
+```html
+<link rel="stylesheet" href="./paperless.css" />
+<script type="module">
+  import {
+    waitForPayload,
+    getSettings,
+    getQuerySettings,
+    mergeSettings,
+    loadLanguageJson,
+    applyColorTheme,
+    markReady,
+    markError,
+    fitAllText,
+    fitToScreen,
+    escapeHtml,
+  } from "./paperless.js";
+
+  const app = document.querySelector("#app");
+
+  try {
+    const payload = await waitForPayload({ timeoutMs: 500 });
+    const { messages } = await loadLanguageJson(payload);
+    const defaults = { color: "light", title: "Example" };
+    const settings = mergeSettings(
+      defaults,
+      getSettings(payload),
+      getQuerySettings(),
+    );
+
+    applyColorTheme(settings.color, { defaultTheme: defaults.color });
+
+    app.innerHTML = `<h1>${escapeHtml(settings.title)}</h1>`;
+
+    await document.fonts?.ready;
+    fitAllText();
+    fitToScreen(app);
+    markReady();
+  } catch (error) {
+    markError(error);
+  }
+</script>
+```
+
+If you prefer a classic script tag, use the IIFE bundle:
+
+```html
+<script src="./paperless.iife.js"></script>
+<script>
+  const { waitForPayload, markReady } = window.PaperlessOpenIntegration;
+</script>
+```
+
+## EPD optimization
+
+Render pages can tune `epdoptimize` with a meta tag:
+
+```html
+<meta name="paperless:epd-optimize" content='{"intent":"vivid"}' />
+```
+
+Supported intents are `natural`, `vivid`, `readable`, `faithful`, and `lowNoise`. The page may update this tag before calling `markReady()`. Use `content='{"enabled":false}'` when a page wants the EPD render path to return the raw Puppeteer screenshot.
+
+For lower-level image processing details, see [`epdoptimize` on npm](https://www.npmjs.com/package/epdoptimize), the [`epdoptimize` source repository](https://github.com/paperlesspaper/epdoptimize), and the [interactive demo](https://paperlesspaper.github.io/epdoptimize/).
+
+## Theme helpers
+
+`paperless.css` exposes app-style theme class names using the Spectra 6 device colors:
+
+```txt
+dark, light, red-dark, red-light, blue-dark, blue-light, green-dark, green-light
+```
+
+Treat `color` as a global setting with a local default, merge it from the host payload and query string, then call `applyColorTheme(settings.color, { defaultTheme: defaults.color })`.
+
+The CSS exposes `--pp-bg`, `--pp-fg`, `--pp-muted`, `--pp-border`, `--pp-card`, and `--pp-accent`. Because the theme class is applied to `body`, consume those variables directly in component rules instead of aliasing them on `:root`.
+
+## Examples provider package
+
+The `paperlesspaper-openintegrations` examples repo uses the toolkit as an optional local dependency and serves many integrations from one Express app:
+
+```json
+{
+  "scripts": {
+    "start": "node server/index.js",
+    "screenshots": "node scripts/render-screenshots.mjs",
+    "copy:assets": "node scripts/copy-openintegration-assets.mjs",
+    "postinstall": "npm run copy:assets",
+    "docker:build": "docker build -t paperlesspaper-openintegrations:latest .",
+    "docker:run": "docker run --rm -p 3000:3000 paperlesspaper-openintegrations:latest"
+  },
+  "dependencies": {
+    "@paperlesspaper/openintegration": "file:vendor/openintegration",
+    "express": "^4.19.2"
+  }
+}
+```
+
+`npm run copy:assets` copies toolkit assets into `public/`:
+
+```txt
+node_modules/@paperlesspaper/openintegration/dist/paperless.css -> public/paperless.css
+node_modules/@paperlesspaper/openintegration/dist/paperless.iife.js -> public/paperless.iife.js
+node_modules/@paperlesspaper/openintegration/dist/preview.css -> public/runner.css
+```
+
+`npm start` serves the provider on `http://localhost:3000`. Each integration lives in `applications/<slug>/` and is mapped to predictable URLs:
+
+```txt
+/:slug/             -> applications/:slug/render.html
+/:slug/render.html  -> applications/:slug/render.html
+/:slug/config.json  -> applications/:slug/config.json
+/:slug/run          -> hosted preview runner
+/:slug/settings.html
+/:slug/languages/:fileName
+/:slug/assets/:fileName
+/:slug/screenshots/:fileName
+/:slug/api/:apiName -> applications/:slug/api/:apiName.js
+/assets/*           -> shared helper assets
+```
+
+For local development, install an integration from:
+
+```txt
+http://localhost:3000/<slug>/config.json
+```
+
+Use `npm run screenshots` in that repo to regenerate local variant screenshots and update `configVariants` in application manifests.
+
+Related links:
+
+- [`paperlesspaper-apps` on GitHub](https://github.com/paperlesspaper/paperlesspaper-apps)
+- [Quote demo](https://integrations.paperlesspaper.de/quote/run)
+- [Quote manifest](https://integrations.paperlesspaper.de/quote/config.json)

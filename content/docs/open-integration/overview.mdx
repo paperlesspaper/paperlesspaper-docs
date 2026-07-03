@@ -13,13 +13,13 @@ import { File, Folder, Files } from "fumadocs-ui/components/files";
 
 # Open Integrations
 
-paperlesspaper supports installable Open Integrations hosted outside the main app. An integration provider is a web app that exposes a small manifest, a render page for screenshot generation, and optionally a settings page.
+paperlesspaper supports installable Open Integrations hosted outside the main app. An integration provider is a small web app that exposes a manifest, a deterministic render page for screenshot generation, and optionally a settings page or API route.
 
 ![paperlesspaper device preview](./tutorial-thumbnail-wide3.jpg)
 
 ## What is it?
 
-An Integration lets you ship custom content for the epaper display by simply providing a small JSON manifest and a render page.
+An Integration lets you ship custom content for the epaper display by providing a JSON manifest and a static render page. Most integrations are just HTML, CSS, and JavaScript. The optional [`@paperlesspaper/openintegration` toolkit](/open-integration/toolkit) adds local preview, validation, rendering, shared CSS, and browser helpers without forcing a framework.
 
 The host app installs your integration from a public config URL. After that it can:
 
@@ -29,15 +29,28 @@ The host app installs your integration from a public config URL. After that it c
 
 ## Architecture
 
-The contract is intentionally small. A provider exposes up to three public URLs:
+The contract is intentionally small. A provider exposes a few public files:
 
 1. `config.json` or another manifest URL
-2. a render page
-3. an optional settings page
+2. a render page, usually `render.html`
+3. optional language JSON files
+4. optional assets such as icons
+5. an optional settings page
+6. optional server-side API routes
 
 <Files>
   <File name="config.json" />
   <File name="render.html" />
+  <Folder name="languages">
+    <File name="de.json" />
+    <File name="en.json" />
+  </Folder>
+  <Folder name="assets">
+    <File name="icon.png" />
+  </Folder>
+  <Folder name="api">
+    <File name="data.js" />
+  </Folder>
   <File name="settings.html" />
 </Files>
 
@@ -52,7 +65,7 @@ The manifest contract, example payload, and CORS requirements are documented in 
 
 ## Render page
 
-The render page is the screen that paperlesspaper screenshots for the device. It receives runtime data through `window.postMessage` which will include any settings and meta data.
+The render page is the screen that paperlesspaper screenshots for the device. It receives runtime data through `window.postMessage`, including configured settings and host metadata.
 
 Supported payload you can expect:
 
@@ -113,7 +126,7 @@ Typical payload shape:
 }
 ```
 
-Especially note `pluginSettings`, which contains the configured settings.
+Especially note `pluginSettings`, which contains the configured settings. The host-selected language is delivered as `payload.meta.language`; the global color setting is delivered through `payload.meta.pluginSettings.color` when configured.
 
 <Callout type="tip" title="Testing the render page">
   You can test your render page by sending a postMessage from the browser
@@ -121,21 +134,7 @@ Especially note `pluginSettings`, which contains the configured settings.
   and loading behavior before installing the integration in the app.
 </Callout>
 
-#### Receiving settings updates
-
-Use a message listener to receive settings updates whenever the user changes them in the app:
-
-```js
-window.addEventListener("message", (event) => {
-  const data = event.data;
-  if (data.type === "INIT" && data.cmd === "message") {
-    const payload = data.data;
-    console.log("Received message from app:", payload);
-    paper = payload;
-    loadComic();
-  }
-});
-```
+The optional [toolkit helpers](/open-integration/toolkit) provide `waitForPayload()`, `getSettings()`, `loadLanguageJson()`, `markReady()`, and layout helpers so static render pages do not need to hand-roll this wiring.
 
 ![paperlesspaper device preview](./design-html.jpg)
 
@@ -154,10 +153,9 @@ paperlesspaper also expects loading markers for reliable screenshot timing:
 
 ```html
 <div id="website-has-loading-element"></div>
-<div id="website-has-loaded">ready</div>
 ```
 
-If you fetch remote data before rendering, create the loading element immediately and only add `#website-has-loaded` when the page is ready for capture. This way the app will wait for your content to load instead of taking a screenshot too early.
+If you use the toolkit `markReady()` helper, it removes `#website-has-loading-element` and adds `#website-has-loaded` for you. If you do not use the helper, create the loading element immediately and only add `#website-has-loaded` when the page is ready for capture. This way the app will wait for your content to load instead of taking a screenshot too early.
 
 <Callout type="warning" title="Timeout">
   Currently the app waits up to 30 seconds for the page to load. If your page
@@ -173,9 +171,9 @@ If your integration needs a custom iframe UI, message-based settings updates, or
 
 The public repos show two practical approaches:
 
-### Minimal example
-
 For a static HTML provider with a tiny serverless API route, continue with [Minimal example](/open-integration/minimal-example).
+
+For a local CLI workflow, shared render helpers, and the examples-provider scripts, continue with [Open Integration Toolkit](/open-integration/toolkit).
 
 ## Choosing the right level of complexity
 
@@ -184,10 +182,21 @@ Start with the smallest working provider:
 - use `formSchema` only when plain fields are enough
 - add `settingsPage` when you need custom UI, previews, or auth flows
 - add server routes only when the render page cannot call the upstream service directly
+- use language JSON files when display copy should follow the host language
+- use `configVariants` and screenshots when a catalog or demo page should show known-good states
 
 That is the pattern the public paperlesspaper examples already follow: keep the install contract stable, and move complexity into your own provider only when the use case needs it.
 
 ### Example projects
+
+Core and toolkit repositories:
+
+- [`paperlesspaper/openintegration`](https://github.com/paperlesspaper/openintegration)
+- [`paperlesspaper-apps`](https://github.com/paperlesspaper/paperlesspaper-apps)
+- [`@paperlesspaper/openintegration` on npm](https://www.npmjs.com/package/@paperlesspaper/openintegration)
+- [`epdoptimize`](https://github.com/paperlesspaper/epdoptimize)
+- [`epdoptimize` on npm](https://www.npmjs.com/package/epdoptimize)
+- [Hosted Quote demo](https://integrations.paperlesspaper.de/quote/run)
 
 <GithubInfo owner="paperlesspaper" repo="paperlesspaper-apps" />
 

@@ -16,6 +16,8 @@ Use a settings page when your integration needs:
 
 If plain fields are enough, prefer `formSchema` alone because it keeps the provider simpler.
 
+When a custom settings page owns a field, keep the value in `nativeSettings` and add the field to `formSchema.properties` with `"inStettingsPage": true`. The spelling matches the current toolkit compatibility flag. The CLI preview uses it to avoid showing the same setting twice in the generated form.
+
 ## Runtime model
 
 The settings UI runs inside an iframe embedded by the paperlesspaper host app.
@@ -148,6 +150,7 @@ Before shipping a settings page, verify all of these are true:
 - it sends `SET_HEIGHT`
 - it replies to the correct host origin and window
 - it still works if the host sends existing stored settings on first load
+- `paperlesspaper-openintegration dev ./config.json` embeds the page and receives settings updates
 
 ## Related guide
 

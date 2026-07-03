@@ -1,4 +1,4 @@
 {
   "title": "Open Integration",
-  "pages": ["overview", "manifest", "settings-pages", "minimal-example", "icons"]
+  "pages": ["overview", "manifest", "toolkit", "settings-pages", "minimal-example", "icons"]
 }

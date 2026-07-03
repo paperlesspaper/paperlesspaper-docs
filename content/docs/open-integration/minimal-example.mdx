@@ -9,13 +9,23 @@ import { Step, Steps } from "fumadocs-ui/components/steps";
 
 <GithubInfo owner="paperlesspaper" repo="openintegration-xkcd" />
 
-`openintegration-xkcd` is a small sample provider built with static HTML and a serverless API route. It includes:
+`openintegration-xkcd` is a small sample provider built with static HTML and a serverless API route. You can build this shape by hand, with any static host, or with the optional [Open Integration Toolkit](/open-integration/toolkit).
+
+A typical integration includes:
 
 <Files>
   <File name="config.json (static manifest)" />
   <File name="render.html (screenshot target)" />
-  <File name="api/xkcd.js (minimal proxy)" />
-  <File name="vercel.json (routing and deployment)" />
+  <Folder name="languages">
+    <File name="de.json" />
+    <File name="en.json" />
+  </Folder>
+  <Folder name="api">
+    <File name="data.js (optional data adapter)" />
+  </Folder>
+  <Folder name="assets">
+    <File name="icon.png" />
+  </Folder>
 </Files>
 
 Use this approach when the integration is mostly a single rendered page with a tiny amount of server logic.
@@ -24,7 +34,7 @@ Use this approach when the integration is mostly a single rendered page with a t
 
 ## Local development workflow
 
-For the [XKCD](https://xkcd.com/) sample, local development is done with `vercel dev`, and the install URL is `https://YOURDOMAIN.COM/config.json`.
+For the [XKCD](https://xkcd.com/) sample, the deployed install URL is `https://YOURDOMAIN.COM/config.json`.
 
 In the paperlesspaper app, install the integration by pasting the public config URL into the Integration Plugin flow.
 
@@ -47,9 +57,9 @@ The manifest returns correct CORS headers.
 </Step>
 <Step>
   
-### Receiving settings and context
+### Settings and context
 
-The render page listens for `postMessage`.
+The render page receives the `INIT` payload, merges host settings with local defaults, and treats all payload values as untrusted input.
 
     </Step>
 
@@ -58,7 +68,14 @@ The render page listens for `postMessage`.
 ### Loading state
   
 - the render page exposes `#website-has-loading-element`
-- the render page exposes `#website-has-loaded` when ready
+- the render page exposes `#website-has-loaded` only after data, fonts, and images are settled
+
+</Step>
+  <Step>
+
+### Local checks
+
+Preview the integration locally and check both landscape and portrait layouts. The optional toolkit can automate this with `check` and `render`.
 
 </Step>
   <Step>

@@ -5,23 +5,31 @@ description: Define the install manifest for a paperlesspaper Open Integration p
 
 The Open Integration manifest is the install contract between your hosted provider and the paperlesspaper app.
 
-The manifest only requires two fields:
+The manifest requires three fields:
 
 - `name`
 - `version`
+- `renderPage`
 
 You may also define:
 
 - `description`
 - `icon`
+- `language`
 - `nativeSettings`
 - `formSchema`
 - `settingsPage`
-- `renderPage`
+- `configVariants`
 
 `formSchema` is useful when simple host-rendered fields are enough and you do not need a custom iframe UI.
 
 `nativeSettings` is treated by the host as defaults, not forced overrides.
+
+`renderPage` should usually be relative, such as `./render.html`, so the same integration works locally and after deployment.
+
+`language` is an array of supported language codes. If you declare it, add matching JSON object files at `languages/<code>.json`.
+
+`configVariants` can describe known-good preview states and screenshots for catalogs or demo runners.
 
 Example manifest:
 
@@ -30,9 +38,13 @@ Example manifest:
   "name": "Example Weather Board",
   "version": "1.0.0",
   "description": "Displays a compact daily weather view",
-  "icon": "https://example.com/icon.png",
+  "renderPage": "./render.html",
+  "icon": "./assets/icon.png",
+  "language": ["de", "en"],
   "nativeSettings": {
-    "orientation": "portrait"
+    "color": "light",
+    "location": "Berlin",
+    "refreshSeconds": 900
   },
   "formSchema": {
     "type": "object",
@@ -45,14 +57,44 @@ Example manifest:
       "refreshSeconds": {
         "type": "integer",
         "description": "Refresh interval in seconds",
+        "minimum": 300,
+        "maximum": 3600,
         "default": 900
       }
     }
   },
-  "settingsPage": "https://example.com/integration/settings",
-  "renderPage": "https://example.com/integration/render"
+  "configVariants": [
+    {
+      "color": "light",
+      "location": "Berlin",
+      "screenshots": {
+        "800x480": "./screenshots/weather-berlin-800x480-landscape.png",
+        "480x800": "./screenshots/weather-berlin-480x800-portrait.png"
+      }
+    }
+  ]
 }
 ```
+
+## Settings fields
+
+Put every normal user-editable setting in both `nativeSettings` and `formSchema.properties`. The host uses `nativeSettings` as defaults and uses `formSchema` to build controls.
+
+Use the global `color` setting in `nativeSettings` when the render page supports the toolkit color themes. Do not add `color` to `formSchema.properties`; the host and CLI preview provide the global color control.
+
+If a setting is edited by a custom `settingsPage`, keep it in `nativeSettings` but mark its schema property with `"inStettingsPage": true`. The spelling matches the current toolkit compatibility flag. The CLI preview uses it to avoid rendering a duplicate generated control.
+
+Avoid duplicating the host language as a normal setting when possible. Render pages can read the host language from `payload.meta.language` and load localized copy with `loadLanguageJson(payload)`.
+
+## Local validation
+
+The toolkit can validate the manifest and nearby files:
+
+```sh
+paperlesspaper-openintegration check ./config.json
+```
+
+Use `--json` for machine-readable output in CI. The check verifies required fields, local `renderPage` and `settingsPage` files, declared `languages/*.json` files, `formSchema` shape, and default-exported `api/*.js` handlers.
 
 ## CORS and hosting
 
