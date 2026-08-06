@@ -2,10 +2,14 @@
   "title": "Manufacturing",
   "pages": [
     "overview",
+    "bill-of-materials",
     "3d-print",
     "laser",
     "pcb-montage",
     "passepartout",
-    "frames"
+    "frames",
+    "assembly",
+    "firmware-testing",
+    "packaging"
   ]
 }

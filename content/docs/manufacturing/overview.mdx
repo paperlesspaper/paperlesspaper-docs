@@ -1,25 +1,24 @@
 ---
-title: Overview
-description: Manufacture paperlesspaper hardware parts with 3D printing, laser cutting, and frame assembly guidance.
+title: Manufacturing Overview
+description: Build a paperlesspaper device from parts to finished frame.
 ---
 
 import { GithubInfo } from "fumadocs-ui/components/github-info";
 
-The hardware is designed to be repairable, adaptable, and buildable with accessible tools.
-
 <GithubInfo owner="paperlesspaper" repo="paperlesspaper-hardware" />
 
-This section collects the practical notes for producing printed parts, laser-cut pieces, and finished frames.
+The [hardware repository](https://github.com/paperlesspaper/paperlesspaper-hardware) contains the PCB, 3D, fixture, and laser files. These pages cover the workshop side:
 
-<Callout type="info" title="Work in Progress">
-  The manufacturing docs are just starting out. Expect printable files, laser
-  files, recommended profiles, and assembly notes to grow over time.
+1. Get the [parts](/manufacturing/bill-of-materials).
+2. Make the [3D prints](/manufacturing/3d-print), [backplane](/manufacturing/laser), and [passepartout](/manufacturing/passepartout).
+3. Join the [display and PCB](/manufacturing/pcb-montage).
+4. Put everything into the [frame](/manufacturing/assembly).
+5. [Flash and test](/manufacturing/firmware-testing) the device.
+6. [Pack it](/manufacturing/packaging).
+
+<Callout type="warn" title="Do not mix versions">
+  The display, PCB, printed parts, and firmware must belong to the same model
+  and hardware version.
 </Callout>
-
-Use this area for guidance around the physical hardware:
-
-- [3D printing](/manufacturing/3d-print): printable parts, filament choices, slicer settings, and inserts
-- [Laser cutting](/manufacturing/laser): sheet materials, cut files, engraving, and tolerances
-- [Frames](/manufacturing/frames): finished frame assemblies, fit checks, and part replacement
 
 ![Manufactured paperlesspaper hardware](./IMG_9567.jpeg)

@@ -1,86 +1,61 @@
 ---
-title: Laser
-description: Prepare laser-cut paperlesspaper parts with material, kerf, and finishing notes.
+title: Laser Cutting
+description: Cut and mark the 2 mm pressboard backplane.
 ---
 
-The backpane of the paperlesspaper frame is made from laser-cut pressboard (2mm).
+The backplane is made from 2 mm pressboard. Cut and mark it before adding clips or other hardware.
 
-We usually do laser cut them before adding the clamps on the back.
+![Laser-cut backplanes with clamps](./IMG_0095.jpeg)
 
-![Laser cut backpanes with clamps](./IMG_0095.jpeg)
+[OpenPaper 7 laser files](https://github.com/paperlesspaper/paperlesspaper-hardware/tree/main/paper7/lasercut)
 
-Files for laser cutting can be found here:
+## Colors
 
-[Laser cut files](https://github.com/paperlesspaper/paperlesspaper-hardware/tree/main/paper7/lasercut)
+- red: cut
+- black: mark
+- green: ignore
 
-For better quality we use mark instead of engrave for the text. This is faster and produces cleaner edges on the pressboard.
+Use `mark` rather than `engrave` for the text. It is faster and looks cleaner.
 
-#### Process
+## Steps
 
-- Adjust the Z-axis distance
-- Align the X and Y axes
-- Open the laser file in VisiCut
-- Check and adjust the laser settings
-- Laser the first back side
-- Fine-tune the settings
-- Are the cutouts fully cut through?
-- Is the marking easy to read?
-- Adjust if necessary
+1. Set the Z distance.
+2. Align the X and Y axes.
+3. Open the file in [VisiCut](https://visicut.org).
+4. Check the cut and mark settings.
+5. Make one test backplane.
+6. Check that every cut goes through and the text is easy to read.
+7. Adjust the settings before cutting the batch.
 
-![Laser cut backpane test](./laser-screenshot.png)
+![Laser-cut backplane test](./laser-screenshot.png)
 
-#### Meaning of colors:
-
-- Red: cut
-- Black: mark
-- Green: ignore (for alignment and reference)
-
-<Callout type="tip" title="Kerf and fit">
-  Laser cutting removes material, so the cut lines will be slightly wider than
-  the design. Test your laser's kerf with a sample cut and adjust the design if
-  necessary to ensure parts fit together properly.
+<Callout type="tip" title="Check the kerf">
+  The laser removes a little material around every line. Measure a test piece
+  before cutting a full batch, especially after changing material.
 </Callout>
 
-#### Software
+## Our settings
 
-[VisiCut](https://visicut.org) is a popular open-source software for controlling laser cutters. It allows you to set different parameters for cutting and marking, and it supports various file formats. It is quite limited, but O.K. for our needs.
+These are starting points for our machines. Test them before running a batch.
 
-#### Lasersaur
+| Machine | Cut | Mark |
+| --- | --- | --- |
+| Lasersaur | 100% power, 25% speed, 500 PPI | 4% power, 25% speed, 500 PPI |
+| Zing | 100% power, 25% speed, 500 PPI | 15% power, 100% speed, 500 PPI |
 
-We use a [Lasersaur](https://hardware.prototypefund.de/project/lasersaur) at our [local makerspace](https://konglomerat.org). It's an open-source laser cutter that can handle laser cutting multiple backpanes at once, which is great for batch production.
+For the Zing, use `NEAREST` as the cut order.
 
-Settings for pressboard:
+## Cutting several at once
 
-- Cut: 100% power, 25% speed, 500 PPI
-- Mark: 4% power, 25% speed, 500 PPI
+A simple jig keeps the pressboard in the same place for every run.
 
-#### Zing
-
-The other laser we use is a Zing, which is faster for single cuts and has a smaller bed.
-
-Settings for pressboard:
-
-- Cut: 100% power, 25% speed, 500 PPI
-- Mark: 15% power, 100% speed, 500 PPI
-
-Always use `NEAREST` for the cut order to optimize for speed.
-
-#### Optimizing for multiple cuts
-
-When cutting multiple backpanes at once, we use a small jig for placing the pressboard sheets in the same position on the bed. This allows us to use the same cut file and settings for each batch, improving consistency and efficiency.
-
-It looks like this and needs to be customized for your specific laser cutter and bed size:
 ![Laser cutting jig](./IMG_1017.jpg)
 
-The jigs are good for:
-OpenPaper 7:
+| | Lasersaur | Zing |
+| --- | --- | --- |
+| OpenPaper 7 | 12 pieces, about 15 minutes | 3 pieces, about 3 minutes |
+| OpenPaper L | 6 pieces, about 10 minutes | 2 pieces, about 3 minutes |
 
-- Lasersaur: 12 backpanes at a time (ca. 15 minutes total)
-- Zing: 3 backpane at a time (ca. 3 minutes total)
+![Laser-cut backplanes](./IMG_3099.jpeg)
 
-OpenPaper L:
-
-- Lasersaur: 6 backpanes at a time (ca. 10 minutes total)
-- Zing: 2 backpane at a time (ca. 3 minutes total)
-
-![Laser cut backpanes](./IMG_3099.jpeg)
+Check that the finished backplane is flat, not badly scorched, and fits the frame, USB-C port, buttons, and battery cover.

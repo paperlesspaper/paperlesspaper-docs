@@ -1,0 +1,46 @@
+---
+title: Flash and Test
+description: Flash the firmware, run the hardware test, and add the device label.
+---
+
+## What you need
+
+- deployment tablet
+- USB hub and USB data cable
+- Wi-Fi adapter
+- relay flash cable
+- label printer
+
+Do not plug USB devices into the charging-only port on the hub.
+
+## First device
+
+1. Connect the label printer and switch it on.
+2. Connect the flash cable and one PCB.
+3. Put the PCB into boot mode:
+   - hold the small `Boot` button
+   - press the large `Reset` button once
+   - keep holding `Boot` for another second, then release it
+4. Open Firmware Deployment on the tablet. The serial ports should appear in the log.
+5. Check that the tablet's deployment Wi-Fi hotspot is active.
+6. Connect the PCB and display over USB-C.
+7. Choose the correct device model and start deployment.
+8. Wait for flashing and the hardware test to finish.
+9. Put the printed label on the PCB.
+10. Disconnect the device.
+
+The next devices normally start flashing as soon as they are connected.
+
+## Quick check
+
+- the selected model matches the display and PCB
+- flashing finishes without an error
+- the test image is complete and correctly rotated
+- colors and refresh work
+- USB-C, buttons, and battery power work
+- the label belongs to this device
+
+<Callout type="warn" title="Check the model before flashing">
+  It is possible to flash the wrong firmware onto a similar-looking board. A
+  successful flash alone does not mean the device is correct.
+</Callout>

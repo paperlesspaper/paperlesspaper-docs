@@ -1,53 +1,42 @@
 ---
-title: 3D Print
-description: How to prepare paperlesspaper parts for 3D printing.
+title: 3D Printing
+description: Print and finish the spacers and battery parts.
 ---
 
-Use 3D printing for brackets, mounts, spacers, small mechanical details, and parts that need quick iteration.
-
-## Materials
-
-We use [PETG-HF](https://eu.store.bambulab.com/de/products/petg-hf) in the paperlesspaper hardware because it is durable, has good layer adhesion, and prints well without warping. It also has a nice matte finish that hides layer lines.
-
-PLA is also a good choice since it is usually hidden inside the frame and does not require high heat resistance. It is easier to print and in our case usually not affected by the heat and UV exposure.
+We use black [PETG-HF](https://eu.store.bambulab.com/de/products/petg-hf). PLA is fine for quick test prints, but PETG is the better choice for finished devices.
 
 ![3D printed parts](./IMG_5980-Bearbeitet.jpg)
 
-## Baseline slicer settings
-
-Start with these settings unless the model notes say otherwise:
+## Starting settings
 
 - 0.2 mm layer height
-- 3 or more perimeters
-- 20-30% infill
-- supports only where the model requires them
-- print orientation that keeps visible faces clean and mechanical layers strong
+- at least 3 walls
+- 20–30% infill
+- supports where needed
+
+Use the profile included with the model when there is one. The current OpenPaper 7 files are in the [hardware repository](https://github.com/paperlesspaper/paperlesspaper-hardware/tree/main/paper7).
 
 ![3D printed parts](./IMG_2525.jpeg)
 
-### Parts
+## Parts
 
-- `Upper spacing` right
-- `USB-part` from the right
-- `Battery compartment` bottom left
-- `Battery cover` (consists of flat battery cover and battery snap lock) top left
+- upper spacer
+- USB-C/lower spacer
+- battery compartment
+- flat battery cover
+- battery-cover latch
 
-### Glue
+Let the build plate cool before removing the parts. Remove all support material from the battery compartment, latch, hooks, spacers, and cable openings. Test the cover before gluing it.
 
-The battery cover must be glued together. It is best to wear one glove so that no glue gets on your hand and to place cardboard underneath. Use only waterproof cyanoacrylate super glue (do not use spray adhesive)!
+## Glue the battery cover
 
-<Callout type="tip" title="Glue application">
-  Make sure that no glue leaks out at the sides, but apply enough glue so that
-  the bond is sufficiently strong.
-</Callout>
+Use waterproof cyanoacrylate super glue, not spray adhesive. Work over a piece of cardboard and follow the safety instructions on the glue.
 
 ![Lots of parts](./IMG_7602.jpeg)
 
-#### Procedure
-
-- Lay out about 10–20 covers.
-- Apply a small amount of super glue to the cover.
-- Glue in the latch.
-- Press briefly (possibly press firmly again after about 2 minutes).
-- Leave to rest (about 5 minutes).
-- Check whether the glued connection holds sufficiently.
+1. Lay out 10–20 covers.
+2. Put a small amount of glue on each cover.
+3. Insert the latch and press it down.
+4. Press it again after about 2 minutes if needed.
+5. Leave it for at least 5 minutes.
+6. Check that the latch holds and no glue came out at the sides.
