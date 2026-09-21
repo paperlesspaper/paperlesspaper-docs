@@ -20,6 +20,8 @@ You may also define:
 - `formSchema`
 - `settingsPage`
 - `configVariants`
+- `requiredPermissions`
+- `capabilities`
 
 `formSchema` is useful when simple host-rendered fields are enough and you do not need a custom iframe UI.
 
@@ -85,6 +87,27 @@ Use the global `color` setting in `nativeSettings` when the render page supports
 If a setting is edited by a custom `settingsPage`, keep it in `nativeSettings` but mark its schema property with `"inStettingsPage": true`. The spelling matches the current toolkit compatibility flag. The CLI preview uses it to avoid rendering a duplicate generated control.
 
 Avoid duplicating the host language as a normal setting when possible. Render pages can read the host language from `payload.meta.language` and load localized copy with `loadLanguageJson(payload)`.
+
+## Content push and status webhooks
+
+An event-driven integration can declare `capabilities.contentPush` so its backend can send text or images to a saved paper and receive delivery status callbacks:
+
+```json
+{
+  "settingsPage": "./settings.html",
+  "renderPage": "./render.html",
+  "requiredPermissions": ["paper:content:write", "paper:delivery:read"],
+  "capabilities": {
+    "contentPush": { "callbackPath": "/api/paper-status" }
+  }
+}
+```
+
+This is a manifest fragment; keep the required `name` and `version` fields in your full manifest. `requiredPermissions` describes the intended access; authorization comes from a user-approved connection to the saved paper.
+
+For content push, the manifest, settings page, renderer, and resolved callback URL must share one HTTPS origin on port 443. Configured URLs must not contain credentials, query strings, or fragments. The host derives the callback from the saved manifest; changes to the resolved configuration require reconnecting.
+
+Follow [Webhooks & content push](/open-integration/webhooks) for the connection-grant handshake, backend examples, and render payload. See [Webhook & API reference](/open-integration/webhook-reference) for endpoint and delivery semantics.
 
 ## Local validation
 

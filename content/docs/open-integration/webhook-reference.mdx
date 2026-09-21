@@ -1,0 +1,164 @@
+---
+title: Webhook & API reference
+description: Content push endpoints, webhook authentication, delivery states, retry behavior, and troubleshooting for Open Integrations.
+---
+
+Start with [Webhooks & content push](/open-integration/webhooks) to configure the manifest and establish a connection. This reference describes the host's content API and the status callbacks your backend receives.
+
+## Endpoint reference
+
+All paths below are relative to `https://api.paperlesspaper.de/v1/integration-papers`. JSON requests use `Content-Type: application/json`. Responses use `Cache-Control: no-store`.
+
+| Method and path | Authorization | Request and result |
+| --- | --- | --- |
+| `POST /papers/:paperId/grants` | Logged-in host user with organization membership | Host-side setup. Body `{configUrl, settingsPage}` must match the saved integration's resolved URLs. Returns `201` with `{grant}`. Settings iframes should use `REQUEST_CONNECTION` instead of handling host credentials. |
+| `POST /exchange` | Single-use grant | Body `{grant}`. Returns `200` with `{connectionId, paperId, name, token, callbackToken}`. |
+| `POST /connections/:connectionId/content` | `Authorization: Bearer <token>` | Body `{messageId, text?, imageBase64?}`. Returns `202` with `{requestId, paperId, messageId, state}` after durable acceptance. |
+| `GET /connections/:connectionId/status` | `Authorization: Bearer <token>` | Returns `200` with the latest request's state and individual frame deliveries. |
+| `DELETE /connections/:connectionId` | `Authorization: Bearer <token>` | Revokes the connection; returns `204`. |
+| `GET /papers/:paperId/content` | Logged-in host user with organization membership | Private app preview endpoint. Returns `200` with `{content, configUrl, renderUrl}`; `content` may be absent. |
+| `DELETE /papers/:paperId/connection` | Logged-in host user | Revokes only that user's paper connection and pending grants, even with a broken manifest; returns `204`. |
+
+Connection endpoints use the token returned by grant exchange. They do not use the general `x-api-key` upload flow or the callback token.
+
+The current limits are 30 content submissions per minute per connection and 60 grant exchanges per minute per client IP. A rate-limited request returns `429`; respect `Retry-After` before retrying.
+
+## Status webhook
+
+The host posts to the callback URL derived from the saved manifest:
+
+```http
+POST /api/paper-status HTTP/1.1
+Authorization: Bearer <callbackToken>
+Content-Type: application/json
+```
+
+Example frame event:
+
+```json
+{
+  "eventId": "<stable-event-id>",
+  "connectionId": "<connection-id>",
+  "paperId": "<paper-id>",
+  "requestId": "<host-request-id>",
+  "messageId": "order-482-ready",
+  "state": "synced",
+  "deviceId": "<frame-id>",
+  "frameName": "Kitchen",
+  "occurredAt": "2026-09-20T10:00:00.000Z"
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `eventId` | Stable ID for deduplicating this event across retries. |
+| `connectionId`, `paperId` | The connection and paper the event belongs to. Validate both against your stored connection. |
+| `requestId` | Host request ID returned by content submission; also used as the render content's `revision`. |
+| `messageId` | Your original source-event ID. |
+| `state` | One of the callback states below. |
+| `deviceId`, `frameName` | Present for frame events; absent for paper-level events. Use the ID for correlation and the name for display. |
+| `occurredAt` | ISO 8601 timestamp for event creation, not proof of physical display time. |
+
+### Receiver requirements
+
+1. Look up the active stored connection by `connectionId` and check `paperId` matches.
+2. Validate `Authorization: Bearer <callbackToken>` using that connection's callback token. Use a constant-time secret comparison. Reject unauthenticated or mismatched events.
+3. Validate the payload and durably store or enqueue the event, with a unique constraint on `eventId`.
+4. Return a `2xx` response promptly after durable acceptance. A duplicate already stored successfully should also receive `2xx`.
+5. Process notifications asynchronously. Correlate by request and frame, and tolerate events arriving out of order; a delayed `prepared` event must not downgrade an already `synced` delivery.
+
+There is **no HMAC signature** in this protocol. The separate callback bearer token authenticates the request. Response bodies are ignored, and the host times out callback requests after 15 seconds.
+
+### Retries and retention
+
+Network failures, timeouts, and non-`2xx` responses trigger retries with exponential backoff, capped at one hour between attempts. Actual delivery also depends on the callback queue's sweep. Redirects are not followed. Events are retained for seven days; failed callbacks do not block later events.
+
+Expect possible duplicate callbacks and uploads after a crash. Exactly-once delivery is not guaranteed. Keep event deduplication records for at least the callback retry window. Callbacks stop when the connection is revoked or its access/configuration is no longer valid.
+
+Before every attempt, the host resolves the callback hostname, rejects private/reserved addresses, and pins the validated address for the connection. The endpoint must use public HTTPS on port 443 in production.
+
+## Callback states
+
+Paper-level events omit `deviceId` and `frameName`. A frame event applies only to the named frame, not to every frame displaying the paper.
+
+| State | Scope | Meaning |
+| --- | --- | --- |
+| `available` | Paper | Content is now the paper's current render source. No device synchronization is implied. |
+| `prepared` | Frame | Rendering and upload succeeded for this frame. Device synchronization is still pending. |
+| `synced` | Frame | The host has correlated fresh device-reported synchronization with this content revision and its upload. |
+| `superseded` | Paper or frame | Newer content replaced this request. For a frame, the earlier delivery was still pending or prepared. |
+| `inactive` | Frame | The frame is no longer assigned to this paper in the same organization. |
+| `failed` | Frame | Rendering/upload failed after four attempts. |
+| `unconfirmed` | Frame, or paper when no deliveries exist | The 48-hour observation window ended without confirmation for that delivery, or without any frame delivery being created. |
+
+`synced` requires the device's `pictureSynced` flag, a newer file version, matching upload timing, fresh reachability, and the latest relevant upload log tied to the same content revision. It reports device synchronization, not optical verification of the panel. Missing or stale evidence cannot produce success.
+
+A frame that already reached a terminal state such as `synced` keeps that historical result when a later message arrives. Do not interpret a paper-level `superseded` event as evidence that an earlier frame synchronization never happened.
+
+## Poll the latest status
+
+Use polling to reconcile your UI or recover when a callback could not be processed:
+
+```bash
+curl --fail-with-body \
+  "https://api.paperlesspaper.de/v1/integration-papers/connections/<connection-id>/status" \
+  -H "Authorization: Bearer <content-api-bearer-token>"
+```
+
+Example response (delivery records may contain additional database fields):
+
+```json
+{
+  "paperId": "<paper-id>",
+  "name": "Kitchen messages",
+  "state": "active",
+  "messageId": "order-482-ready",
+  "deliveries": [
+    {
+      "deviceId": "<frame-id>",
+      "frameName": "Kitchen",
+      "state": "synced"
+    }
+  ]
+}
+```
+
+The top-level state describes the **latest request for this connection's current generation**. It is separate from callback and frame states:
+
+| Request state | Meaning |
+| --- | --- |
+| `empty` | No retained request exists for this connection generation; `messageId` is omitted and `deliveries` is empty. |
+| `receiving` | Intake started but durable acceptance has not completed. Retry the original content submission with the same ID and payload. |
+| `accepted` | Content was accepted and is waiting for processing. |
+| `active` | The request is being monitored. Inspect each delivery to determine frame progress. |
+| `superseded` | A newer request became the paper's current source. |
+| `closed` | The 48-hour monitoring window ended; this does not itself mean success or failure. |
+| `revoked` | Background processing stopped because the connection generation or authorization no longer matched. Revoked/unauthorized credentials themselves cannot query status. |
+
+Deliveries can be `pending` before an upload, followed by the frame states in the callback table. A request can remain `active` even when all existing deliveries are `synced`, because additional frames can be assigned during the observation window.
+
+This endpoint is not a history API and accepts no request ID selector. Request and delivery records expire after 30 days. The current paper content persists independently, so an `empty` status does not necessarily mean the paper has no content.
+
+## Errors and troubleshooting
+
+| Result or symptom | Likely cause and action |
+| --- | --- |
+| `400 Invalid integration request` | Check field types and length limits for `grant`, `messageId`, `text`, and `imageBase64`. |
+| `400 Text or image required` | Supply non-whitespace text or a supported image. |
+| `400 Invalid image (maximum 20 MB)` | Use canonical Base64 without a data-URL prefix or line breaks and stay within the decoded size limit. |
+| `400 Supported images: JPEG, PNG, WebP, maximum 40 MP` | Re-encode a supported image within the pixel limit. |
+| `400 Invalid push integration configuration` | Save a plugin paper with `contentPush.callbackPath` and valid same-origin manifest, settings, render, and callback URLs. |
+| `401 Connection grant expired or used` | Request a new grant from the settings iframe and exchange it immediately. |
+| `401` on a connection endpoint | Check the connection ID and content token. Reconnect if revoked or from an older connection generation. |
+| `403 Paper access denied` | The user must still belong to the paper's organization. Restore authorized access before reconnecting. |
+| `403 Integration configuration changed; reconnect` | Save the current integration configuration and reconnect. |
+| `409` during grant creation or exchange | Save the paper and current settings-page configuration, then request a fresh grant. |
+| `409` during content submission | The message ID already exists with different content. Use the original payload for a retry or a new ID for new content. |
+| `429` | Wait for the rate limit's `Retry-After`, then retry. Preserve the message ID for content retries. |
+| `503 Integration processing is disabled` | The host operator must enable integration processing. New grants and content submissions require it. |
+| `202`, but no immediate frame update | Inspect status. Processing is asynchronous; confirm that the frame is assigned to this paper and can wake and connect normally. |
+| No callbacks | Check the saved callback path, public HTTPS reachability, token validation, and a prompt `2xx` response after persistence. Avoid redirects. |
+| `failed` delivery | Check renderer readiness, image loading, and layout. A failure preserves the previous frame image; submit corrected content with a new message ID. |
+| `unconfirmed` delivery | The host lacked sufficient synchronization evidence within 48 hours. Check the frame's connectivity and assignment before sending a new request. |
+
+After a rendering failure, the failed message remains the paper's current source until replaced. Neither revocation nor request-record expiry is a content deletion operation.

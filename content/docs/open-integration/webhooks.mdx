@@ -1,0 +1,240 @@
+---
+title: Webhooks & content push
+description: Connect your integration backend to a saved paper, push text and images, and receive delivery status webhooks.
+---
+
+Open Integrations can receive content from external events: a chat message, a home automation, or a webhook from another service. Your integration backend sends that content to paperlesspaper. The host stores it, renders your integration, and sends delivery status webhooks back to your backend.
+
+The connection belongs to a **saved paper**. Every frame displaying that paper shares its latest content. Use separate papers when frames need different content.
+
+```text
+External service → your backend → paperlesspaper content API
+                                           ↓
+                                  saved paper content
+                                           ↓
+Your render page → screenshot → assigned frames
+                                           ↓
+Your backend ← status webhook ← delivery status
+```
+
+Your backend handles the external service's authentication and translates its events into the content format below. The paperlesspaper endpoint accepts a connection bearer token and JSON; an arbitrary third-party webhook payload must be adapted by your backend first.
+
+<Callout type="info" title="Acceptance and display are separate">
+  A successful content request means the host has durably accepted the content.
+  Rendering and device synchronization happen later. A push cannot wake an offline
+  or sleeping frame. Use delivery status to tell users what has actually happened.
+</Callout>
+
+## 1. Declare the capability
+
+Add a custom settings page and the content push capability to your [manifest](/open-integration/manifest):
+
+```json
+{
+  "name": "My Webhook Integration",
+  "version": "1.0.0",
+  "settingsPage": "./settings.html",
+  "renderPage": "./render.html",
+  "requiredPermissions": ["paper:content:write", "paper:delivery:read"],
+  "capabilities": {
+    "contentPush": {
+      "callbackPath": "/api/paper-status"
+    }
+  }
+}
+```
+
+`requiredPermissions` declares the integration's intended access. The host authorizes the saved paper, the user's organization membership, and the connection's configuration on each operation; declaring permissions alone does not grant access.
+
+The manifest, settings page, render page, and callback must share the **same HTTPS origin**, using port 443 in production. These configured URLs cannot contain credentials, query strings, or fragments. Relative paths resolve against the manifest URL: `/api/paper-status` is relative to the origin, while `./api/paper-status` is relative to the manifest's directory.
+
+The callback must be publicly reachable. Private or reserved network addresses are rejected, and callbacks do not follow redirects. Configure the direct render and callback URLs.
+
+Install the manifest, save the paper, then reopen its settings. A paper can be connected before any frame is assigned.
+
+## 2. Request a connection from the settings iframe
+
+The [settings page protocol](/open-integration/settings-pages) includes `paper.id` in the host's `INIT` payload. Wait for a saved paper ID before offering to connect.
+
+The iframe sends this message to its trusted parent window, using the parent's exact origin as `targetOrigin`:
+
+```json
+{
+  "source": "paperlesspaper-plugin",
+  "type": "REQUEST_CONNECTION",
+  "payload": {
+    "requestId": "a-unique-browser-request-id"
+  }
+}
+```
+
+Use a fresh request ID, for example `crypto.randomUUID()`, with at most 100 characters. The host checks the sending window and origin and creates a single-use grant under the logged-in user's authorization. It replies to that iframe:
+
+```json
+{
+  "source": "paperlesspaper-app",
+  "type": "CONNECTION_GRANT",
+  "payload": {
+    "requestId": "a-unique-browser-request-id",
+    "grant": "opaque-single-use-grant"
+  }
+}
+```
+
+On failure, `payload.error` replaces `payload.grant`; show the error and let the user save the paper and reconnect. Match the reply's request ID to your pending request. Validate `event.source`, `event.origin`, and the message envelope before accepting it. Use an explicit allowlist of trusted host origins, and never send grants with `targetOrigin: "*"`.
+
+The grant expires after **five minutes**. A new grant for the same user and paper invalidates that user's previous pending grant. Send it immediately to **your own backend**, for example through an authenticated `POST /api/connect`, and bind the result to the appropriate integration user or pairing session. That endpoint is yours to implement.
+
+## 3. Exchange the grant on your backend
+
+Configure the trusted paperlesspaper API base on your server. The examples use `https://api.paperlesspaper.de/v1`; self-hosted installations use their own API base. Do not accept an API destination from the browser.
+
+Run the exchange server-side:
+
+```bash
+curl --fail-with-body -X POST \
+  "https://api.paperlesspaper.de/v1/integration-papers/exchange" \
+  -H "Content-Type: application/json" \
+  --data '{"grant":"<grant-from-settings-iframe>"}'
+```
+
+Example response (`200 OK`; identifiers and secrets are placeholders):
+
+```json
+{
+  "connectionId": "<connection-id>",
+  "paperId": "<paper-id>",
+  "name": "Kitchen messages",
+  "token": "<content-api-bearer-token>",
+  "callbackToken": "<status-webhook-bearer-token>"
+}
+```
+
+Store this response securely on your backend, associated with your integration user. The grant itself authorizes the exchange; no user API key is needed. The host derives the callback URL from the saved manifest, so it cannot be overridden in the exchange request.
+
+| Credential | Direction | Use |
+| --- | --- | --- |
+| `grant` | Settings iframe → your backend → host | One-time connection setup, valid for five minutes. |
+| `token` | Your backend → host | Content submissions, status queries, and revocation for this connection. |
+| `callbackToken` | Host → your backend | Authenticate status webhooks for this connection. |
+
+Never return the permanent tokens to the iframe or store them in plugin settings, render payloads, URLs, or logs. A paper ID or connection ID by itself is not authorization.
+
+The grant is consumed during exchange. If the response is lost, request a fresh grant. Reconnecting an unchanged, active connection returns its existing credentials, preserving in-flight work.
+
+## 4. Push text or an image
+
+Once your backend has a connection, it can translate an external event into this request:
+
+```bash
+curl --fail-with-body -X POST \
+  "https://api.paperlesspaper.de/v1/integration-papers/connections/<connection-id>/content" \
+  -H "Authorization: Bearer <content-api-bearer-token>" \
+  -H "Content-Type: application/json" \
+  --data '{"messageId":"order-482-ready","text":"Your order is ready for pickup."}'
+```
+
+Example response (`202 Accepted`):
+
+```json
+{
+  "requestId": "<host-request-id>",
+  "paperId": "<paper-id>",
+  "messageId": "order-482-ready",
+  "state": "accepted"
+}
+```
+
+| Field | Requirements |
+| --- | --- |
+| `messageId` | Required string, 1–128 characters. Use a stable source-event ID across retries. |
+| `text` | Optional string, up to 1,000 characters. Also serves as an image caption. |
+| `imageBase64` | Optional standard Base64-encoded JPEG, PNG, or WebP file. No `data:` prefix or line breaks. Maximum decoded size: 20 MiB (20 × 1024 × 1024 bytes); maximum image size: 40 million pixels. |
+
+Send non-whitespace text, an image, or both. Each submission is a complete replacement: sending only text removes the previous source image; sending only an image removes the previous text.
+
+For an image, construct JSON server-side, for example in Node.js:
+
+```js
+import { readFile } from "node:fs/promises";
+
+const response = await fetch(
+  `${process.env.PAPERLESS_API_URL}/integration-papers/connections/${connectionId}/content`,
+  {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      messageId: "photo-482",
+      text: "See you on Sunday!",
+      imageBase64: (await readFile("./photo.jpg")).toString("base64"),
+    }),
+  },
+);
+
+if (!response.ok) throw new Error(`Content push failed: ${response.status}`);
+const receipt = await response.json();
+```
+
+Here `PAPERLESS_API_URL` includes `/v1`; `connectionId` and `token` come from secure backend storage. The host applies image orientation, strips input metadata, fits the image within 1600 × 1600 pixels without enlargement, and stores a normalized PNG privately.
+
+### Retries and latest-content behavior
+
+Retry a failed or interrupted submission with the **same `messageId` and identical content**. While its request record is retained, the host returns the existing request rather than creating another one. Its returned state may have advanced beyond `accepted`. Reusing that ID with different text or image bytes returns `409 Conflict`. A corrected or intentionally new message needs a new ID.
+
+IDs are scoped to the connection and its current connection generation. Request records are retained for 30 days; do not assume indefinite deduplication or replay historical events after reconnecting.
+
+The latest accepted source wins across the paper's connections. Older retries cannot replace newer content. This is a latest-content feed; intermediate messages can be superseded before a frame displays them.
+
+## 5. Render the pushed content
+
+Your render page receives an additional top-level `integrationContent` property in the normal render payload:
+
+```json
+{
+  "integrationContent": {
+    "revision": "<host-request-id>",
+    "text": "See you on Sunday!",
+    "imageUrl": "https://storage.example/short-lived-signed-image-url",
+    "receivedAt": "2026-09-20T10:00:00.000Z"
+  }
+}
+```
+
+Read it from the payload returned by the [toolkit's `waitForPayload()`](/open-integration/toolkit). It is separate from settings. `integrationContent` can be absent before the first message, `text` can be empty, and `imageUrl` is omitted for text-only content.
+
+Your renderer owns the layout: show an empty state before the first message, render text literally using `textContent` or normal framework escaping, and wait for image loading and layout before calling `markReady()`. Use the supplied signed image URL for that render; do not persist it as a permanent public URL. The host screenshots your page and handles device image preparation and upload.
+
+Authenticated app previews receive the same content only for the saved integration's configured renderer. Save changes before previewing a different renderer, and configure its direct URL rather than redirecting to another origin.
+
+## 6. Receive delivery status
+
+Implement the callback declared by `capabilities.contentPush.callbackPath`. The host sends authenticated JSON events such as `available`, `prepared`, and `synced`. See [Webhook & API reference](/open-integration/webhook-reference) for payloads, all states, polling, retries, and errors.
+
+Processing is asynchronous: the current host schedules processing sweeps every 30 seconds, with active requests eligible for rechecking after about a minute. Queue load, rendering, and the frame's wake schedule affect actual latency.
+
+Frames currently assigned to the paper receive independent delivery records. The host watches for assigned frames for 48 hours after acceptance, so content can arrive before a frame is assigned. Selecting another paper on a frame is respected. After that window, ordinary scheduled rendering can still use the persisted content, but the old request no longer starts delivery receipts for newly assigned frames.
+
+## Disconnect and reconnect
+
+Your backend can revoke its connection:
+
+```bash
+curl --fail-with-body -X DELETE \
+  "https://api.paperlesspaper.de/v1/integration-papers/connections/<connection-id>" \
+  -H "Authorization: Bearer <content-api-bearer-token>"
+```
+
+Success returns `204 No Content`. Users can also select **Revoke this integration's write access** in the paper's settings, even if your provider is unavailable. This revokes that user's connection and pending grants for the paper.
+
+Revocation stops further authorized work and callbacks; it does not erase the current paper content or recall an upload already sent. Reconnection after revocation rotates both tokens. Changes to the saved provider URLs or the paper's organization require reconnection, and loss of organization membership removes access. Old queued work and callbacks are not transferred to the new connection generation.
+
+## Development checklist
+
+- Deploy a host web app and API that both support the connection-grant protocol, with integration processing enabled.
+- Test a text-only message, an image, a duplicate retry, and a conflicting retry.
+- Test callbacks with invalid tokens, duplicate event IDs, and out-of-order delivery.
+- Test an unassigned paper, multiple assigned frames, an offline frame, and revocation.
+- For local host development only, `INTEGRATION_ALLOW_LOCALHOST=true` on the host API permits explicit loopback HTTP/HTTPS endpoints. It does not enable local URLs in production. Use a public HTTPS deployment for hosted integration testing.

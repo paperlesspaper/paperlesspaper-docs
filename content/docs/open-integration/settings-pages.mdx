@@ -13,6 +13,7 @@ Use a settings page when your integration needs:
 - live previews or contextual help
 - multi-step configuration
 - OAuth or other redirect-based account linking
+- connecting an integration backend for content push and delivery webhooks
 
 If plain fields are enough, prefer `formSchema` alone because it keeps the provider simpler.
 
@@ -41,9 +42,15 @@ type OpenIntegrationAppToPluginMessage =
       payload: {
         settings: Record<string, unknown>;
         nativeSettings: Record<string, unknown>;
+        paper?: { id?: string; kind?: string; organization?: string };
         device: { deviceId?: string; kind?: string };
         app: { language?: string };
       };
+    }
+  | {
+      source: "paperlesspaper-app";
+      type: "CONNECTION_GRANT";
+      payload: { requestId: string; grant?: string; error?: string };
     }
   | {
       source: "paperlesspaper-app";
@@ -57,6 +64,8 @@ type OpenIntegrationAppToPluginMessage =
 
 `INIT` is sent after the iframe loads and contains the current settings plus some host context.
 
+`paper.id` identifies the saved paper. `CONNECTION_GRANT` answers a content push connection request with a short-lived, single-use grant or an error. Forward the grant to your own backend for exchange; keep permanent credentials server-side.
+
 `REDIRECT` is optional and is used for OAuth-style flows where the host needs your provider to send the user through an external authorization step.
 
 ## Plugin to host messages
@@ -65,6 +74,11 @@ Your settings page replies to the host with messages like these:
 
 ```ts
 type OpenIntegrationPluginToAppMessage =
+  | {
+      source: "paperlesspaper-plugin";
+      type: "REQUEST_CONNECTION";
+      payload: { requestId: string };
+    }
   | {
       source: "paperlesspaper-plugin";
       type: "UPDATE_SETTINGS";
@@ -83,6 +97,8 @@ type OpenIntegrationPluginToAppMessage =
 ```
 
 `UPDATE_SETTINGS` sends a patch that the host merges into the stored integration settings.
+
+`REQUEST_CONNECTION` asks the host to authorize a backend connection for a saved paper with the `contentPush` capability. Use a unique request ID of at most 100 characters and match it in the `CONNECTION_GRANT` reply. The host validates the iframe window and origin.
 
 `SET_HEIGHT` lets the host resize the iframe to match your content.
 
@@ -103,11 +119,19 @@ This keeps the settings UI compact while avoiding clipped controls.
 
 Because the page is cross-window and can be cross-origin, keep the message bridge strict:
 
-- learn the host origin from the first trusted message
+- validate the parent window and an explicitly allowed host origin before trusting a message
 - store `event.source` and reply to that window only
 - use a strict `targetOrigin` instead of `*` when replying
 - treat incoming settings and redirect data as untrusted input
-- avoid sending secrets in plain settings payloads when possible
+- keep permanent connection and callback tokens out of settings, URLs, render payloads, and browser responses
+
+## Content push connection flow
+
+For webhook-driven content, wait for `INIT` with a saved `paper.id`, send `REQUEST_CONNECTION`, then forward the matching `CONNECTION_GRANT` to your backend. This uses its own grant exchange and does not require the `REDIRECT` flow below.
+
+The grant expires after five minutes and can be used once. An error is returned as `payload.error`; if the paper or provider configuration has not been saved, save it and reconnect. Your backend receives a paper-scoped content token and a separate callback token after exchange.
+
+Follow [Webhooks & content push](/open-integration/webhooks) for the complete setup and [Webhook & API reference](/open-integration/webhook-reference) for status callbacks and revocation.
 
 ## Redirect and OAuth-style flows
 
@@ -154,4 +178,4 @@ Before shipping a settings page, verify all of these are true:
 
 ## Related guide
 
-For the full provider model, manifest, and render-page contract, go back to [Open Integrations](/open-integration).
+For the full provider model, manifest, and render-page contract, go back to [Open Integrations](/open-integration/overview).

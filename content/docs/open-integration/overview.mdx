@@ -26,6 +26,7 @@ The host app installs your integration from a public config URL. After that it c
 - read your manifest
 - show your settings UI in an iframe
 - open your render page in a renderer and create the ePaper screenshot
+- accept pushed text and images from a connected integration backend and send delivery status webhooks
 
 ## Architecture
 
@@ -164,6 +165,12 @@ If you use the toolkit `markReady()` helper, it removes `#website-has-loading-el
 ## Advanced HTML settings page
 
 If your integration needs a custom iframe UI, message-based settings updates, or an OAuth-style connection flow, continue with [Open Integration Settings Pages](/open-integration/settings-pages).
+
+## Webhooks and event-driven content
+
+Use [Webhooks & content push](/open-integration/webhooks) when an external event should update a paper, such as a chat message or a home automation. Your backend connects through a short-lived grant, pushes text or images, and receives authenticated delivery status callbacks. The render page receives that source as `payload.integrationContent` and owns its layout.
+
+Content belongs to the saved paper and is shared by all frames displaying it. The latest message replaces the previous source; device updates still depend on each frame's wake schedule. See [Webhook & API reference](/open-integration/webhook-reference) for endpoints, states, retries, and troubleshooting.
 
 ## Development approaches
 

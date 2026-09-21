@@ -7,6 +7,8 @@ Use this endpoint when a paper already exists and you want to replace its image.
 
 This guide focuses on the practical upload flow for `POST /papers/uploadSingleImage/{paperId}`. For the generated endpoint reference, see [API Reference: Upload single image](/api-reference/papers/uploadsingleimage/paperid/post).
 
+For an Open Integration that receives external events, see [Webhooks & content push](/open-integration/webhooks). That flow sends text or images to a saved integration paper, uses its render page for layout, and reports delivery status through authenticated callbacks.
+
 ## Getting the parameters right
 
 You need a paperID, which is best obtained by the web application when viewing the details of an existing paper.
