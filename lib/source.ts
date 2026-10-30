@@ -4,7 +4,6 @@ import { openapiPlugin, openapiSource } from "fumadocs-openapi/server";
 import {
   BookOpen,
   Factory,
-  FlaskConical,
   House,
   PlugZap,
   Rocket,
@@ -22,7 +21,6 @@ function createMenuIcon(Icon: typeof House, className: string) {
 }
 
 const topLevelFolderIcons = {
-  development: createMenuIcon(FlaskConical, "text-blue-600 dark:text-blue-400"),
   "api-reference": createMenuIcon(BookOpen, "text-sky-600 dark:text-sky-400"),
   "api-guide": createMenuIcon(Rocket, "text-amber-600 dark:text-amber-400"),
   "how-it-works": createMenuIcon(

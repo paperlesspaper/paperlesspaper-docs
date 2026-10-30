@@ -3,6 +3,20 @@ import { createMDX } from 'fumadocs-mdx/next';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  async redirects() {
+    return [
+      {
+        source: "/development/testbench",
+        destination: "/manufacturing/testbench",
+        permanent: true,
+      },
+      {
+        source: "/development/testbench.md",
+        destination: "/manufacturing/testbench.md",
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     return [
       {
