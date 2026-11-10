@@ -64,7 +64,6 @@ export const source = loader(
             ...node,
             icon: createMenuIcon(
               House,
-  PanelsTopLeft,
               "text-emerald-600 dark:text-emerald-400",
             ),
           };
