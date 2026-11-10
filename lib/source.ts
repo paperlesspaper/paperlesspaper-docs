@@ -5,6 +5,7 @@ import {
   BookOpen,
   Factory,
   House,
+  PanelsTopLeft,
   PlugZap,
   Rocket,
   Workflow,
@@ -21,6 +22,7 @@ function createMenuIcon(Icon: typeof House, className: string) {
 }
 
 const topLevelFolderIcons = {
+  panels: createMenuIcon(PanelsTopLeft, "text-cyan-600 dark:text-cyan-400"),
   "api-reference": createMenuIcon(BookOpen, "text-sky-600 dark:text-sky-400"),
   "api-guide": createMenuIcon(Rocket, "text-amber-600 dark:text-amber-400"),
   "how-it-works": createMenuIcon(
@@ -62,6 +64,7 @@ export const source = loader(
             ...node,
             icon: createMenuIcon(
               House,
+  PanelsTopLeft,
               "text-emerald-600 dark:text-emerald-400",
             ),
           };

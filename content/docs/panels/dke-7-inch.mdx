@@ -1,0 +1,89 @@
+---
+title: DKE 7 Inch (DEPG0730RTE730F0HP)
+description: Solid colors, dithered mixtures, and measurement setup for the DKE 7-inch panel.
+---
+
+import { SolidColorPalette, MixtureColorSwatches, PanelPhoto, PanelPhotoGallery } from "@/components/panels/color-measurements";
+import measurements from "@/public/panels/dke-7-inch/measurements.json";
+
+The DEPG0730RTE730F0HP uses six native colors at 800 × 480 pixels. DKE lists it as a [7.3-inch panel](https://customer.dke.top/products/dke-73-inch-six-color-e6-epaper-display); it is used here in the OpenPaper 7.
+
+The measurements cover six solid colors and 45 dithered mixtures. These are camera-based estimates under the test lighting; see the [Panels overview](/panels/overview) for the shared setup, method, and how to read the swatches.
+
+## Setup
+
+The 7-inch panel stands to the right of the reference card on the [shared bench](/panels/overview#setup). The card overlaps part of the panel's left edge, so the test fields sit inside the visible central area.
+
+## Solid colors
+
+Each solid color was measured at three positions. The swatches show the average after white-image correction.
+
+<SolidColorPalette measurements={measurements.patches} />
+
+## Field positions
+
+Three charts place the same six solid colors at different locations. Each chart has 24 fields in the central area, within x = 104–684 and y = 80–376 in the native 800 × 480 raster. The surrounding margin keeps the sampled fields away from the card overlap and panel edges.
+
+| Check | Result |
+| --- | --- |
+| Mean solid-color position difference | 2.71 ΔE₀₀ |
+| Largest solid-color position difference | 14.51 ΔE₀₀ |
+| Brightest / darkest sampled location in the white image | 1.37× |
+| Reference-card cross-validation, mean across charts | 6.31 ΔE₀₀ |
+| Largest held-out reference-card error | 16.87 ΔE₀₀ |
+| Largest fraction of field pixels at a camera channel limit | 0.00% |
+| Largest frame-to-frame field difference | 0.43 ΔE₀₀ |
+
+An initial pass clipped dark channels in several dithered fields. We repeated the full series with camera saturation reduced from 128 to 96 and sharpening set to zero. The values on this page come from that second series.
+
+The largest difference belongs to black. Its three positions differ by up to 14.51 ΔE₀₀, so treat that swatch as an average with noticeable position dependence.
+
+The position differences include residual lighting and camera effects. This test does not separate field position from refresh history. The white-image correction compensates for a brightness gradient, but cannot remove reflected glare. No measurements from the 13.3-inch panel are used to calculate these values.
+
+## Mixtures
+
+The 45 mixtures use the [shared Bayer patterns](/panels/overview#test-patterns). The mean area-model difference is **4.23 ΔE₀₀**.
+
+<MixtureColorSwatches measurements={measurements.patches} />
+
+## Camera captures
+
+These are the original 2160 × 3840 JPEGs, without additional color correction or image optimization. Open a photo to inspect the fields at full size. The panel is mounted vertically; the test images retain their native 800 × 480 pixel dimensions.
+
+<PanelPhotoGallery>
+  <PanelPhoto src="/panels/dke-7-inch/central-1-2.jpg" alt="First 7-inch measurement chart beside the Spyder Checkr reference card" caption="Chart 1: mixtures with white and the first solid-color positions." width={2160} height={3840} />
+  <PanelPhoto src="/panels/dke-7-inch/central-2-2.jpg" alt="Second 7-inch measurement chart with the solid colors moved" caption="Chart 2: the next mixtures and moved solid colors." width={2160} height={3840} />
+  <PanelPhoto src="/panels/dke-7-inch/central-3-2.jpg" alt="Third 7-inch measurement chart with the remaining mixtures" caption="Chart 3: the remaining mixtures and repeat measurements." width={2160} height={3840} />
+</PanelPhotoGallery>
+
+<PanelPhotoGallery>
+  <PanelPhoto src="/panels/dke-7-inch/flat-white-2.jpg" alt="Full-white 7-inch panel beside the reference card" caption="The white image used for brightness correction." width={2160} height={3840} />
+  <PanelPhoto src="/panels/dke-7-inch/sampling-overlay.svg" alt="First measurement chart with cyan outlines around the sampled field centers" caption="Cyan outlines mark the sampled centers of the fields." width={2160} height={3840} />
+</PanelPhotoGallery>
+
+## Capture settings
+
+| Setting | Value |
+| --- | --- |
+| Test image | 800 × 480 pixels |
+| Camera image | 2160 × 3840 JPEG |
+| Camera processing | Saturation 96/255; sharpness 0/255 |
+| White-image spatial reference | The same 24 locations across all three charts |
+
+Exposure, lighting, frame selection, and profiling follow the [shared measurement method](/panels/overview#measurement-method).
+
+## Measurement notes
+
+The reference-card cross-validation is about 6.31 ΔE₀₀ on average, with a largest held-out error of 16.87 ΔE₀₀. Black varies substantially across positions, as shown above. Each mixture was measured at one position, so the solid-color checks do not establish repeatability for every mixture.
+
+See the [measurement limits](/panels/overview#measurement-limits) before using these values for color matching or comparing panels.
+
+## Downloads
+
+- [Color measurements (JSON)](/panels/dke-7-inch/measurements.json) — all 51 swatches, Lab, XYZ, unclipped sRGB, and comparison metrics.
+- [Individual observations (JSON)](/panels/dke-7-inch/measurements-full.json) — including sampling polygons and per-frame checks.
+- [Camera profiles and sampling coordinates (JSON)](/panels/dke-7-inch/camera-profiles.json).
+- [Measurement table (CSV)](/panels/dke-7-inch/measurements.csv).
+- Native images: [chart 1](/panels/dke-7-inch/central-1.png), [chart 2](/panels/dke-7-inch/central-2.png), [chart 3](/panels/dke-7-inch/central-3.png), [full white](/panels/dke-7-inch/flat-white.png). Keep their original dimensions and colors when repeating the test.
+
+References: [DKE panel specifications](https://customer.dke.top/products/dke-73-inch-six-color-e6-epaper-display).

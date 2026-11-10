@@ -1,0 +1,2088 @@
+{
+  "panel": "DKE 13.3 inch (DEPG1330RTE133F5HP)",
+  "measuredOn": "2026-11-10",
+  "status": "Provisional camera-based characterization, not an absolute color calibration.",
+  "colorSpace": "D65-equivalent XYZ and CIELAB estimated from nominal reference-chart sRGB values; sRGB previews are clipped to the display gamut.",
+  "stats": {
+    "old_primary_mean_position_delta_e00": 4.3223353261713084,
+    "central_primary_mean_position_delta_e00": 1.6188275916810488,
+    "central_primary_max_position_delta_e00": 4.276434336318702,
+    "central_flat_max_to_min": 1.3423670020864695,
+    "old_excluded_observations": 16,
+    "reference_loo_mean_delta_e00": [
+      4.4676293531720255,
+      4.487262865973406,
+      4.4867796665356385
+    ],
+    "mean_mixture_area_model_delta_e00": 6.0989466224864195
+  },
+  "patches": [
+    {
+      "id": "white",
+      "name": "White",
+      "kind": "solid",
+      "pair": null,
+      "fractions": [
+        {
+          "color": "white",
+          "value": 1.0
+        }
+      ],
+      "hex": "#C0C0C5",
+      "srgb": [
+        192,
+        192,
+        197
+      ],
+      "lab": [
+        77.92814529140092,
+        0.9189053938227776,
+        -2.584639811751299
+      ],
+      "xyz": [
+        0.5080413050643665,
+        0.5309006692357611,
+        0.6063089546691766
+      ],
+      "srgbUnclipped": [
+        192.1363080604887,
+        192.2715477182589,
+        197.39669427394054
+      ],
+      "nativeCode": "#FFFFFF",
+      "maxPositionDeltaE00": 3.1200097385931054,
+      "areaModelDeltaE00": 0.0,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "black",
+      "name": "Black",
+      "kind": "solid",
+      "pair": null,
+      "fractions": [
+        {
+          "color": "black",
+          "value": 1.0
+        }
+      ],
+      "hex": "#212A39",
+      "srgb": [
+        33,
+        42,
+        57
+      ],
+      "lab": [
+        16.843594819860257,
+        0.9777675050564594,
+        -11.178046461665513
+      ],
+      "xyz": [
+        0.02202306762553322,
+        0.02269750338643077,
+        0.04243701395240681
+      ],
+      "srgbUnclipped": [
+        33.1410875903172,
+        41.844023051625015,
+        57.38701955251598
+      ],
+      "nativeCode": "#000000",
+      "maxPositionDeltaE00": 4.276434336318702,
+      "areaModelDeltaE00": 0.0,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "red",
+      "name": "Red",
+      "kind": "solid",
+      "pair": null,
+      "fractions": [
+        {
+          "color": "red",
+          "value": 1.0
+        }
+      ],
+      "hex": "#A3212C",
+      "srgb": [
+        163,
+        33,
+        44
+      ],
+      "lab": [
+        36.14747889324679,
+        52.21898219875196,
+        27.851329841433003
+      ],
+      "xyz": [
+        0.16159445786629173,
+        0.09085021999763221,
+        0.03253544078387902
+      ],
+      "srgbUnclipped": [
+        163.30841353994376,
+        32.986700162437344,
+        43.68246362026003
+      ],
+      "nativeCode": "#FF0000",
+      "maxPositionDeltaE00": 2.3661632234759162,
+      "areaModelDeltaE00": 0.0,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "yellow",
+      "name": "Yellow",
+      "kind": "solid",
+      "pair": null,
+      "fractions": [
+        {
+          "color": "yellow",
+          "value": 1.0
+        }
+      ],
+      "hex": "#CFBF21",
+      "srgb": [
+        207,
+        191,
+        33
+      ],
+      "lab": [
+        76.5088350047574,
+        -9.81753184130152,
+        72.69309356765471
+      ],
+      "xyz": [
+        0.4473297142610102,
+        0.5071958222648784,
+        0.08904173501718758
+      ],
+      "srgbUnclipped": [
+        207.2357779565447,
+        191.11142729658187,
+        33.456721436402205
+      ],
+      "nativeCode": "#FFFF00",
+      "maxPositionDeltaE00": 0.6100172564574294,
+      "areaModelDeltaE00": 0.0,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "blue",
+      "name": "Blue",
+      "kind": "solid",
+      "pair": null,
+      "fractions": [
+        {
+          "color": "blue",
+          "value": 1.0
+        }
+      ],
+      "hex": "#0757AD",
+      "srgb": [
+        7,
+        87,
+        173
+      ],
+      "lab": [
+        37.58312159421721,
+        12.65535714909674,
+        -51.60894800547583
+      ],
+      "xyz": [
+        0.10993733733067983,
+        0.09856212640044949,
+        0.40643477345711315
+      ],
+      "srgbUnclipped": [
+        6.934660571865615,
+        86.96648195745502,
+        172.57663966461496
+      ],
+      "nativeCode": "#0000FF",
+      "maxPositionDeltaE00": 1.2549735432859765,
+      "areaModelDeltaE00": 0.0,
+      "cameraClippedFraction": 0.0017828843106180666
+    },
+    {
+      "id": "green",
+      "name": "Green",
+      "kind": "solid",
+      "pair": null,
+      "fractions": [
+        {
+          "color": "green",
+          "value": 1.0
+        }
+      ],
+      "hex": "#4E6B58",
+      "srgb": [
+        78,
+        107,
+        88
+      ],
+      "lab": [
+        42.46536703304311,
+        -14.871022715624127,
+        7.301630037306362
+      ],
+      "xyz": [
+        0.10139305992207324,
+        0.12803304476857927,
+        0.11127712206673883
+      ],
+      "srgbUnclipped": [
+        78.04719167195833,
+        106.83362731062961,
+        87.80869876550244
+      ],
+      "nativeCode": "#00FF00",
+      "maxPositionDeltaE00": 2.3982695267801755,
+      "areaModelDeltaE00": 0.0,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "white-black-25",
+      "name": "25% White + 75% Black",
+      "kind": "mixture",
+      "pair": "White + Black",
+      "fractions": [
+        {
+          "color": "white",
+          "value": 0.25
+        },
+        {
+          "color": "black",
+          "value": 0.75
+        }
+      ],
+      "hex": "#4E505D",
+      "srgb": [
+        78,
+        80,
+        93
+      ],
+      "lab": [
+        34.274605054160254,
+        2.389284696015487,
+        -7.747452779231734
+      ],
+      "xyz": [
+        0.079963287114341,
+        0.08140892782348581,
+        0.11462005828941589
+      ],
+      "srgbUnclipped": [
+        78.32747430874298,
+        79.88628410258451,
+        92.81164474569918
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 10.508214368473485,
+      "cameraClippedFraction": 0.0009902951079421667
+    },
+    {
+      "id": "white-black-50",
+      "name": "50% White + 50% Black",
+      "kind": "mixture",
+      "pair": "White + Black",
+      "fractions": [
+        {
+          "color": "white",
+          "value": 0.5
+        },
+        {
+          "color": "black",
+          "value": 0.5
+        }
+      ],
+      "hex": "#6D6F80",
+      "srgb": [
+        109,
+        111,
+        128
+      ],
+      "lab": [
+        47.32020640755283,
+        2.6073984313473852,
+        -9.624544903758059
+      ],
+      "xyz": [
+        0.15906430396885204,
+        0.16264959939758353,
+        0.2282342375052663
+      ],
+      "srgbUnclipped": [
+        108.56823701787349,
+        111.48748759799999,
+        128.29084899188797
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 13.026785731192865,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "white-black-75",
+      "name": "75% White + 25% Black",
+      "kind": "mixture",
+      "pair": "White + Black",
+      "fractions": [
+        {
+          "color": "white",
+          "value": 0.75
+        },
+        {
+          "color": "black",
+          "value": 0.25
+        }
+      ],
+      "hex": "#969BA9",
+      "srgb": [
+        150,
+        155,
+        169
+      ],
+      "lab": [
+        63.95538393001533,
+        1.374312853817783,
+        -8.013546484601575
+      ],
+      "xyz": [
+        0.31498246102028066,
+        0.32746822921576463,
+        0.42251092398958134
+      ],
+      "srgbUnclipped": [
+        150.37960265179345,
+        154.7493187302537,
+        169.11139992022854
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 6.283743287018907,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "white-red-25",
+      "name": "25% White + 75% Red",
+      "kind": "mixture",
+      "pair": "White + Red",
+      "fractions": [
+        {
+          "color": "white",
+          "value": 0.25
+        },
+        {
+          "color": "red",
+          "value": 0.75
+        }
+      ],
+      "hex": "#A75D5F",
+      "srgb": [
+        167,
+        93,
+        95
+      ],
+      "lab": [
+        48.02617461683661,
+        30.413440035680196,
+        12.279209886343533
+      ],
+      "xyz": [
+        0.2186948879203389,
+        0.16815070654985959,
+        0.12856142030186016
+      ],
+      "srgbUnclipped": [
+        166.93971714283225,
+        92.75403162400788,
+        94.7346154790385
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 4.758345668908979,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "white-red-50",
+      "name": "50% White + 50% Red",
+      "kind": "mixture",
+      "pair": "White + Red",
+      "fractions": [
+        {
+          "color": "white",
+          "value": 0.5
+        },
+        {
+          "color": "red",
+          "value": 0.5
+        }
+      ],
+      "hex": "#AC8386",
+      "srgb": [
+        172,
+        131,
+        134
+      ],
+      "lab": [
+        58.706942227246486,
+        16.559649117822374,
+        4.349894564970658
+      ],
+      "xyz": [
+        0.29510485976055,
+        0.26712154336947097,
+        0.26242175561241693
+      ],
+      "srgbUnclipped": [
+        172.43358229331935,
+        130.75053274506647,
+        134.239497616585
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 3.8586398002392257,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "white-red-75",
+      "name": "75% White + 25% Red",
+      "kind": "mixture",
+      "pair": "White + Red",
+      "fractions": [
+        {
+          "color": "white",
+          "value": 0.75
+        },
+        {
+          "color": "red",
+          "value": 0.25
+        }
+      ],
+      "hex": "#B4A3AB",
+      "srgb": [
+        180,
+        163,
+        171
+      ],
+      "lab": [
+        68.58081461000427,
+        7.513087841511168,
+        -1.8068223685344886
+      ],
+      "xyz": [
+        0.39169717091104594,
+        0.38765163770927147,
+        0.4380625065119884
+      ],
+      "srgbUnclipped": [
+        179.7529973445106,
+        162.91307977194558,
+        170.72113104339348
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 2.3085621792229576,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "white-yellow-25",
+      "name": "25% White + 75% Yellow",
+      "kind": "mixture",
+      "pair": "White + Yellow",
+      "fractions": [
+        {
+          "color": "white",
+          "value": 0.25
+        },
+        {
+          "color": "yellow",
+          "value": 0.75
+        }
+      ],
+      "hex": "#CCC02C",
+      "srgb": [
+        204,
+        192,
+        44
+      ],
+      "lab": [
+        76.47962468313861,
+        -11.343246194849833,
+        69.83307048151487
+      ],
+      "xyz": [
+        0.4416549842874648,
+        0.5067155219066242,
+        0.09797079418418214
+      ],
+      "srgbUnclipped": [
+        203.9440937960365,
+        191.92313218186828,
+        43.6127759782373
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 7.595209939584825,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "white-yellow-50",
+      "name": "50% White + 50% Yellow",
+      "kind": "mixture",
+      "pair": "White + Yellow",
+      "fractions": [
+        {
+          "color": "white",
+          "value": 0.5
+        },
+        {
+          "color": "yellow",
+          "value": 0.5
+        }
+      ],
+      "hex": "#CBBD6C",
+      "srgb": [
+        203,
+        189,
+        108
+      ],
+      "lab": [
+        76.1812582128651,
+        -6.019999313807811,
+        42.7396527838205
+      ],
+      "xyz": [
+        0.45561166259530456,
+        0.5018268881137448,
+        0.21355364909312124
+      ],
+      "srgbUnclipped": [
+        203.20688415390143,
+        188.9777049481829,
+        107.58241091899183
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 7.524646229000977,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "white-yellow-75",
+      "name": "75% White + 25% Yellow",
+      "kind": "mixture",
+      "pair": "White + Yellow",
+      "fractions": [
+        {
+          "color": "white",
+          "value": 0.75
+        },
+        {
+          "color": "yellow",
+          "value": 0.25
+        }
+      ],
+      "hex": "#C5BEA7",
+      "srgb": [
+        197,
+        190,
+        167
+      ],
+      "lab": [
+        77.04488661960802,
+        -1.5316441180475149,
+        12.4501765561567
+      ],
+      "xyz": [
+        0.4848978617567217,
+        0.5160640012794012,
+        0.44106228417348714
+      ],
+      "srgbUnclipped": [
+        196.97045138173607,
+        190.26419913789996,
+        167.29345786764588
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 2.0848226655051696,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "white-blue-25",
+      "name": "25% White + 75% Blue",
+      "kind": "mixture",
+      "pair": "White + Blue",
+      "fractions": [
+        {
+          "color": "white",
+          "value": 0.25
+        },
+        {
+          "color": "blue",
+          "value": 0.75
+        }
+      ],
+      "hex": "#416FAD",
+      "srgb": [
+        65,
+        111,
+        173
+      ],
+      "lab": [
+        46.328304106408616,
+        4.146967316634054,
+        -37.98080582245096
+      ],
+      "xyz": [
+        0.1543730724014738,
+        0.1551250602781653,
+        0.41883500392804596
+      ],
+      "srgbUnclipped": [
+        65.06932133821594,
+        110.9450371267258,
+        173.33088922930045
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 7.85880028562683,
+      "cameraClippedFraction": 0.0003961965134706815
+    },
+    {
+      "id": "white-blue-50",
+      "name": "50% White + 50% Blue",
+      "kind": "mixture",
+      "pair": "White + Blue",
+      "fractions": [
+        {
+          "color": "white",
+          "value": 0.5
+        },
+        {
+          "color": "blue",
+          "value": 0.5
+        }
+      ],
+      "hex": "#718BB9",
+      "srgb": [
+        113,
+        139,
+        185
+      ],
+      "lab": [
+        57.56050015085816,
+        2.65819642321663,
+        -27.123767697282485
+      ],
+      "xyz": [
+        0.24852458268865907,
+        0.255011668381825,
+        0.4967281343654339
+      ],
+      "srgbUnclipped": [
+        113.18058460657056,
+        138.99673615886772,
+        185.29235630480412
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 7.12590774706026,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "white-blue-75",
+      "name": "75% White + 25% Blue",
+      "kind": "mixture",
+      "pair": "White + Blue",
+      "fractions": [
+        {
+          "color": "white",
+          "value": 0.75
+        },
+        {
+          "color": "blue",
+          "value": 0.25
+        }
+      ],
+      "hex": "#9EA9BC",
+      "srgb": [
+        158,
+        169,
+        188
+      ],
+      "lab": [
+        68.84406338916502,
+        0.23016345463100496,
+        -11.195463528800031
+      ],
+      "xyz": [
+        0.3725993790502553,
+        0.3912824882670879,
+        0.5316469625513855
+      ],
+      "srgbUnclipped": [
+        157.78441271563415,
+        168.66594849958838,
+        187.9994207014336
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 3.2813526336290275,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "white-green-25",
+      "name": "25% White + 75% Green",
+      "kind": "mixture",
+      "pair": "White + Green",
+      "fractions": [
+        {
+          "color": "white",
+          "value": 0.25
+        },
+        {
+          "color": "green",
+          "value": 0.75
+        }
+      ],
+      "hex": "#738061",
+      "srgb": [
+        115,
+        128,
+        97
+      ],
+      "lab": [
+        51.76087282536939,
+        -11.027660616786116,
+        15.499233149787205
+      ],
+      "xyz": [
+        0.16879122733142837,
+        0.19932556637223262,
+        0.14163586018011948
+      ],
+      "srgbUnclipped": [
+        114.53499633794236,
+        128.1015104351514,
+        96.5770249891043
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 9.700018539155105,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "white-green-50",
+      "name": "50% White + 50% Green",
+      "kind": "mixture",
+      "pair": "White + Green",
+      "fractions": [
+        {
+          "color": "white",
+          "value": 0.5
+        },
+        {
+          "color": "green",
+          "value": 0.5
+        }
+      ],
+      "hex": "#979972",
+      "srgb": [
+        151,
+        153,
+        114
+      ],
+      "lab": [
+        62.09963517122391,
+        -7.2050772416926705,
+        20.062863403125487
+      ],
+      "xyz": [
+        0.2718419497051636,
+        0.3051919314877049,
+        0.20484255438313098
+      ],
+      "srgbUnclipped": [
+        151.0414452326684,
+        152.7912958277358,
+        114.358038921971
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 14.006633326182756,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "white-green-75",
+      "name": "75% White + 25% Green",
+      "kind": "mixture",
+      "pair": "White + Green",
+      "fractions": [
+        {
+          "color": "white",
+          "value": 0.75
+        },
+        {
+          "color": "green",
+          "value": 0.25
+        }
+      ],
+      "hex": "#ADADA3",
+      "srgb": [
+        173,
+        173,
+        163
+      ],
+      "lab": [
+        70.48668513873602,
+        -1.8261698093698375,
+        4.960335387051984
+      ],
+      "xyz": [
+        0.38815721739587594,
+        0.41445156861261573,
+        0.4077995964828589
+      ],
+      "srgbUnclipped": [
+        172.916688042397,
+        173.0710926688244,
+        163.37480214999644
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 6.150299723002094,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "black-red-25",
+      "name": "25% Black + 75% Red",
+      "kind": "mixture",
+      "pair": "Black + Red",
+      "fractions": [
+        {
+          "color": "black",
+          "value": 0.25
+        },
+        {
+          "color": "red",
+          "value": 0.75
+        }
+      ],
+      "hex": "#911F33",
+      "srgb": [
+        145,
+        31,
+        51
+      ],
+      "lab": [
+        32.436722629057215,
+        47.750342331600166,
+        17.83202922591789
+      ],
+      "xyz": [
+        0.1283609716638983,
+        0.07280316865759841,
+        0.03857017926347542
+      ],
+      "srgbUnclipped": [
+        145.39099448247606,
+        31.128196360149236,
+        50.968703239410814
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 1.8427451727585702,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "black-red-50",
+      "name": "50% Black + 50% Red",
+      "kind": "mixture",
+      "pair": "Black + Red",
+      "fractions": [
+        {
+          "color": "black",
+          "value": 0.5
+        },
+        {
+          "color": "red",
+          "value": 0.5
+        }
+      ],
+      "hex": "#732635",
+      "srgb": [
+        115,
+        38,
+        53
+      ],
+      "lab": [
+        27.701244034403423,
+        35.008486291077446,
+        9.382563671716193
+      ],
+      "xyz": [
+        0.08474830446978338,
+        0.05346966124781839,
+        0.03907418664438893
+      ],
+      "srgbUnclipped": [
+        115.47488431180518,
+        38.47228523711553,
+        52.616260776904575
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 1.643156808572291,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "black-red-75",
+      "name": "75% Black + 25% Red",
+      "kind": "mixture",
+      "pair": "Black + Red",
+      "fractions": [
+        {
+          "color": "black",
+          "value": 0.75
+        },
+        {
+          "color": "red",
+          "value": 0.25
+        }
+      ],
+      "hex": "#562538",
+      "srgb": [
+        86,
+        37,
+        56
+      ],
+      "lab": [
+        22.173464282230476,
+        25.13581726810085,
+        -1.4269947816599182
+      ],
+      "xyz": [
+        0.051887568352853214,
+        0.035637789278632134,
+        0.04139121940988212
+      ],
+      "srgbUnclipped": [
+        85.85107553709116,
+        36.761353138934645,
+        55.87020974931044
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 2.2877239427197433,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "black-yellow-25",
+      "name": "25% Black + 75% Yellow",
+      "kind": "mixture",
+      "pair": "Black + Yellow",
+      "fractions": [
+        {
+          "color": "black",
+          "value": 0.25
+        },
+        {
+          "color": "yellow",
+          "value": 0.75
+        }
+      ],
+      "hex": "#A89930",
+      "srgb": [
+        168,
+        153,
+        48
+      ],
+      "lab": [
+        62.901705761811826,
+        -6.841272345851301,
+        54.40779647139588
+      ],
+      "xyz": [
+        0.281411204934327,
+        0.3146916424061427,
+        0.07404647069346874
+      ],
+      "srgbUnclipped": [
+        167.94287014057522,
+        153.47214965169428,
+        48.163899188172444
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 5.131117409752358,
+      "cameraClippedFraction": 0.01717171717171717
+    },
+    {
+      "id": "black-yellow-50",
+      "name": "50% Black + 50% Yellow",
+      "kind": "mixture",
+      "pair": "Black + Yellow",
+      "fractions": [
+        {
+          "color": "black",
+          "value": 0.5
+        },
+        {
+          "color": "yellow",
+          "value": 0.5
+        }
+      ],
+      "hex": "#857231",
+      "srgb": [
+        133,
+        114,
+        49
+      ],
+      "lab": [
+        48.57559226722137,
+        -0.7210312864543988,
+        37.77721398703672
+      ],
+      "xyz": [
+        0.16269858963084596,
+        0.17251673354086616,
+        0.054185905337162395
+      ],
+      "srgbUnclipped": [
+        133.12546280382867,
+        113.98336798697777,
+        49.366128293627426
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 11.23348252939901,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "black-yellow-75",
+      "name": "75% Black + 25% Yellow",
+      "kind": "mixture",
+      "pair": "Black + Yellow",
+      "fractions": [
+        {
+          "color": "black",
+          "value": 0.75
+        },
+        {
+          "color": "yellow",
+          "value": 0.25
+        }
+      ],
+      "hex": "#5A4F3E",
+      "srgb": [
+        90,
+        79,
+        62
+      ],
+      "lab": [
+        34.090819940081175,
+        1.646028462608612,
+        11.603095130309871
+      ],
+      "xyz": [
+        0.07829383943646999,
+        0.08051938600582158,
+        0.0568820912812942
+      ],
+      "srgbUnclipped": [
+        89.7203013751924,
+        78.67825543235493,
+        61.92600963602748
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 15.128208922823584,
+      "cameraClippedFraction": 0.020622725434694702
+    },
+    {
+      "id": "black-blue-25",
+      "name": "25% Black + 75% Blue",
+      "kind": "mixture",
+      "pair": "Black + Blue",
+      "fractions": [
+        {
+          "color": "black",
+          "value": 0.25
+        },
+        {
+          "color": "blue",
+          "value": 0.75
+        }
+      ],
+      "hex": "#154B94",
+      "srgb": [
+        21,
+        75,
+        148
+      ],
+      "lab": [
+        32.57042707901949,
+        11.367127907634805,
+        -44.95217243290911
+      ],
+      "xyz": [
+        0.08176384384415572,
+        0.07340773076189926,
+        0.29016079907884934
+      ],
+      "srgbUnclipped": [
+        20.89926677738066,
+        75.08366964914052,
+        148.03208515337272
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 1.3462415886520516,
+      "cameraClippedFraction": 0.0009854158454867955
+    },
+    {
+      "id": "black-blue-50",
+      "name": "50% Black + 50% Blue",
+      "kind": "mixture",
+      "pair": "Black + Blue",
+      "fractions": [
+        {
+          "color": "black",
+          "value": 0.5
+        },
+        {
+          "color": "blue",
+          "value": 0.5
+        }
+      ],
+      "hex": "#253F78",
+      "srgb": [
+        37,
+        63,
+        120
+      ],
+      "lab": [
+        27.471012838985423,
+        10.737808919417446,
+        -35.91693674161027
+      ],
+      "xyz": [
+        0.059123481691112284,
+        0.0526290231781599,
+        0.18551000098153528
+      ],
+      "srgbUnclipped": [
+        36.652103501152055,
+        62.6300045135096,
+        120.24354273594369
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 3.42977957022677,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "black-blue-75",
+      "name": "75% Black + 25% Blue",
+      "kind": "mixture",
+      "pair": "Black + Blue",
+      "fractions": [
+        {
+          "color": "black",
+          "value": 0.75
+        },
+        {
+          "color": "blue",
+          "value": 0.25
+        }
+      ],
+      "hex": "#1D3152",
+      "srgb": [
+        29,
+        49,
+        82
+      ],
+      "lab": [
+        20.418022185790704,
+        3.728416043492194,
+        -22.507051210802032
+      ],
+      "xyz": [
+        0.03155666374500792,
+        0.030943903693634863,
+        0.08448085351167049
+      ],
+      "srgbUnclipped": [
+        29.415816242805928,
+        49.223318133420186,
+        82.17295653959626
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 4.051232978144867,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "black-green-25",
+      "name": "25% Black + 75% Green",
+      "kind": "mixture",
+      "pair": "Black + Green",
+      "fractions": [
+        {
+          "color": "black",
+          "value": 0.25
+        },
+        {
+          "color": "green",
+          "value": 0.75
+        }
+      ],
+      "hex": "#4F5C48",
+      "srgb": [
+        79,
+        92,
+        72
+      ],
+      "lab": [
+        37.49896765394274,
+        -9.25604929020049,
+        9.688208722573544
+      ],
+      "xyz": [
+        0.08245538942067701,
+        0.09809847079724897,
+        0.0765833050410484
+      ],
+      "srgbUnclipped": [
+        79.01789764423509,
+        92.11433194095984,
+        72.4002382280764
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 5.044148488636523,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "black-green-50",
+      "name": "50% Black + 50% Green",
+      "kind": "mixture",
+      "pair": "Black + Green",
+      "fractions": [
+        {
+          "color": "black",
+          "value": 0.5
+        },
+        {
+          "color": "green",
+          "value": 0.5
+        }
+      ],
+      "hex": "#564C3F",
+      "srgb": [
+        86,
+        76,
+        63
+      ],
+      "lab": [
+        32.98423130776196,
+        1.3482874626955799,
+        9.506853255769332
+      ],
+      "xyz": [
+        0.07294917532237556,
+        0.07529999093961527,
+        0.057313053666858946
+      ],
+      "srgbUnclipped": [
+        85.55645511145711,
+        76.3488240474242,
+        62.72516657888995
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 15.085057348780335,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "black-green-75",
+      "name": "75% Black + 25% Green",
+      "kind": "mixture",
+      "pair": "Black + Green",
+      "fractions": [
+        {
+          "color": "black",
+          "value": 0.75
+        },
+        {
+          "color": "green",
+          "value": 0.25
+        }
+      ],
+      "hex": "#3D343D",
+      "srgb": [
+        61,
+        52,
+        61
+      ],
+      "lab": [
+        22.795061728111335,
+        6.321676270122811,
+        -4.508667986356274
+      ],
+      "xyz": [
+        0.039740565030523256,
+        0.03740721484479128,
+        0.04954449878980158
+      ],
+      "srgbUnclipped": [
+        60.941641646396086,
+        51.500751878716606,
+        61.191197769241306
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 17.03684905545544,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "red-yellow-25",
+      "name": "25% Red + 75% Yellow",
+      "kind": "mixture",
+      "pair": "Red + Yellow",
+      "fractions": [
+        {
+          "color": "red",
+          "value": 0.25
+        },
+        {
+          "color": "yellow",
+          "value": 0.75
+        }
+      ],
+      "hex": "#C7A926",
+      "srgb": [
+        199,
+        169,
+        38
+      ],
+      "lab": [
+        69.78893471337595,
+        -1.6754056556858576,
+        65.51795602656385
+      ],
+      "xyz": [
+        0.37925847843303956,
+        0.4045012400217427,
+        0.07614610452580946
+      ],
+      "srgbUnclipped": [
+        198.70979068036374,
+        168.558076783835,
+        37.674821544879
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 0.4197022332710194,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "red-yellow-50",
+      "name": "50% Red + 50% Yellow",
+      "kind": "mixture",
+      "pair": "Red + Yellow",
+      "fractions": [
+        {
+          "color": "red",
+          "value": 0.5
+        },
+        {
+          "color": "yellow",
+          "value": 0.5
+        }
+      ],
+      "hex": "#BF8E25",
+      "srgb": [
+        191,
+        142,
+        37
+      ],
+      "lab": [
+        62.23986399932578,
+        9.044206439813241,
+        58.88093275502045
+      ],
+      "xyz": [
+        0.31573520382105014,
+        0.3068388122238374,
+        0.05979507469447552
+      ],
+      "srgbUnclipped": [
+        191.11300999872952,
+        142.39252490408626,
+        36.64722227019943
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 1.0177028565940252,
+      "cameraClippedFraction": 0.025752773375594295
+    },
+    {
+      "id": "red-yellow-75",
+      "name": "75% Red + 25% Yellow",
+      "kind": "mixture",
+      "pair": "Red + Yellow",
+      "fractions": [
+        {
+          "color": "red",
+          "value": 0.75
+        },
+        {
+          "color": "yellow",
+          "value": 0.25
+        }
+      ],
+      "hex": "#B4632D",
+      "srgb": [
+        180,
+        99,
+        45
+      ],
+      "lab": [
+        50.39277995878507,
+        28.687582305570057,
+        43.420755613762076
+      ],
+      "xyz": [
+        0.23734950965500248,
+        0.18749452607026645,
+        0.04882530934400079
+      ],
+      "srgbUnclipped": [
+        180.0323954758429,
+        98.61739913840498,
+        45.31616927130572
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 4.282267857567213,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "red-blue-25",
+      "name": "25% Red + 75% Blue",
+      "kind": "mixture",
+      "pair": "Red + Blue",
+      "fractions": [
+        {
+          "color": "red",
+          "value": 0.25
+        },
+        {
+          "color": "blue",
+          "value": 0.75
+        }
+      ],
+      "hex": "#3D5196",
+      "srgb": [
+        61,
+        81,
+        150
+      ],
+      "lab": [
+        36.23011054619936,
+        13.878026251330722,
+        -39.88985054815083
+      ],
+      "xyz": [
+        0.10381455929410167,
+        0.09128278198548974,
+        0.298680734427056
+      ],
+      "srgbUnclipped": [
+        61.34340132346582,
+        81.3622647390664,
+        149.523744729059
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 6.204049248734265,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "red-blue-50",
+      "name": "50% Red + 50% Blue",
+      "kind": "mixture",
+      "pair": "Red + Blue",
+      "fractions": [
+        {
+          "color": "red",
+          "value": 0.5
+        },
+        {
+          "color": "blue",
+          "value": 0.5
+        }
+      ],
+      "hex": "#674F79",
+      "srgb": [
+        103,
+        79,
+        121
+      ],
+      "lab": [
+        37.585287008635405,
+        18.862475921135825,
+        -20.197881815168618
+      ],
+      "xyz": [
+        0.11856983039620689,
+        0.09857407623475146,
+        0.19427532886571722
+      ],
+      "srgbUnclipped": [
+        103.07557399623634,
+        78.94938968745126,
+        121.18888831461892
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 6.716073957969123,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "red-blue-75",
+      "name": "75% Red + 25% Blue",
+      "kind": "mixture",
+      "pair": "Red + Blue",
+      "fractions": [
+        {
+          "color": "red",
+          "value": 0.75
+        },
+        {
+          "color": "blue",
+          "value": 0.25
+        }
+      ],
+      "hex": "#8F4163",
+      "srgb": [
+        143,
+        65,
+        99
+      ],
+      "lab": [
+        38.82387986535749,
+        36.9673730823232,
+        -3.835850728302781
+      ],
+      "xyz": [
+        0.15517872114429196,
+        0.10556873893902805,
+        0.12954289237622302
+      ],
+      "srgbUnclipped": [
+        143.3150482479076,
+        65.11733308744306,
+        98.72113905402885
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 3.252796868046235,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "red-green-25",
+      "name": "25% Red + 75% Green",
+      "kind": "mixture",
+      "pair": "Red + Green",
+      "fractions": [
+        {
+          "color": "red",
+          "value": 0.25
+        },
+        {
+          "color": "green",
+          "value": 0.75
+        }
+      ],
+      "hex": "#766347",
+      "srgb": [
+        118,
+        99,
+        71
+      ],
+      "lab": [
+        43.18018804946989,
+        3.1098129929363894,
+        19.043960874071185
+      ],
+      "xyz": [
+        0.13088042311712694,
+        0.132786845785807,
+        0.0778128818886124
+      ],
+      "srgbUnclipped": [
+        118.01500292936967,
+        99.27466316247465,
+        70.68416525483508
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 5.426960797115739,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "red-green-50",
+      "name": "50% Red + 50% Green",
+      "kind": "mixture",
+      "pair": "Red + Green",
+      "fractions": [
+        {
+          "color": "red",
+          "value": 0.5
+        },
+        {
+          "color": "green",
+          "value": 0.5
+        }
+      ],
+      "hex": "#905C36",
+      "srgb": [
+        144,
+        92,
+        54
+      ],
+      "lab": [
+        43.986085256960024,
+        17.10363044861363,
+        30.155021021203954
+      ],
+      "xyz": [
+        0.15928091845140258,
+        0.13828580227259685,
+        0.05354592292947732
+      ],
+      "srgbUnclipped": [
+        143.52696150965667,
+        92.11065949797776,
+        54.2836380844921
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 10.918209383538596,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "red-green-75",
+      "name": "75% Red + 25% Green",
+      "kind": "mixture",
+      "pair": "Red + Green",
+      "fractions": [
+        {
+          "color": "red",
+          "value": 0.75
+        },
+        {
+          "color": "green",
+          "value": 0.25
+        }
+      ],
+      "hex": "#9B4331",
+      "srgb": [
+        155,
+        67,
+        49
+      ],
+      "lab": [
+        39.874111821664776,
+        35.680771506113956,
+        28.748157109124318
+      ],
+      "xyz": [
+        0.16076431299464372,
+        0.11175267568062572,
+        0.04202823475630898
+      ],
+      "srgbUnclipped": [
+        155.0973456417232,
+        66.68444825255182,
+        48.886505058518274
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 5.332706304138876,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "yellow-blue-25",
+      "name": "25% Yellow + 75% Blue",
+      "kind": "mixture",
+      "pair": "Yellow + Blue",
+      "fractions": [
+        {
+          "color": "yellow",
+          "value": 0.25
+        },
+        {
+          "color": "blue",
+          "value": 0.75
+        }
+      ],
+      "hex": "#687B99",
+      "srgb": [
+        104,
+        123,
+        153
+      ],
+      "lab": [
+        51.253784153650116,
+        0.5381934162962954,
+        -18.307640187327003
+      ],
+      "xyz": [
+        0.1862622458043473,
+        0.19488401099641128,
+        0.3294765684936941
+      ],
+      "srgbUnclipped": [
+        104.46660070361733,
+        123.2009630843146,
+        153.07173000502956
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 2.009859228905226,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "yellow-blue-50",
+      "name": "50% Yellow + 50% Blue",
+      "kind": "mixture",
+      "pair": "Yellow + Blue",
+      "fractions": [
+        {
+          "color": "yellow",
+          "value": 0.5
+        },
+        {
+          "color": "blue",
+          "value": 0.5
+        }
+      ],
+      "hex": "#9C9F80",
+      "srgb": [
+        156,
+        159,
+        128
+      ],
+      "lab": [
+        64.43436531252341,
+        -6.46234240498239,
+        16.00070377651832
+      ],
+      "xyz": [
+        0.29948049138350574,
+        0.33338875718016275,
+        0.25134723714640844
+      ],
+      "srgbUnclipped": [
+        156.0507090102973,
+        158.77747753725043,
+        127.58334522426873
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 4.000649514503171,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "yellow-blue-75",
+      "name": "75% Yellow + 25% Blue",
+      "kind": "mixture",
+      "pair": "Yellow + Blue",
+      "fractions": [
+        {
+          "color": "yellow",
+          "value": 0.75
+        },
+        {
+          "color": "blue",
+          "value": 0.25
+        }
+      ],
+      "hex": "#B8B03A",
+      "srgb": [
+        184,
+        176,
+        58
+      ],
+      "lab": [
+        70.49291922451323,
+        -11.019439182224644,
+        58.72791868750819
+      ],
+      "xyz": [
+        0.3600884373570267,
+        0.41454119788450855,
+        0.10056215377362103
+      ],
+      "srgbUnclipped": [
+        184.03603951892956,
+        175.7675304110931,
+        57.62506500751581
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 5.683633646340161,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "yellow-green-25",
+      "name": "25% Yellow + 75% Green",
+      "kind": "mixture",
+      "pair": "Yellow + Green",
+      "fractions": [
+        {
+          "color": "yellow",
+          "value": 0.25
+        },
+        {
+          "color": "green",
+          "value": 0.75
+        }
+      ],
+      "hex": "#7E893F",
+      "srgb": [
+        126,
+        137,
+        63
+      ],
+      "lab": [
+        54.72484928624948,
+        -15.683108105048472,
+        37.998324739394675
+      ],
+      "xyz": [
+        0.18384882565160843,
+        0.22664290299342046,
+        0.08051641597161026
+      ],
+      "srgbUnclipped": [
+        125.60848350249533,
+        137.04747617892204,
+        62.614163394488536
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 3.61846878068616,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "yellow-green-50",
+      "name": "50% Yellow + 50% Green",
+      "kind": "mixture",
+      "pair": "Yellow + Green",
+      "fractions": [
+        {
+          "color": "yellow",
+          "value": 0.5
+        },
+        {
+          "color": "green",
+          "value": 0.5
+        }
+      ],
+      "hex": "#A3A42F",
+      "srgb": [
+        163,
+        164,
+        47
+      ],
+      "lab": [
+        65.28965293492757,
+        -14.319609221134789,
+        57.09192876290427
+      ],
+      "xyz": [
+        0.2886017116779182,
+        0.3441373739401207,
+        0.07801501505060653
+      ],
+      "srgbUnclipped": [
+        163.21809154062436,
+        163.5810333391709,
+        46.916662519498075
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 3.8657902749670665,
+      "cameraClippedFraction": 0.0002051702913418137
+    },
+    {
+      "id": "yellow-green-75",
+      "name": "75% Yellow + 25% Green",
+      "kind": "mixture",
+      "pair": "Yellow + Green",
+      "fractions": [
+        {
+          "color": "yellow",
+          "value": 0.75
+        },
+        {
+          "color": "green",
+          "value": 0.25
+        }
+      ],
+      "hex": "#BBB22A",
+      "srgb": [
+        187,
+        178,
+        42
+      ],
+      "lab": [
+        71.1240135172157,
+        -11.406307075880084,
+        65.06938431434128
+      ],
+      "xyz": [
+        0.3671005495079652,
+        0.4236816487797101,
+        0.08402909430670295
+      ],
+      "srgbUnclipped": [
+        186.91784124164383,
+        177.52189631665004,
+        41.677919415834836
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 1.4338695350796165,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "blue-green-25",
+      "name": "25% Blue + 75% Green",
+      "kind": "mixture",
+      "pair": "Blue + Green",
+      "fractions": [
+        {
+          "color": "blue",
+          "value": 0.25
+        },
+        {
+          "color": "green",
+          "value": 0.75
+        }
+      ],
+      "hex": "#416469",
+      "srgb": [
+        65,
+        100,
+        105
+      ],
+      "lab": [
+        40.160968196950165,
+        -11.459237765779562,
+        -6.396263096703847
+      ],
+      "xyz": [
+        0.09325635079758207,
+        0.11348273425998123,
+        0.14973459201928893
+      ],
+      "srgbUnclipped": [
+        65.15088769343582,
+        100.47993875846488,
+        104.66584991031773
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 5.476759456045932,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "blue-green-50",
+      "name": "50% Blue + 50% Green",
+      "kind": "mixture",
+      "pair": "Blue + Green",
+      "fractions": [
+        {
+          "color": "blue",
+          "value": 0.5
+        },
+        {
+          "color": "green",
+          "value": 0.5
+        }
+      ],
+      "hex": "#306170",
+      "srgb": [
+        48,
+        97,
+        112
+      ],
+      "lab": [
+        38.52700976159176,
+        -12.27329718148945,
+        -13.201050970384298
+      ],
+      "xyz": [
+        0.08404571335462596,
+        0.10386305143360532,
+        0.16776637886973111
+      ],
+      "srgbUnclipped": [
+        47.55631306111532,
+        97.31604438386422,
+        111.60797309126667
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 11.672324655160692,
+      "cameraClippedFraction": 0.0
+    },
+    {
+      "id": "blue-green-75",
+      "name": "75% Blue + 25% Green",
+      "kind": "mixture",
+      "pair": "Blue + Green",
+      "fractions": [
+        {
+          "color": "blue",
+          "value": 0.75
+        },
+        {
+          "color": "green",
+          "value": 0.25
+        }
+      ],
+      "hex": "#195D8F",
+      "srgb": [
+        25,
+        93,
+        143
+      ],
+      "lab": [
+        37.89659325579864,
+        -2.383718320106393,
+        -33.11001741745947
+      ],
+      "xyz": [
+        0.09242815040951659,
+        0.1003020886431074,
+        0.27254377219371717
+      ],
+      "srgbUnclipped": [
+        24.539140808003545,
+        93.17980604462156,
+        142.5436592956025
+      ],
+      "nativeCode": null,
+      "maxPositionDeltaE00": null,
+      "areaModelDeltaE00": 3.7890474735007675,
+      "cameraClippedFraction": 0.0
+    }
+  ]
+}
