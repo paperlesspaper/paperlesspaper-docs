@@ -1,0 +1,101 @@
+---
+title: DKE 13.3 inch (DEPG1330RTE133F5HP)
+description: Solid colors, dithered mixtures, and measurement setup for the DKE 13.3-inch Spectra 6 panel.
+---
+
+import { SolidColorPalette, MixtureColorSwatches, PanelPhoto } from "@/components/panels/color-measurements";
+import measurements from "@/public/panels/dke-13-3-inch/2026-11-10/measurements.json";
+
+The DEPG1330RTE133F5HP is a 13.3-inch Spectra 6 panel with a 1600 × 1200 pixel test raster. We measured its six solid colors and 45 dithered mixtures using a camera and a Spyder Checkr 24 reference card.
+
+These are camera-based estimates under the test lighting. See the [Panels overview](/panels/overview) for the shared setup, method, and how to read the swatches.
+
+## Setup
+
+The 13.3-inch panel sits to the left of the reference card on the [shared bench](/panels/overview#setup). The measurement charts were moved toward the center to avoid reflections at the corners.
+
+## Solid colors
+
+Each color was measured at three positions near the center of the panel. The swatches show the average. The input code is the RGB value sent to the panel: `#FF0000`, for example, produced the red measured here as `#A3212C`.
+
+<SolidColorPalette measurements={measurements.patches} />
+
+## Reflections and field positions
+
+The first charts covered most of the panel and caught reflections in the upper-left and lower-right corners. We repeated the measurements with smaller fields near the center: three charts of 24 fields, within x = 360–1252 and y = 250–958 in panel pixels.
+
+Each chart places the six solid colors in different positions. Together, the charts cover all 45 two-color mixtures, plus white, black, and three-color controls.
+
+| Check | Original layout | Central layout |
+| --- | --- | --- |
+| Mean solid-color position difference | 4.32 ΔE₀₀, two positions | 1.62 ΔE₀₀, three position pairs per color |
+| Largest solid-color position difference | — | 4.28 ΔE₀₀ |
+| Brightest / darkest sampled location in the white image | 1.96× | 1.34× |
+| Reference-card cross-validation, mean | About 4.7 ΔE₀₀ | About 4.5 ΔE₀₀ |
+
+Moving the fields improved agreement between positions. Because the layouts use different positions and sample counts, this is a repeatability check rather than a measure of absolute accuracy.
+
+Sixteen observations from the original charts overlapped the reflection regions and were excluded from comparisons with the new fields. The original solid-color position statistic remains in the table as a baseline. The excluded rectangles are `[0, 0, 400, 220]` and `[1260, 900, 1600, 1200]`, in `[left, top, right, bottom]` panel coordinates.
+
+<PanelPhoto
+  src="/panels/dke-13-3-inch/2026-11-10/sampling-overlay.svg"
+  alt="Measurement chart with cyan sampling outlines and red exclusion regions at the upper-left and lower-right corners"
+  caption="Cyan marks the sampled field centers; red marks the excluded reflection regions."
+/>
+
+## Mixtures
+
+The 45 mixtures use the [shared Bayer patterns](/panels/overview#test-patterns). The mean area-model difference is **6.10 ΔE₀₀**.
+
+<MixtureColorSwatches measurements={measurements.patches} />
+
+## Camera captures
+
+These are the original 2560 × 1440 JPEGs used in the measurement series, with no additional color correction or image optimization. Click a photo to open it at full size.
+
+<PanelPhoto
+  src="/panels/dke-13-3-inch/2026-11-10/central-1-2.jpg"
+  alt="First measurement chart with solid colors and mixtures with white, beside the Spyder Checkr 24"
+  caption="Chart 1: mixtures with white and the first set of solid-color positions."
+/>
+
+<PanelPhoto
+  src="/panels/dke-13-3-inch/2026-11-10/central-2-2.jpg"
+  alt="Second measurement chart with different mixtures and moved solid-color fields"
+  caption="Chart 2: the next set of mixtures, with the solid colors moved."
+/>
+
+<PanelPhoto
+  src="/panels/dke-13-3-inch/2026-11-10/central-3-2.jpg"
+  alt="Third measurement chart with the remaining mixtures and control fields"
+  caption="Chart 3: the remaining mixtures and repeat measurements."
+/>
+
+<PanelPhoto
+  src="/panels/dke-13-3-inch/2026-11-10/flat-white-2.jpg"
+  alt="Full-white panel beside the reference card"
+  caption="The white reference image used to correct for uneven brightness across the panel."
+/>
+
+## Capture settings
+
+| Setting | Value |
+| --- | --- |
+| Test image | 1600 × 1200 pixels |
+| Camera image | 2560 × 1440 JPEG |
+| White-image spatial reference | Original 54-position grid, used for both layouts |
+
+Exposure, lighting, frame selection, and profiling follow the [shared measurement method](/panels/overview#measurement-method).
+
+## Measurement notes
+
+There is still a brightness gradient across the central fields. White and black vary more with position than some of the saturated colors. The reference-card cross-validation is about 4.5 ΔE₀₀ on average.
+
+See the [measurement limits](/panels/overview#measurement-limits) before using these values for color matching or comparing panels.
+
+## Downloads
+
+- [Color measurements (JSON)](/panels/dke-13-3-inch/2026-11-10/measurements.json) — all 51 swatches, with Lab, XYZ, unclipped sRGB, input codes, and comparison metrics.
+- [Position comparison (JSON)](/panels/dke-13-3-inch/2026-11-10/comparison.json) — including excluded observations.
+- [Measurement table (CSV)](/panels/dke-13-3-inch/2026-11-10/measurements.csv).
+- Native test images: [chart 1](/panels/dke-13-3-inch/2026-11-10/central-1.png), [chart 2](/panels/dke-13-3-inch/2026-11-10/central-2.png), [chart 3](/panels/dke-13-3-inch/2026-11-10/central-3.png). Keep their original pixel dimensions and colors when repeating the test.
