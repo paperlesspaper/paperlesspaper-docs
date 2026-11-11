@@ -17,6 +17,7 @@ import {
   ViewOptionsPopover,
 } from "@/components/ai/page-actions";
 import { getMDXComponents } from "@/components/mdx";
+import { OpenPaperPromo } from "@/components/openpaper-promo";
 import { source } from "@/lib/source";
 
 const DOCS_GITHUB_BRANCH = "main";
@@ -122,13 +123,20 @@ export default async function DocsCatchAllPage({ params }: PageProps) {
   const MDX = mdxPage.data.body;
 
   return (
-    <DocsPage toc={mdxPage.data.toc} full={mdxPage.data.full}>
+    <DocsPage
+      toc={mdxPage.data.toc}
+      full={mdxPage.data.full}
+      tableOfContent={{ footer: <OpenPaperPromo /> }}
+    >
       <DocsTitle>{mdxPage.data.title}</DocsTitle>
       <DocsDescription>{mdxPage.data.description}</DocsDescription>
       {renderPageActions(mdxPage)}
       <DocsBody>
         <MDX components={getMDXComponents()} />
       </DocsBody>
+      <div className={mdxPage.data.full ? "" : "xl:hidden"}>
+        <OpenPaperPromo />
+      </div>
     </DocsPage>
   );
 }
