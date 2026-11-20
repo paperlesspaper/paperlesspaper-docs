@@ -1,141 +1,76 @@
 ---
 title: Display control
-description: Measured refresh times, partial updates, one-second clock markers, color transitions and editable grayscale tables on the 13.3-inch OpenPaper L.
+description: How refresh speed affects color, how a partial update behaves, and how to set a grayscale photo LUT on the 13.3-inch OpenPaper L.
 ---
 
 import { PanelPhoto } from "@/components/panels/color-measurements";
 
-On the 13.3-inch OpenPaper L, the fastest tested full-color refresh took **14.93 seconds** of panel BUSY time. A small clock marker could move once per second by interrupting the update. For photographs, a two-pass drive produced uniform intermediate grays, and spatial mixing gave 16 measured brightness steps. Each method has a different cost in flashing, color accuracy or residual marks.
-
-These experiments used one DKE DEPG1330RTE133F5HP panel, 1600 × 1200 pixels, on the unit identified as **frame-2**. The experimental commands below belong to its bench firmware. For the six native colors, the shared camera setup and calibrated color measurements, see the [panel test data](/panels/dke-13-3-inch).
+These results come from one 13.3-inch OpenPaper L (`frame-2`, DKE DEPG1330RTE133F5HP) running experimental bench firmware. [Test data and recordings](/panels/dke-13-3-inch#display-control-measurements).
 
 ## Full-frame speed, flashing and color
 
-The controller clock setting is register `0x30`. All three BUSY measurements below come from the same full-color trial series. BUSY measures the long panel drive pulse. Application time also includes transferring the image and powering the panel.
+All three settings flash during a full-color refresh. Register `0x30` selects the clock. BUSY time measures the panel drive after image transfer.
 
-| Clock setting | Register | Full-color BUSY | Visible result |
+| Clock setting | Register value | BUSY in this comparison | Settled color |
 | --- | --- | ---: | --- |
-| Normal, dynamic | `0x08` | 35.825 s | Full sequence with bright and dark intermediate frames |
-| Nominal 75 Hz | `0x04` | 23.857 s | Shorter sequence, with visible flashing |
-| Nominal 120 Hz | `0x07` | 14.930 s | Shortest sequence, still with visible flashing |
-
-The rates are setting names. The footage shows the length and appearance of the sequence. The camera delivered roughly 7–8 frames per second in this comparison, so it can miss very brief flashes. Color and white point should be judged from the settled image beside the reference card. Other normal refreshes on this unit took about 27 seconds. At 75 Hz the green shifted toward yellow-green. At 120 Hz the blue field became paler and developed a vertical tonal band, and the green shifted further.
+| Normal (dynamic) | `0x08` | 35.8 s | Reference |
+| Nominal 75 Hz | `0x04` | 23.9 s | Green shifts toward yellow |
+| Nominal 120 Hz | `0x07` | 14.9 s | Blue becomes paler and shows a vertical band |
 
 <video controls playsInline preload="none" poster="/panels/dke-13-3-inch/control/refresh-poster.webp" src="/panels/dke-13-3-inch/control/refresh.mp4?build=6382664" aria-label="Real-time side-by-side full refresh in normal, 75 Hz and 120 Hz modes" />
 
-The three recordings are aligned to the start of the measured drive pulse and play in real time. The faster panel reaches its final image while the normal run is still cycling.
-
-<PanelPhoto src="/panels/dke-13-3-inch/control/refresh-modes.webp" width={1440} height={800} alt="Settled displays photographed after normal, 75 Hz and 120 Hz refresh" caption="The same color target after each refresh. Open the photograph to compare the patches at full size." />
+<PanelPhoto src="/panels/dke-13-3-inch/control/refresh-modes.webp" width={1440} height={800} alt="Settled displays photographed after normal, 75 Hz and 120 Hz refresh" caption="The same target after each refresh. The green and blue patches show the largest visible trade-offs." />
 
 ## Partial updates and the area outside the window
 
-Sending fewer pixels reduces transfer time. A 240 × 400 window covers 5% of this panel, yet the initial fast partial update still took **14.944 s BUSY**, against **14.930 s** for full color. A full monochrome image took **14.927 s**. In the initial window tests the area outside the rectangle visibly faded, including when its image RAM contents stayed the same.
+A window covering **5% of the panel still took about 15 seconds**. Sending `0x01` with the refresh command (`0x12`) kept the surrounding dark, red and blue patches close to their original appearance during repeated black/white updates. The active window still flashed.
 
-A change in the refresh command improved exterior retention. Here “VCOM 0/1” means the byte `0x00` or `0x01` sent with **display refresh `0x12`**. It does not specify a voltage in volts. Both settings took **14.948 s BUSY** in the direct comparison. With `0x01`, the dark, red and blue exterior samples stayed close to their starting readings during repeated black/white changes. The active rectangle still cycled through intermediate colors.
-
-<PanelPhoto src="/panels/dke-13-3-inch/control/partial-vcom.webp" width={945} height={1350} alt="Comparison of the center patch and the surrounding chart for refresh arguments 00 and 01" caption="Compare the dark border and the colored exterior patches as well as the center rectangle. Lighting and camera exposure also affect apparent brightness." />
+<PanelPhoto src="/panels/dke-13-3-inch/control/partial-vcom.webp" width={945} height={1350} alt="Comparison of the center patch and the surrounding chart for refresh arguments 00 and 01" caption="The center changes in both trials. Compare the dark border and colored patches outside it for arguments 0x00 and 0x01." />
 
 <video controls playsInline preload="none" poster="/panels/dke-13-3-inch/control/window-poster.webp" src="/panels/dke-13-3-inch/control/window.mp4" aria-label="Repeated black and white partial refreshes with the surrounding color patches in view" />
 
 ## Early cutoff, digits and a one-second hand
 
-In a five-step monochrome series, black reached 90% of its measured optical change after **9.90–9.92 s** and white after **13.50–13.53 s**. BUSY was still active. The cutoff experiment interrupts the drive using hardware reset at a measured interval from the falling BUSY edge. A 10 s black cutoff followed by a 13.5 s white cutoff left the first white visibly darker than a later white. Letting white finish to BUSY-ready gave a more repeatable erase.
+For changing digits, the firmware interrupted black after **10 s** with a hardware reset and let white finish to BUSY-ready. Cutting white at 13.5 s left the first erase visibly darker. [Digit video and ghosting measurements](/panels/dke-13-3-inch#digits-and-clock-markers).
 
-For the digit sequence **8 → 1 → 2 → 7**, the bench cut black at 10 s and allowed each white erase to finish. Across the four erases, the mean difference between old strokes and the blank comparison area ranged from **−0.18 to +1.69 camera-luma counts** on a 0–255 scale. Individual segments could leave larger differences.
-
-<video controls playsInline preload="none" poster="/panels/dke-13-3-inch/control/digit-erase-poster.webp" src="/panels/dke-13-3-inch/control/digit-erase.mp4" aria-label="Digit strokes before and after white erases for 8, 1, 2 and 7" />
-
-A clock could use an even earlier optical state. The firmware prepared the clock face, then updated a narrow region around the old and new marker. A host table selected a pixel code for each of the four logical transitions (white→white, white→black, black→white and black→black).
-
-| Clock trial | Cadence | What the camera found after 60 ticks |
-| --- | ---: | --- |
-| Single 100 ms drive, `MAPDIAL 1 22116655` | 0.997–1.000 s | All 60 tips detectable, 3.7% of the face classified as changed, with a residual yellow ring |
-| Two 100 ms drives, `MAPDIAL 2 2751A351` | 1.247–1.250 s | 59 tips detectable, 33.9% of the face classified as changed |
-| Blue-marker trial | About 1 s | 59 tips had strong dark contrast, 19 met the blue criterion and 18 met both |
-
-The short rim marker disturbed less of the dial than a hand crossing its center. A full-screen intermediate flash was avoidable in the clock demonstration. Local transients, a changing hue and cumulative residue remained. One minute of operation establishes the demonstrated cadence. Long-term wear and hour-long image retention were not measured.
+A short marker at the edge of the clock advanced **once per second for 60 ticks** on a 100 ms drive pulse per tick. The dial avoided a full-screen flash. A yellow ring remained after one revolution. The two-pulse version took 1.25 s per tick and left more of the face marked. [Blue-marker video](/panels/dke-13-3-inch/control/blue-marker.mp4).
 
 <video controls playsInline preload="none" poster="/panels/dke-13-3-inch/control/clock-poster.webp" src="/panels/dke-13-3-inch/control/clock.mp4" aria-label="Clock recording comparing one- and two-stage transition tables and their remaining marks" />
 
-<video controls playsInline preload="none" poster="/panels/dke-13-3-inch/control/blue-marker-poster.webp" src="/panels/dke-13-3-inch/control/blue-marker.mp4" aria-label="Blue-marker trial showing changes in the tip color over a minute" />
-
-[Download the two clock transition tables and measured cadence](/panels/dke-13-3-inch/control/clock-transitions.json).
-
 ## Red transitions, factory profiles and temperature
 
-Reducing the red update window, changing the temperature hint, and varying `CCSET` (`0xE0`) did not establish a fast red-only transition that completes without reset. In the profile comparison, the measured drive periods clustered around **14.9–15.1 s** and **23.5–23.8 s**. Returning to the initial setting restored the roughly 15 s timing. The color footage shows the intervening phases. It is insufficient to identify a particular factory waveform bank.
-
-<video controls playsInline preload="none" poster="/panels/dke-13-3-inch/control/red-profiles-poster.webp" src="/panels/dke-13-3-inch/control/red-profiles.mp4" aria-label="Red-window comparison across CCSET settings with the neighboring regions in view" />
-
-A programmed temperature hint and the ESP32's internal temperature are different from measured panel temperature. There was no temperature-chamber sweep. The tests also yielded no verified Ripple or Sparkle command sequence for this controller. Optical states obtained by cutting a refresh depend on the starting image, timing and panel position.
+Changing `CCSET` (`0xE0`) and the temperature hint produced no fast, red-only update that completed without reset. Ripple and Sparkle command sequences remain unverified. [Profile timings and red-window video](/panels/dke-13-3-inch#red-profile-trials).
 
 ## Native colors, orange and skin tones
 
-The normal completed waveform reproduces black, white, red, yellow, blue and green. All 16 image-code nibbles were compared after white and black preparation. None established a repeatable seventh native orange. Some short-pulse combinations approached an orange reference in a particular starting state. For still photographs, adjacent red and yellow pixels produced controllable orange mixtures.
+The panel produces black, white, red, yellow, blue and green. Orange required mixing adjacent red and yellow pixels for a repeatable result. For pale pink, a 4 × 4 tile used 14 white pixels and two red ones.
 
-<PanelPhoto src="/panels/dke-13-3-inch/control/orange.webp" width={880} height={508} alt="Uniform pixel codes compared with red, yellow and spatially mixed orange reference patches" caption="The red/yellow controls give an optical reference for testing whether a solid code actually produces orange." />
-
-For skin, a 4 × 4 tile varied the proportions of the native pigments. The 20 tested mixtures covered five measured brightness groups. For example, 14 white pixels and two red pixels made a very light pink. Darker mixtures need less white. Adjusting red and yellow changes the hue. The tile is visible under magnification. Its proportions describe an area average rather than an additional pigment.
-
-<PanelPhoto src="/panels/dke-13-3-inch/control/skin-tones.webp" width={785} height={645} alt="Twenty warm and cool skin-tone mixtures photographed on the physical panel" caption="Skin-tone samples from this panel. Apparent color depends on the light falling on the reflective display." />
+<PanelPhoto src="/panels/dke-13-3-inch/control/skin-tones.webp" width={785} height={645} alt="Twenty warm and cool skin-tone mixtures photographed on the physical panel" caption="Twenty skin-tone mixtures photographed on the panel. The tile pattern is visible under magnification." />
 
 ## Grayscale photographs, text and dithering
 
-A three-level rendering used black, gray and white for the photo and gray edge pixels for antialiased text. In the repeated test, the camera's white-patch luma was **188.9–189.5** with gray enabled and **190.2** in the ordinary monochrome render. The white reference was close across those captures. The change was much larger in intermediate tones.
+Gray edge pixels smoothed text while the white background stayed close to the monochrome reference. In the Apollo photograph, eight mixed levels preserved the folds in the bright sleeve. Sixteen reduced coarse grain but added fine texture. Six directly driven tones without dithering lost detail in the highlights.
 
-<PanelPhoto src="/panels/dke-13-3-inch/control/text-antialias.webp" width={344} height={352} alt="Enlarged source pixels showing gray samples along the edge of a letter" caption="Source pixel data for the antialiased text edge. The panel photographs below show optical output." />
+<PanelPhoto src="/panels/dke-13-3-inch/control/suit-tones.webp" width={1391} height={1040} alt="Eight mixed levels, sixteen mixed levels and six uniform recipes, with magnified spacesuit crops" caption="Compare the sleeve folds, glove and chest fittings across the three renderings. NASA, Apollo 11, AS11-40-5903." />
 
-Adding timed direct recipes introduced warm midtones and, in one version, a sepia cast. Mixing the measured recipes and adjusting the source tone curve reduced the cast. The brighter eight-level version lifted the spacesuit's midtones and highlights while keeping contrast close to the three-level reference. The black-to-white reference strip below the image is part of the test pattern. Uneven lighting, glare and prior image state can also affect an apparent band. A photograph alone does not establish a failed column.
-
-A Bayer tile assigns each physical pixel a fixed rank. A lighter mixture replaces more of the 16 positions with a lighter recipe. Repetition makes an orderly pattern in broad, flat areas. Error diffusion instead passes a quantization error to nearby pixels. The bright eight-level render used serpentine Floyd–Steinberg to select the tone and an ordered tile for mixed tones. Blue-noise and finer ordered patterns were also compared on the panel.
-
-<PanelPhoto src="/panels/dke-13-3-inch/control/bayer-tile.webp" width={1024} height={388} alt="Magnified Bayer arrangement beside its appearance in the grayscale image" caption="Inspect the magnified tile to see why smooth gradients can acquire a repeating texture." />
-
-<PanelPhoto src="/panels/dke-13-3-inch/control/dither-grain.webp" width={1438} height={861} alt="Physical camera crops comparing different spatial mixtures on the astronaut photograph" caption="Dither comparisons use corresponding patches of the same photograph. An added lamp changes the apparent grain and contrast, so use captures from the same comparison." />
-
-The Apollo photograph occupied **1040 × 1040 independently addressed pixels** within the 1600 × 1200 panel. Both photographed ramps of the 16-mixture rendering increased monotonically. Compared with the bright eight-level reference, the suit's coarse brightness variation fell about **7%**, while fine variation increased about **13%** on the same smooth source patches. Six individual drive recipes with spatial dithering disabled produced large white regions along the sleeve. The two darkest recipes nearly coincided.
-
-<PanelPhoto src="/panels/dke-13-3-inch/control/suit-tones.webp" width={1391} height={1040} alt="Eight mixed levels, sixteen mixed levels and six uniform recipes, with magnified spacesuit crops" caption="Actual panel captures. Compare the sleeve folds, glove and chest fittings. NASA image Apollo 11, AS11-40-5903, Neil Armstrong's photograph of Buzz Aldrin." />
+<PanelPhoto src="/panels/dke-13-3-inch/control/bayer-tile.webp" width={1024} height={388} alt="Magnified Bayer arrangement beside its appearance in the grayscale image" caption="A 4 × 4 Bayer tile repeats across flat areas. More pixels take the lighter tone as the source brightens, making the pattern visible up close." />
 
 ## Finding a lighter gray without dithering
 
-Each test field received one preparation code during a full drive and one target code during a timed partial drive. The initial screen tested all **256 pairs** at **2.1, 2.8, 3.6 and 4.6 seconds**. Selected values were tested on larger fields at additional timings from **1.85 to 2.45 seconds**. The old gray (`0x8A`) and white (`0x97`) at 2.8 s supplied the reference interval.
+**`0xFD` at 2.8 s** gave a cool gray about a quarter of the way from the previous gray to white. The three center fields below use this same recipe. `0x09` produced a paler tone, but at 2.1 s its brightness varied across the panel. [Pulse times and measured grays](/panels/dke-13-3-inch#uniform-gray-recipes).
 
-| Recipe and pulse | What reproduced on this panel |
-| --- | --- |
-| `0xFD`, 2.8 s | A cool intermediate gray about 23–24% of the way from the old gray to white. A second run placed it on 15 fields. The median was still 24% in a photograph taken 79 s later. |
-| `0x8D`, 2.8 s | A brighter, bluer intermediate, about 36–40% across the reference interval on five fields. |
-| `0x09`, 1.85 s | A much paler, slightly warm tone, about 84–88% across the interval in one five-position run. |
-| `0x09`, 2.1 s | Around 54–57% on the three right-hand samples but around 90% on the two left-hand samples in the first repeated-field test. Moving the patches reproduced the spatial difference. |
-
-These percentages are relative **camera luma** after reference and position correction. They are not calibrated reflectance. A single attractive swatch can give a misleading impression of what the entire photograph will look like. The 1.95 s camera capture also clipped its two brightest neutral-card patches and is unsuitable for a precise white-point comparison.
-
-<PanelPhoto src="/panels/dke-13-3-inch/control/uniform-gray.webp" width={1260} height={270} alt="Old gray, three positions receiving solid FD, and panel white in a confirmed 2.8-second test" caption="All three middle fields use the same uniform FD recipe. The differences between them include panel and lighting variation." />
-
-[Download the 1,024 measured combinations as CSV](/panels/dke-13-3-inch/control/pixel-recipes.csv). Each row identifies the time, both nibbles, field position and reference-matched camera readings. The full matrices sample each pair at only one position per time.
+<PanelPhoto src="/panels/dke-13-3-inch/control/uniform-gray.webp" width={1260} height={270} alt="Old gray, three positions receiving solid FD, and panel white in a confirmed 2.8-second test" caption="Left to right, the previous gray, three samples of FD, and white." />
 
 ## Setting a custom LUT
 
-**Host photo LUT.** The bench firmware can map source brightness to recipes you choose. Each byte packs two pixel values. For example, `FD` means prepare with nibble `F`, then write nibble `D` during the timed partial update. A common cutoff applies to the entire update. The interval begins at the active BUSY edge after display-refresh command `0x12`. It excludes image upload and the preceding full refreshes.
+**You can edit the photo LUT in the bench firmware.** It maps image brightness to two-pass pixel recipes. For example, `FD` prepares a pixel with code `F` and drives it with `D` during the timed update. Loading custom voltage waveforms into the NT61522 remains unverified.
 
-**Controller waveform LUT.** The NT61522's voltage phases, phase durations and repetition counts have no verified read/write format in these tests. Seeed's NT61522-family driver describes waveforms stored in chip-on-glass OTP. Its 13.3-inch driver sends initialization values, pixel data and a refresh command. It supplies no host waveform file. Reconstructing the factory table would require a verified readout or a known waveform payload with its register format. Several different voltage sequences can give the same photographed end color. [Seeed's 13.3-inch driver](https://github.com/Seeed-Studio/Seeed_GFX2/blob/c2a6dd6eafbaf805fff9be0cd4b019e071222f4b/src/driver/epaper/Driver_T133A01.cpp) · [NT61522-family driver notes](https://github.com/Seeed-Studio/Seeed_GFX2/blob/c2a6dd6eafbaf805fff9be0cd4b019e071222f4b/src/driver/epaper/Driver_GDEB0709E01.cpp) · [Module datasheet](https://files.seeedstudio.com/wiki/Other_Display/1330-E6-epaper/13.3_E6_eInk_Display_module_Datasheet.pdf).
-
-### Try a recipe on the bench firmware
-
-Send the following ASCII line followed by a newline on the frame-2 bench serial console at 115200 baud. The first argument is milliseconds. The next ten hex digits are five recipes. This command repeats `FD` beside gray and white references at different positions. It performs full preparation cycles before the timed partial drive.
-
-```text
-PATCHGRID 2800 FD8AFD97FD
-```
-
-### Edit the photo's brightness table
-
-Download the [direct-recipe photo LUT](/panels/dke-13-3-inch/control/photo-lut.csv?build=6382664) and [Python encoder/decoder](/panels/dke-13-3-inch/control/patch_palette.py) into the same directory. Edit `upper_luma` (inclusive source brightness from 0 to 255) and `recipe` (two hex digits). Keep 16 rows in nondecreasing threshold order, ending at 255. Repeating 255 pads unused rows. Then generate the command:
+1. Save the [example photo LUT (CSV)](/panels/dke-13-3-inch/control/photo-lut.csv?build=6382664) and [Python encoder/decoder](/panels/dke-13-3-inch/control/patch_palette.py) in the same directory.
+2. Edit the two-hex-digit `recipe` and its inclusive brightness limit, `upper_luma` (0–255). Use 16 rows with nondecreasing thresholds ending at 255. Repeat 255 to fill unused rows.
+3. Generate the command in that directory.
 
 ```sh
 python3 patch_palette.py photo photo-lut.csv
 ```
 
-Send the printed `FINEPHOTO` line to render the built-in Apollo photo with your table. In this firmware the photo command uses a **2.8 s** partial pulse. The sample uses six direct recipes and no spatial mixing in the lookup table. The thresholds are an editable example chosen for this photograph. To inspect a command, pass the entire quoted line to `python3 patch_palette.py decode`. Photo commands decode back to editable CSV. Camera results describe this bench unit and its preparation sequence. The stock firmware has a different command interface.
-
-<PanelPhoto src="/panels/dke-13-3-inch/control/apollo-host-lut.webp?build=6382664" width={1550} height={872} alt="Apollo photograph on the 13.3-inch frame after applying the downloadable six-recipe host LUT" caption="The downloadable table rendered on frame-2. The large steps in the suit highlights show where this particular palette runs out of intermediate brightness levels." />
+Send the printed `FINEPHOTO` line followed by a newline to the bench serial console at 115200 baud. It renders the built-in Apollo photo with your table and a 2.8 s partial pulse. [Photo rendered with the example LUT](/panels/dke-13-3-inch/control/apollo-host-lut.webp?build=6382664).
