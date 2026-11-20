@@ -21,7 +21,7 @@ The controller clock setting is register `0x30`. All three BUSY measurements bel
 
 The rates are setting names. The footage shows the length and appearance of the sequence. The camera delivered roughly 7–8 frames per second in this comparison, so it can miss very brief flashes. Color and white point should be judged from the settled image beside the reference card. Other normal refreshes on this unit took about 27 seconds. At 75 Hz the green shifted toward yellow-green. At 120 Hz the blue field became paler and developed a vertical tonal band, and the green shifted further.
 
-<video controls playsInline preload="none" poster="/panels/dke-13-3-inch/control/refresh-poster.webp" src="/panels/dke-13-3-inch/control/refresh.mp4" aria-label="Real-time side-by-side full refresh in normal, 75 Hz and 120 Hz modes" />
+<video controls playsInline preload="none" poster="/panels/dke-13-3-inch/control/refresh-poster.webp" src="/panels/dke-13-3-inch/control/refresh.mp4?build=6382664" aria-label="Real-time side-by-side full refresh in normal, 75 Hz and 120 Hz modes" />
 
 The three recordings are aligned to the start of the measured drive pulse and play in real time. The faster panel reaches its final image while the normal run is still cycling.
 
@@ -130,7 +130,7 @@ PATCHGRID 2800 FD8AFD97FD
 
 ### Edit the photo's brightness table
 
-Download the [direct-recipe photo LUT](/panels/dke-13-3-inch/control/photo-lut.csv) and [Python encoder/decoder](/panels/dke-13-3-inch/control/patch_palette.py) into the same directory. Edit `upper_luma` (inclusive source brightness from 0 to 255) and `recipe` (two hex digits). Keep 16 rows in nondecreasing threshold order, ending at 255. Repeating 255 pads unused rows. Then generate the command:
+Download the [direct-recipe photo LUT](/panels/dke-13-3-inch/control/photo-lut.csv?build=6382664) and [Python encoder/decoder](/panels/dke-13-3-inch/control/patch_palette.py) into the same directory. Edit `upper_luma` (inclusive source brightness from 0 to 255) and `recipe` (two hex digits). Keep 16 rows in nondecreasing threshold order, ending at 255. Repeating 255 pads unused rows. Then generate the command:
 
 ```sh
 python3 patch_palette.py photo photo-lut.csv
@@ -138,4 +138,4 @@ python3 patch_palette.py photo photo-lut.csv
 
 Send the printed `FINEPHOTO` line to render the built-in Apollo photo with your table. In this firmware the photo command uses a **2.8 s** partial pulse. The sample uses six direct recipes and no spatial mixing in the lookup table. The thresholds are an editable example chosen for this photograph. To inspect a command, pass the entire quoted line to `python3 patch_palette.py decode`. Photo commands decode back to editable CSV. Camera results describe this bench unit and its preparation sequence. The stock firmware has a different command interface.
 
-<PanelPhoto src="/panels/dke-13-3-inch/control/apollo-host-lut.webp" width={1550} height={872} alt="Apollo photograph on the 13.3-inch frame after applying the downloadable six-recipe host LUT" caption="The downloadable table rendered on frame-2. The large steps in the suit highlights show where this particular palette runs out of intermediate brightness levels." />
+<PanelPhoto src="/panels/dke-13-3-inch/control/apollo-host-lut.webp?build=6382664" width={1550} height={872} alt="Apollo photograph on the 13.3-inch frame after applying the downloadable six-recipe host LUT" caption="The downloadable table rendered on frame-2. The large steps in the suit highlights show where this particular palette runs out of intermediate brightness levels." />
