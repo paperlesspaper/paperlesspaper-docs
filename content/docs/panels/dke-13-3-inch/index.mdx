@@ -1,6 +1,6 @@
 ---
 title: DKE 13.3 inch (DEPG1330RTE133F5HP)
-description: Solid colors, dithered mixtures, and measurement setup for the DKE 13.3-inch Spectra 6 panel.
+description: Color measurements, refresh timings, partial updates, and grayscale recipe tests for the DKE 13.3-inch Spectra 6 panel.
 ---
 
 import { SolidColorPalette, MixtureColorSwatches, PanelPhoto } from "@/components/panels/color-measurements";
@@ -10,7 +10,7 @@ The DEPG1330RTE133F5HP is a 13.3-inch Spectra 6 panel with a 1600 × 1200 pixel 
 
 These are camera-based estimates under the test lighting. See the [Panels overview](/panels/overview) for the shared setup, method, and how to read the swatches.
 
-For refresh timing, partial updates, and programmable pixel recipes, see [Display control](/panels/dke-13-3-inch/display-control).
+Jump to the [display control measurements](#display-control-measurements) for the refresh and grayscale trials. For settings and a working photo LUT example, see [Display control](/panels/dke-13-3-inch/display-control).
 
 ## Setup
 
@@ -101,3 +101,81 @@ See the [measurement limits](/panels/overview#measurement-limits) before using t
 - [Position comparison (JSON)](/panels/dke-13-3-inch/2026-11-10/comparison.json) — including excluded observations.
 - [Measurement table (CSV)](/panels/dke-13-3-inch/2026-11-10/measurements.csv).
 - Native test images: [chart 1](/panels/dke-13-3-inch/2026-11-10/central-1.png), [chart 2](/panels/dke-13-3-inch/2026-11-10/central-2.png), [chart 3](/panels/dke-13-3-inch/2026-11-10/central-3.png). Keep their original pixel dimensions and colors when repeating the test.
+
+## Display control measurements
+
+These trials used the experimental firmware on `frame-2`. BUSY times cover the panel drive. They exclude image transfer and power-up. The full-frame recordings were aligned at the start of the drive and captured at roughly 7–8 frames per second. Short flashes can fall between captured frames.
+
+### Full and partial refresh timings
+
+| Trial | BUSY |
+| --- | ---: |
+| Full color, normal dynamic clock | 35.825 s |
+| Full color, nominal 75 Hz | 23.857 s |
+| Full color, nominal 120 Hz | 14.930 s |
+| Full monochrome, fast clock | 14.927 s |
+| Initial 240 × 400 partial window, fast clock | 14.944 s |
+| Direct comparison of refresh arguments `0x00` and `0x01` | 14.948 s each |
+
+Other normal refreshes took about 27 s on this panel. In the initial window trial the exterior faded even when its image RAM contents stayed the same. The “VCOM” label in the comparison identifies the argument byte sent with display refresh `0x12`. With `0x01`, the sampled exterior patches stayed close to their initial readings across repeated changes.
+
+### Digits and clock markers
+
+Across five black/white steps, black reached 90% of its measured optical change at 9.90–9.92 s and white at 13.50–13.53 s. BUSY remained active. The cutoff was a hardware reset timed from the falling BUSY edge. For **8 → 1 → 2 → 7**, black ran for 10 s and each white erase finished. The mean difference between old strokes and the blank comparison area ranged from −0.18 to +1.69 camera-luma counts (0–255) across four erases. Individual segments showed larger differences.
+
+<video controls playsInline preload="none" poster="/panels/dke-13-3-inch/control/digit-erase-poster.webp" src="/panels/dke-13-3-inch/control/digit-erase.mp4" aria-label="Digit strokes before and after white erases for 8, 1, 2 and 7" />
+
+Each tick updated a narrow window around the old and new marker. A host table selected codes for the four black/white transitions. A rim marker disturbed less of the dial than a hand crossing the center.
+
+| Trial | Tick interval | Camera observations after 60 ticks |
+| --- | ---: | --- |
+| One 100 ms pulse, `MAPDIAL 1 22116655` | 0.997–1.000 s | 60 tips detectable, 3.7% of face classified as changed, residual yellow ring |
+| Two 100 ms pulses, `MAPDIAL 2 2751A351` | 1.247–1.250 s | 59 tips detectable, 33.9% of face classified as changed |
+| Blue marker | About 1 s | 59 tips had strong dark contrast, 19 met the blue criterion, 18 met both |
+
+Each run lasted one minute. Longer-term retention and wear remain unmeasured. [Transition tables and timing data (JSON)](/panels/dke-13-3-inch/control/clock-transitions.json) · [Blue-marker recording](/panels/dke-13-3-inch/control/blue-marker.mp4).
+
+### Red profile trials
+
+The red-window trials varied window size, the programmed temperature hint and `CCSET` (`0xE0`). Drive periods clustered at 14.9–15.1 s and 23.5–23.8 s. Returning to the initial setting restored approximately 15 s. The observed phases do not identify a particular factory waveform bank. Panel temperature was not measured or swept in a chamber.
+
+<video controls playsInline preload="none" poster="/panels/dke-13-3-inch/control/red-profiles-poster.webp" src="/panels/dke-13-3-inch/control/red-profiles.mp4" aria-label="Red-window comparison across CCSET settings with the neighboring regions in view" />
+
+### Color and grayscale comparisons
+
+All 16 image codes were tested after both white and black preparation. Some short pulses approached orange from a particular starting state. No single code produced repeatable solid orange on completion. The 20 tiled skin-tone mixtures fell into five measured brightness groups.
+
+<PanelPhoto src="/panels/dke-13-3-inch/control/orange.webp" width={880} height={508} alt="Uniform pixel codes compared with red, yellow and spatially mixed orange reference patches" caption="Uniform pixel codes beside red, yellow and spatially mixed orange reference fields." />
+
+The repeated three-level photo and text test gave a white-patch camera luma of 188.9–189.5 against 190.2 in the ordinary monochrome render. Some direct midtone recipes had a sepia cast. Mixing recipes and adjusting the source tone curve reduced it.
+
+<PanelPhoto src="/panels/dke-13-3-inch/control/text-antialias.webp" width={344} height={352} alt="Enlarged source pixels showing gray samples along the edge of a letter" caption="Source pixels along the letter edge show where the renderer assigns gray." />
+
+The Apollo photo occupied 1040 × 1040 individually addressed pixels. The bright eight-level version used serpentine Floyd–Steinberg to select the tone and ordered tiles for mixed levels. Both measured ramps in the 16-mixture trial increased monotonically. On matching smooth patches of the suit, coarse brightness variation fell about 7% and fine variation rose about 13% relative to eight levels. Of the six direct recipes, the two darkest nearly coincided. The reference strip below the photo belongs to the test pattern.
+
+<PanelPhoto src="/panels/dke-13-3-inch/control/dither-grain.webp" width={1438} height={861} alt="Physical camera crops comparing different spatial mixtures on the astronaut photograph" caption="Corresponding camera crops from the dither trials. Compare samples under the same lighting when judging grain." />
+
+### Uniform gray recipes
+
+Each field received a preparation code during a full drive, then a target code during a timed partial update. Each of the 256 pairs was sampled at one position per pulse time (2.1, 2.8, 3.6 and 4.6 s). Selected pairs were repeated on larger fields at additional times from 1.85 to 2.45 s.
+
+| Recipe | Pulse | Position-corrected camera luma between the old gray and white |
+| --- | ---: | --- |
+| `0xFD` | 2.8 s | 23–24%, cool gray. Repeated at 15 positions. Median still 24% after 79 s. |
+| `0x8D` | 2.8 s | 36–40%, brighter and bluer, across five fields. |
+| `0x09` | 1.85 s | 84–88%, pale and slightly warm, in one five-position run. |
+| `0x09` | 2.1 s | 54–57% at three right-hand positions and about 90% at two left-hand positions. Moving the patches reproduced the difference. |
+
+The scale runs from gray (`0x8A`) to white (`0x97`), both at 2.8 s, and describes relative camera brightness. Absolute reflectance was not measured. Two bright reference-card patches clipped in the 1.95 s capture. [All 1,024 measurements with times, pixel codes, field positions and camera readings (CSV)](/panels/dke-13-3-inch/control/pixel-recipes.csv).
+
+To repeat the `FD` trial, send the line below followed by a newline to the frame-2 bench console at 115200 baud. The first argument is the partial drive time in milliseconds, starting at the active BUSY edge after `0x12`. The five bytes specify alternating samples of `FD`, old gray and white. Full preparation cycles precede the timed drive.
+
+```text
+PATCHGRID 2800 FD8AFD97FD
+```
+
+The photo encoder can also decode an existing command back to CSV. Pass the quoted command line to `python3 patch_palette.py decode`. [Photo LUT example and encoder](/panels/dke-13-3-inch/display-control#setting-a-custom-lut).
+
+### Controller waveform references
+
+Seeed's NT61522-family driver describes chip-on-glass OTP waveform storage. Its 13.3-inch driver supplies initialization, image codes and a refresh command. Neither the driver nor these optical trials establish a verified host command for loading the internal phase table. [13.3-inch driver](https://github.com/Seeed-Studio/Seeed_GFX2/blob/c2a6dd6eafbaf805fff9be0cd4b019e071222f4b/src/driver/epaper/Driver_T133A01.cpp) · [NT61522-family driver notes](https://github.com/Seeed-Studio/Seeed_GFX2/blob/c2a6dd6eafbaf805fff9be0cd4b019e071222f4b/src/driver/epaper/Driver_GDEB0709E01.cpp) · [Module datasheet](https://files.seeedstudio.com/wiki/Other_Display/1330-E6-epaper/13.3_E6_eInk_Display_module_Datasheet.pdf).
