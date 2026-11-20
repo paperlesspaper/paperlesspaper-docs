@@ -10,11 +10,20 @@ These results come from one 13.3-inch OpenPaper L (`frame-2`, DKE DEPG1330RTE133
 <Callout type="info" title="What the bench firmware can do">
 
 - **Refresh color images faster.** At 120 Hz the panel drive took 14.9 s versus 35.8 s in normal mode. Blue became paler and green shifted toward yellow.
+- **Draw text one letter at a time.** The 14-letter paperlesspaper logo appeared in 6.38 s on a prepared white screen, with no full-screen flash visible during drawing.
 - **Update part of the screen.** Repeated black/white updates kept the surrounding colors close to their starting values. A clock marker ticked once per second without a full-screen flash, leaving a yellow ring after one minute.
 - **Render more shades.** Mixing neighboring pixels produced orange, skin tones and up to 16 grayscale levels. A two-pass update also produced a uniform light gray without dithering.
 - **Tune photos and smooth text.** An editable photo LUT lets you choose which gray represents each brightness range. Gray edge pixels smooth the outlines of letters.
 
 </Callout>
+
+## Letter-by-letter animation
+
+Watch the top line spell PAPER. As the lower line spells LESSPAPER, the rectangle grows alongside it. Each partial update adds one blue letter and preserves the ink already on the panel. The median interval between letter starts was **0.44 s**.
+
+<video controls playsInline preload="none" width={2560} height={1440} poster="/panels/dke-13-3-inch/control/letter-by-letter-poster.webp" src="/panels/dke-13-3-inch/control/letter-by-letter.mp4" aria-label="Real-time recording of the paperlesspaper logo appearing one letter at a time on OpenPaper L" />
+
+The recording starts with the panel already white. Preparing that white screen took **38.5 s** before drawing began. Drawing the rectangle in four separate strokes instead took **8.50 s** for the whole logo. [Timing comparison and recordings](/panels/dke-13-3-inch#letter-by-letter-animation).
 
 ## Full-frame speed, flashing and color
 
