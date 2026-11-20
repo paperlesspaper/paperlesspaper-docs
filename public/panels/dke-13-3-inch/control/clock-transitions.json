@@ -1,0 +1,70 @@
+{
+  "target": "frame-2",
+  "firmware": "v17",
+  "kind": "host pixel transition table",
+  "pixel_ram_command": "0x10",
+  "ccset": "0x01",
+  "drf": "0x01",
+  "pll": "0x07",
+  "pulse_cut_us": 100000,
+  "definitions": {
+    "W": "logical white",
+    "B": "logical black"
+  },
+  "trials": [
+    {
+      "command": "MAPDIAL 1 22116655",
+      "stage_count": 1,
+      "pixel_codes": {
+        "WW": [
+          2
+        ],
+        "WB": [
+          1
+        ],
+        "BW": [
+          6
+        ],
+        "BB": [
+          5
+        ]
+      },
+      "tick_interval_ms": [
+        997,
+        1000
+      ],
+      "detectable_dark_tips": 60,
+      "yellow_ring": 24.0,
+      "changed_face_pct": 3.7
+    },
+    {
+      "command": "MAPDIAL 2 2751A351",
+      "stage_count": 2,
+      "pixel_codes": {
+        "WW": [
+          2,
+          7
+        ],
+        "WB": [
+          5,
+          1
+        ],
+        "BW": [
+          10,
+          3
+        ],
+        "BB": [
+          5,
+          1
+        ]
+      },
+      "tick_interval_ms": [
+        1247,
+        1250
+      ],
+      "detectable_dark_tips": 59,
+      "yellow_ring": 33.0,
+      "changed_face_pct": 33.9
+    }
+  ]
+}
