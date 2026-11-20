@@ -135,6 +135,27 @@ Each tick updated a narrow window around the old and new marker. A host table se
 
 Each run lasted one minute. Longer-term retention and wear remain unmeasured. [Transition tables and timing data (JSON)](/panels/dke-13-3-inch/control/clock-transitions.json) · [Blue-marker recording](/panels/dke-13-3-inch/control/blue-marker.mp4).
 
+### Letter-by-letter animation
+
+The same 1488 × 444 logo fits across 93% of the panel width. Each of its 14 letters appears in a separate update. Drawing time runs from the start of the first step to the controller's completion report. We checked the finished logo against the camera recording. Each row is a single run on `frame-2` and excludes the white preparation.
+
+| Playback | Outline | Partial updates | Pulse | Drawing time |
+| --- | --- | ---: | ---: | ---: |
+| Streamed from the host | 12 segments | 26 | 100 ms | 20.37 s |
+| Preloaded on the device | 12 segments | 26 | 100 ms | 14.90 s |
+| Preloaded on the device | 12 segments | 26 | 60 ms | 13.87 s |
+| Reuse the reset at pulse cutoff | 12 segments | 26 | 100 ms | 13.21 s |
+| Reuse the reset at pulse cutoff | 12 segments | 26 | 60 ms | 12.11 s |
+| Reuse the reset at pulse cutoff | 12 segments | 26 | 40 ms | 11.46 s |
+| Draw one whole edge per update | 4 edges | 18 | 60 ms | 8.50 s |
+| Draw the outline with the lower letters | No separate outline steps | 14 | 60 ms | **6.38 s** |
+
+With 12 outline segments, shortening the pulse from 60 to 40 ms saved 0.65 s and made the blue letters lighter. Median camera luma inside the letters rose from 65 to 70 on a 0–255 scale. The white reference measured 169 in both runs. [Three runs side by side (video)](/panels/dke-13-3-inch/control/letter-by-letter-pulse-comparison.mp4) · [Four-edge animation (video)](/panels/dke-13-3-inch/control/letter-by-letter-four-edges.mp4).
+
+The fastest complete run used `PLOTREADY 60` in bench firmware v39. It waited for the power-on BUSY cycle before every pulse and omitted the extra 30 ms settling delay after the first letter. The median interval between letter starts was 0.441 s. White preparation took 38.50 s. The camera captured 95 frames during drawing at 1440 × 2560 sensor pixels. The landscape video rotates them to 2560 × 1440 and preserves their timestamps. [Watch the complete run](/panels/dke-13-3-inch/display-control#letter-by-letter-animation).
+
+**Failed power-on trial.** With `PLOTDIRECT 60`, the firmware skipped power-on after the first letter. It logged all 14 cutoff events in 2.53 s, but the camera showed only the first P.
+
 ### Red profile trials
 
 The red-window trials varied window size, the programmed temperature hint and `CCSET` (`0xE0`). Drive periods clustered at 14.9–15.1 s and 23.5–23.8 s. Returning to the initial setting restored approximately 15 s. The observed phases do not identify a particular factory waveform bank. Panel temperature was not measured or swept in a chamber.
