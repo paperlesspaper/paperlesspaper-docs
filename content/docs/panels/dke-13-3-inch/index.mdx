@@ -148,13 +148,28 @@ The same 1488 × 444 logo fits across 93% of the panel width. Each of its 14 let
 | Reuse the reset at pulse cutoff | 12 segments | 26 | 60 ms | 12.11 s |
 | Reuse the reset at pulse cutoff | 12 segments | 26 | 40 ms | 11.46 s |
 | Draw one whole edge per update | 4 edges | 18 | 60 ms | 8.50 s |
-| Draw the outline with the lower letters | No separate outline steps | 14 | 60 ms | **6.38 s** |
+| Draw the outline with the lower letters | No separate outline steps | 14 | 60 ms | 6.38 s |
+| Draw the outline with the lower letters | No separate outline steps | 14 | 40 ms | **6.10 s** |
 
 With 12 outline segments, shortening the pulse from 60 to 40 ms saved 0.65 s and made the blue letters lighter. Median camera luma inside the letters rose from 65 to 70 on a 0–255 scale. The white reference measured 169 in both runs. [Three runs side by side (video)](/panels/dke-13-3-inch/control/letter-by-letter-pulse-comparison.mp4) · [Four-edge animation (video)](/panels/dke-13-3-inch/control/letter-by-letter-four-edges.mp4).
 
-The fastest complete run used `PLOTREADY 60` in bench firmware v39. It waited for the power-on BUSY cycle before every pulse and omitted the extra 30 ms settling delay after the first letter. The median interval between letter starts was 0.441 s. White preparation took 38.50 s. The camera captured 95 frames during drawing at 1440 × 2560 sensor pixels. The landscape video rotates them to 2560 × 1440 and preserves their timestamps. [Watch the complete run](/panels/dke-13-3-inch/display-control#letter-by-letter-animation).
+The 6.38 s run used `PLOTREADY 60` in bench firmware v39. It waited for the power-on BUSY cycle before every pulse and omitted the extra 30 ms settling delay after the first letter. The median interval between letter starts was 0.441 s. White preparation took 38.50 s. The camera captured 95 frames during drawing at 1440 × 2560 sensor pixels. The landscape video rotates them to 2560 × 1440 and preserves their timestamps. [Watch the complete run](/panels/dke-13-3-inch/display-control#letter-by-letter-animation).
+
+Two runs with `PLOTREADY 40` finished in 6.099 and 6.103 s. The camera resolved all 14 letters in sequence in the comparison take. [60 ms and 40 ms side by side in real time](/panels/dke-13-3-inch/control/logo-60-vs-40ms.mp4).
 
 **Failed power-on trial.** With `PLOTDIRECT 60`, the firmware skipped power-on after the first letter. It logged all 14 cutoff events in 2.53 s, but the camera showed only the first P.
+
+### Path demo timings
+
+Each row is one run on `frame-2` with the v39 bench firmware. The host streamed one window per drawing step using `MOON`. Each window received a 100 ms blue pulse. Drawing time includes serial transfer and controller setup, from the first window request to the final completion report. The white preparation preceded that interval.
+
+| Demo | Windows | Drawing time | Camera frames during drawing |
+| --- | ---: | ---: | ---: |
+| Midnight Edition | 93 | 65.74 s | 658 |
+| Last Train Home | 57 | 39.94 s | 399 |
+| Signal from the Moon | 66 | 44.77 s | 447 |
+
+The UGREEN camera recorded at 1440 × 2560. The three landscape videos show a 1616 × 1232 crop around the panel and preserve the timestamp of each captured frame. [Watch the three path demos](/panels/dke-13-3-inch/display-control#path-demos).
 
 ### Red profile trials
 

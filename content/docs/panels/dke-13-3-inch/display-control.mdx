@@ -10,7 +10,7 @@ These results come from one 13.3-inch OpenPaper L (`frame-2`, DKE DEPG1330RTE133
 <Callout type="info" title="What the bench firmware can do">
 
 - **Refresh color images faster.** At 120 Hz the panel drive took 14.9 s versus 35.8 s in normal mode. Blue became paler and green shifted toward yellow.
-- **Draw text one letter at a time.** The 14-letter paperlesspaper logo appeared in 6.38 s on a prepared white screen, with no full-screen flash visible during drawing.
+- **Draw letters and curves in place.** The 14-letter paperlesspaper logo appeared in 6.10 s on a prepared white screen, with no full-screen flash visible during drawing. [Watch the path demos](#path-demos).
 - **Update part of the screen.** Repeated black/white updates kept the surrounding colors close to their starting values. A clock marker ticked once per second without a full-screen flash, leaving a yellow ring after one minute.
 - **Render more shades.** Mixing neighboring pixels produced orange, skin tones and up to 16 grayscale levels. A two-pass update also produced a uniform light gray without dithering.
 - **Tune photos and smooth text.** An editable photo LUT lets you choose which gray represents each brightness range. Gray edge pixels smooth the outlines of letters.
@@ -23,7 +23,29 @@ Watch the top line spell PAPER. As the lower line spells LESSPAPER, the rectangl
 
 <video controls playsInline preload="none" width={2560} height={1440} poster="/panels/dke-13-3-inch/control/letter-by-letter-poster.webp" src="/panels/dke-13-3-inch/control/letter-by-letter.mp4?build=c2af14a" aria-label="Real-time recording of the paperlesspaper logo appearing one letter at a time on OpenPaper L" />
 
-The recording starts with the panel already white. Preparing that white screen took **38.5 s** before drawing began. Drawing the rectangle in four separate strokes instead took **8.50 s** for the whole logo. [Timing comparison and recordings](/panels/dke-13-3-inch#letter-by-letter-animation).
+The recording starts with the panel already white. Preparing that white screen took **38.5 s** before drawing began. With a 40 ms pulse, all 14 letters appeared in **6.10 s**, down from **6.38 s** at 60 ms. [Watch both runs side by side in real time](/panels/dke-13-3-inch/control/logo-60-vs-40ms.mp4). [Timing comparison and recordings](/panels/dke-13-3-inch#letter-by-letter-animation).
+
+## Path demos
+
+Each recording starts on a prepared white screen and runs at real speed. A partial update adds a short piece of a curve, a printed character or a Morse symbol. Previously drawn details stay on the page while the next mark can appear anywhere on the panel. [Step counts and drawing times](/panels/dke-13-3-inch#path-demo-timings).
+
+### Midnight Edition
+
+**HOLD THE FRONT PAGE** goes to press first. The headline “The city after dark” appears one letter at a time. Follow the crescent, towers and suspension cables as the bridge is drawn. The East River dateline completes the edition.
+
+<video controls playsInline preload="none" width={1616} height={1232} poster="/panels/dke-13-3-inch/control/midnight-edition.webp" src="/panels/dke-13-3-inch/control/midnight-edition.mp4" aria-label="Midnight Edition on OpenPaper L, from the first printed words to the finished bridge and dateline" />
+
+### Last Train Home
+
+Start at **East End**, on the right. The track turns north to East Market, bends south through Canal and doubles back toward Home. Each station circle closes before its name appears. On the straight stretch by Museum, the joins between blue strokes are slightly darker.
+
+<video controls playsInline preload="none" width={1616} height={1232} poster="/panels/dke-13-3-inch/control/last-train-home.webp" src="/panels/dke-13-3-inch/control/last-train-home.mp4" aria-label="A train route draws itself from East End to Home, with seven stations appearing in travel order" />
+
+### Signal from the Moon
+
+Read the signal outward from the antenna. A dash spells **T**, four dots spell **H**, and one dot spells **E**. Each decoded letter appears below its completed Morse group until the page reads **THE EAGLE HAS LANDED**.
+
+<video controls playsInline preload="none" width={1616} height={1232} poster="/panels/dke-13-3-inch/control/signal-from-the-moon.webp" src="/panels/dke-13-3-inch/control/signal-from-the-moon.mp4" aria-label="Dots and dashes follow a spiral while the decoded message THE EAGLE HAS LANDED appears letter by letter" />
 
 ## Full-frame speed, flashing and color
 
