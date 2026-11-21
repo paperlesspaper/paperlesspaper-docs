@@ -3,6 +3,7 @@ title: Overview
 description: Compare stock and experimental Spectra 6 rendering, find a refresh strategy for your project, and inspect the panel measurements.
 ---
 
+import warning from "@/components/panels/experimental-warning.module.css";
 import { DemoVideo } from "@/components/panels/demo-video";
 import { MovedCalibrationSection } from "@/components/panels/moved-calibration-section";
 import { PhotoComparison } from "@/components/panels/photo-comparison";
@@ -10,7 +11,14 @@ import { PanelPhoto, PanelPhotoGallery } from "@/components/panels/color-measure
 
 <MovedCalibrationSection />
 
-The **7.3-inch OpenPaper 7** trials change the image sent to stock firmware. The **13.3-inch OpenPaper L** trials also change how the NT61522 drives the panel, using experimental firmware on one test unit.
+<aside className={`not-prose ${warning.banner}`} aria-labelledby="experimental-panel-warning">
+  <img className={warning.sign} src="/panels/experimental-warning-sign.webp" width={368} height={410} alt="" />
+  <div className={warning.copy}>
+    <strong className={warning.title} id="experimental-panel-warning">Experimental panel tests</strong>
+    <p>Changing how the controller drives the display can permanently damage or destroy your panel.</p>
+    <p>If you have questions, <a href="mailto:robert@wirewire.de">email Robert before testing</a>.</p>
+  </div>
+</aside>
 
 ## Portrait on OpenPaper L
 

@@ -1,0 +1,56 @@
+.banner {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: clamp(5rem, 17%, 8rem) 1fr;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 1.25rem 0 .8rem;
+  margin: 1.5rem 0;
+  color: #fff;
+}
+
+.banner::before {
+  position: absolute;
+  z-index: -1;
+  inset: .75rem 0 .35rem;
+  border-radius: .8rem;
+  background: #a62332;
+  content: "";
+}
+
+.sign {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 .2rem .2rem rgb(42 8 12 / 20%));
+}
+
+.copy {
+  padding-block: 1.65rem 1.35rem;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.copy p {
+  margin: .35rem 0 0;
+  line-height: 1.5;
+}
+
+.copy a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: .16em;
+}
+
+@media (max-width: 36rem) {
+  .banner {
+    grid-template-columns: 3.8rem 1fr;
+    align-items: start;
+    gap: .65rem;
+    padding-inline: .45rem .9rem;
+  }
+}
