@@ -3,24 +3,23 @@ title: Display control
 description: Refresh speed, partial updates and measured color and grayscale photo LUTs for the 13.3-inch OpenPaper L.
 ---
 
+import { DemoVideo } from "@/components/panels/demo-video";
 import { PanelPhoto } from "@/components/panels/color-measurements";
 
-These results come from one 13.3-inch OpenPaper L (`frame-2`, DKE DEPG1330RTE133F5HP) running experimental bench firmware. [Test data and recordings](/panels/dke-13-3-inch#display-control-measurements).
+<Callout type="info" title="Choose the update for the job">
 
-<Callout type="info" title="What the bench firmware can do">
-
-- **Refresh color images faster.** At 120 Hz the panel drive took 14.9 s versus 35.8 s in normal mode. Blue became paler and green shifted toward yellow.
-- **Draw letters and curves in place.** The 14-letter paperlesspaper logo appeared in 6.10 s on a prepared white screen, with no full-screen flash visible during drawing. [Watch the path demos](#path-demos).
-- **Update part of the screen.** Repeated black/white updates kept the surrounding colors close to their starting values. A clock marker ticked once per second without a full-screen flash, leaving a yellow ring after one minute.
-- **Render more shades.** Mixing neighboring pixels produced orange, skin tones and up to 16 grayscale levels. A two-pass update also produced a uniform light gray without dithering.
-- **Reduce grain in color photos.** Using all 16 image codes in one full refresh reduced measured grain by 22% across 12 color patches. [Compare the photographs](#color-photos-with-less-grain).
-- **Tune grayscale photos and smooth text.** An editable photo LUT sets the gray for each brightness range. Gray edge pixels smooth letter outlines.
+- **Change the whole picture.** The [faster clock](#full-frame-speed-flashing-and-color) cut panel drive from **35.8 to 14.9 s**. See how much blue and green change before using it for photos.
+- **Keep a color background on screen.** The [departure board](#berlin-hbf-departure-board) advances its seconds and route bar locally. For fields that must erase cleanly, compare [both partial-refresh settings](#partial-updates-and-the-area-outside-the-window).
+- **Add marks without a visible full-screen flash.** On prepared white, [14 separate letters](#letter-by-letter-animation) took **6.10 s**. A [one-second clock marker](#early-cutoff-digits-and-a-one-second-hand) showed where ghosting accumulates.
+- **Smooth photographic shading.** An [experimental image palette](#color-photos-with-less-grain) reduced grain by **22%** across 12 test patches in one normal refresh.
 
 </Callout>
 
+These recordings show a single 1600 × 1200 OpenPaper L on experimental bench firmware. The normal dynamic clock is the full-frame reference. The timings below distinguish panel BUSY, drawing a whole sequence and the interval between ticks. [Test data and recordings](/panels/dke-13-3-inch#display-control-measurements).
+
 ## Berlin Hbf departure board
 
-A full-color refresh draws the simulated timetable, including the scheduled times, destinations and platforms. Once a second, one partial refresh updates two small windows together. One advances the clock digits at the top right. The other extends the blue route bar. The bar reaches Hamburg in 20 seconds.
+Draw the timetable in one full-color refresh. Put frequently changing fields in their own windows and leave the destinations, platforms and colored headings in the base image. Once a second, one partial refresh updates two small windows together. One advances the clock digits at the top right. The other extends the blue route bar. The bar reaches Hamburg in 20 seconds.
 
 Separate partial refreshes change the ICE’s **Expected** time from **18:46** to **18:49** and then **18:51**, and make the **paperlesspaper.de** wordmark blink three times.
 
@@ -28,37 +27,35 @@ Separate partial refreshes change the ICE’s **Expected** time from **18:46** t
 
 ## Letter-by-letter animation
 
-Watch the top line spell PAPER. As the lower line spells LESSPAPER, the rectangle grows alongside it. Each partial update adds one blue letter and preserves the ink already on the panel. The median interval between letter starts was **0.44 s**.
+Watch the top line spell PAPER. As the lower line spells LESSPAPER, the rectangle grows alongside it. Each partial update adds one blue letter and preserves the ink already on the panel. This real-time take uses 60 ms pulses. The median interval between letter starts was **0.44 s**.
 
-<video controls playsInline preload="none" width={2560} height={1440} poster="/panels/dke-13-3-inch/control/letter-by-letter-poster.webp" src="/panels/dke-13-3-inch/control/letter-by-letter.mp4?build=c2af14a" aria-label="Real-time recording of the paperlesspaper logo appearing one letter at a time on OpenPaper L" />
+<DemoVideo width={2560} height={1440} poster="/panels/dke-13-3-inch/control/letter-by-letter-poster.webp" src="/panels/dke-13-3-inch/control/letter-by-letter.mp4?build=c2af14a" aria-label="Real-time recording of the paperlesspaper logo appearing one letter at a time on OpenPaper L" />
 
-The recording starts with the panel already white. Preparing that white screen took **38.5 s** before drawing began. With a 40 ms pulse, all 14 letters appeared in **6.10 s**, down from **6.38 s** at 60 ms. [Watch both runs side by side in real time](/panels/dke-13-3-inch/control/logo-60-vs-40ms.mp4). [Timing comparison and recordings](/panels/dke-13-3-inch#letter-by-letter-animation).
+Budget for two stages. Preparing white took **38.5 s** in the filmed 60 ms run. Then the firmware powered up each window, drove the new strokes and cut the pulse with a hardware reset. Preloading the letters and drawing each outline segment with its letter brought the sequence to **6.38 s**. Shortening the pulse to 40 ms brought it to **6.10 s**. No full-screen flash was visible during drawing. [Watch both runs side by side in real time](/panels/dke-13-3-inch/control/logo-60-vs-40ms.mp4). [Timing comparison and recordings](/panels/dke-13-3-inch#letter-by-letter-animation).
 
-## Path demos
+## Partial updates and the area outside the window
 
-Each recording starts on a prepared white screen and runs at real speed. A partial update adds a short piece of a curve, a printed character or a Morse symbol. Previously drawn details stay on the page while the next mark can appear anywhere on the panel. [Step counts and drawing times](/panels/dke-13-3-inch#path-demo-timings).
+For a field that must erase as well as draw, write the replacement pixels into a window and let the waveform finish. At the fast clock, a 240 × 400 window covering **5% of the panel still took about 15 seconds**, about as long as the whole screen. Sending `0x01` with the refresh command (`0x12`) kept the surrounding dark, red and blue patches close to their original appearance during repeated black/white updates. The active window still flashed.
 
-### Midnight Edition
+<PanelPhoto src="/panels/dke-13-3-inch/control/partial-vcom.webp" width={945} height={1350} alt="Comparison of the center patch and the surrounding chart for refresh arguments 00 and 01" caption="The center changes in both trials. Compare the dark border and colored patches outside it for arguments 0x00 and 0x01." />
 
-**HOLD THE FRONT PAGE** goes to press first. The headline “The city after dark” appears one letter at a time. Follow the crescent, towers and suspension cables as the bridge is drawn. The East River dateline completes the edition.
+<video controls playsInline preload="none" poster="/panels/dke-13-3-inch/control/window-poster.webp" src="/panels/dke-13-3-inch/control/window.mp4" aria-label="Repeated black and white partial refreshes with the surrounding color patches in view" />
 
-<video controls playsInline preload="none" width={1616} height={1232} poster="/panels/dke-13-3-inch/control/midnight-edition.webp" src="/panels/dke-13-3-inch/control/midnight-edition.mp4" aria-label="Midnight Edition on OpenPaper L, from the first printed words to the finished bridge and dateline" />
+<span id="red-transitions-factory-profiles-and-temperature" />
 
-### Last Train Home
+Changing the factory-profile selector did not produce a fast red-only update that finished without reset. [Red-window recordings and profile trials](/panels/dke-13-3-inch#red-profile-trials).
 
-Start at **East End**, on the right. The track turns north to East Market, bends south through Canal and doubles back toward Home. Each station circle closes before its name appears. On the straight stretch by Museum, the joins between blue strokes are slightly darker.
+## Early cutoff, digits and a one-second hand
 
-<video controls playsInline preload="none" width={1616} height={1232} poster="/panels/dke-13-3-inch/control/last-train-home.webp" src="/panels/dke-13-3-inch/control/last-train-home.mp4" aria-label="A train route draws itself from East End to Home, with seven stations appearing in travel order" />
+For changing digits, the firmware interrupted black after **10 s** with a hardware reset and let white finish to BUSY-ready. Cutting white at 13.5 s left the first erase visibly darker. [Digit video and ghosting measurements](/panels/dke-13-3-inch#digits-and-clock-markers).
 
-### Signal from the Moon
+**To show seconds without flashing the whole face, change the smallest shape you can.** A short marker at the edge of the clock advanced **once per second for 60 ticks** on a 100 ms drive pulse per tick. The dial avoided a full-screen flash. A yellow ring remained after one revolution. For a clock face, put the marker on the rim and plan a full redraw to clear accumulated marks. [Blue-marker video](/panels/dke-13-3-inch/control/blue-marker.mp4).
 
-Read the signal outward from the antenna. A dash spells **T**, four dots spell **H**, and one dot spells **E**. Each decoded letter appears below its completed Morse group until the page reads **THE EAGLE HAS LANDED**.
-
-<video controls playsInline preload="none" width={1616} height={1232} poster="/panels/dke-13-3-inch/control/signal-from-the-moon.webp" src="/panels/dke-13-3-inch/control/signal-from-the-moon.mp4" aria-label="Dots and dashes follow a spiral while the decoded message THE EAGLE HAS LANDED appears letter by letter" />
+<video controls playsInline preload="none" poster="/panels/dke-13-3-inch/control/clock-poster.webp" src="/panels/dke-13-3-inch/control/clock.mp4" aria-label="Clock recording comparing one- and two-stage transition tables and their remaining marks" />
 
 ## Full-frame speed, flashing and color
 
-All three settings flash during a full-color refresh. Register `0x30` selects the clock. BUSY time measures the panel drive after image transfer.
+For a photo frame, compare the settled blue and green before choosing a clock. For a frequently replaced dashboard, the fastest tested clock saved about 21 seconds per full draw. All three settings flash. Register `0x30` selects the clock. BUSY time measures the panel drive after image transfer.
 
 | Clock setting | Register value | BUSY in this comparison | Settled color |
 | --- | --- | ---: | --- |
@@ -69,32 +66,6 @@ All three settings flash during a full-color refresh. Register `0x30` selects th
 <video controls playsInline preload="none" poster="/panels/dke-13-3-inch/control/refresh-poster.webp" src="/panels/dke-13-3-inch/control/refresh.mp4?build=6382664" aria-label="Real-time side-by-side full refresh in normal, 75 Hz and 120 Hz modes" />
 
 <PanelPhoto src="/panels/dke-13-3-inch/control/refresh-modes.webp" width={1440} height={800} alt="Settled displays photographed after normal, 75 Hz and 120 Hz refresh" caption="The same target after each refresh. The green and blue patches show the largest visible trade-offs." />
-
-## Partial updates and the area outside the window
-
-A window covering **5% of the panel still took about 15 seconds**. Sending `0x01` with the refresh command (`0x12`) kept the surrounding dark, red and blue patches close to their original appearance during repeated black/white updates. The active window still flashed.
-
-<PanelPhoto src="/panels/dke-13-3-inch/control/partial-vcom.webp" width={945} height={1350} alt="Comparison of the center patch and the surrounding chart for refresh arguments 00 and 01" caption="The center changes in both trials. Compare the dark border and colored patches outside it for arguments 0x00 and 0x01." />
-
-<video controls playsInline preload="none" poster="/panels/dke-13-3-inch/control/window-poster.webp" src="/panels/dke-13-3-inch/control/window.mp4" aria-label="Repeated black and white partial refreshes with the surrounding color patches in view" />
-
-## Early cutoff, digits and a one-second hand
-
-For changing digits, the firmware interrupted black after **10 s** with a hardware reset and let white finish to BUSY-ready. Cutting white at 13.5 s left the first erase visibly darker. [Digit video and ghosting measurements](/panels/dke-13-3-inch#digits-and-clock-markers).
-
-A short marker at the edge of the clock advanced **once per second for 60 ticks** on a 100 ms drive pulse per tick. The dial avoided a full-screen flash. A yellow ring remained after one revolution. The two-pulse version took 1.25 s per tick and left more of the face marked. [Blue-marker video](/panels/dke-13-3-inch/control/blue-marker.mp4).
-
-<video controls playsInline preload="none" poster="/panels/dke-13-3-inch/control/clock-poster.webp" src="/panels/dke-13-3-inch/control/clock.mp4" aria-label="Clock recording comparing one- and two-stage transition tables and their remaining marks" />
-
-## Red transitions, factory profiles and temperature
-
-Changing `CCSET` (`0xE0`) and the temperature hint produced no fast, red-only update that completed without reset. Ripple and Sparkle command sequences remain unverified. [Profile timings and red-window video](/panels/dke-13-3-inch#red-profile-trials).
-
-## Native colors, orange and skin tones
-
-The six standard image codes produce black, white, red, yellow, blue and green. Mixing adjacent red and yellow pixels gave repeatable saturated orange. For pale pink, a 4 × 4 tile used 14 white pixels and two red ones. A separate two-pass test produced a **solid peach** suitable for light skin. It prepared the pixel with red (`0x3`) and drove blue (`0x5`) for 2.8 s. [Solid-color measurements](/panels/dke-13-3-inch#two-pass-solid-colors).
-
-<PanelPhoto src="/panels/dke-13-3-inch/control/skin-tones.webp" width={785} height={645} alt="Twenty warm and cool skin-tone mixtures photographed on the physical panel" caption="Twenty skin-tone mixtures photographed on the panel. The tile pattern is visible under magnification." />
 
 ## Color photos with less grain
 
@@ -112,23 +83,25 @@ python3 render_photo.py photo.jpg six-code-output --mode normal
 python3 render_photo.py photo.jpg sixteen-code-output --mode raw16
 ```
 
+## Native colors, orange and skin tones
+
+The six standard image codes produce black, white, red, yellow, blue and green. Mixing adjacent red and yellow pixels gave repeatable saturated orange. For pale pink, a 4 × 4 tile used 14 white pixels and two red ones. A separate two-pass test produced a **solid peach** suitable for light skin. It prepared the pixel with red (`0x3`) and drove blue (`0x5`) for 2.8 s. [Solid-color measurements](/panels/dke-13-3-inch#two-pass-solid-colors).
+
+<PanelPhoto src="/panels/dke-13-3-inch/control/skin-tones.webp" width={785} height={645} alt="Twenty warm and cool skin-tone mixtures photographed on the physical panel" caption="Twenty skin-tone mixtures photographed on the panel. The tile pattern is visible under magnification." />
+
 ## Grayscale photographs, text and dithering
 
 Gray edge pixels smoothed text while the white background stayed close to the monochrome reference. In the Apollo photograph, eight mixed levels preserved the folds in the bright sleeve. Sixteen reduced coarse grain but added fine texture. Six directly driven tones without dithering lost detail in the highlights.
 
 <PanelPhoto src="/panels/dke-13-3-inch/control/suit-tones.webp" width={1391} height={1040} alt="Eight mixed levels, sixteen mixed levels and six uniform recipes, with magnified spacesuit crops" caption="Compare the sleeve folds, glove and chest fittings across the three renderings. NASA, Apollo 11, AS11-40-5903." />
 
-<PanelPhoto src="/panels/dke-13-3-inch/control/bayer-tile.webp" width={1024} height={388} alt="Magnified Bayer arrangement beside its appearance in the grayscale image" caption="A 4 × 4 Bayer tile repeats across flat areas. More pixels take the lighter tone as the source brightens, making the pattern visible up close." />
+<span id="finding-a-lighter-gray-without-dithering" />
 
-## Finding a lighter gray without dithering
-
-**`0xFD` at 2.8 s** gave a cool gray about a quarter of the way from the previous gray to white. The three center fields below use this same recipe. `0x09` produced a paler tone, but at 2.1 s its brightness varied across the panel. [Pulse times and measured grays](/panels/dke-13-3-inch#uniform-gray-recipes).
-
-<PanelPhoto src="/panels/dke-13-3-inch/control/uniform-gray.webp" width={1260} height={270} alt="Old gray, three positions receiving solid FD, and panel white in a confirmed 2.8-second test" caption="Left to right, the previous gray, three samples of FD, and white." />
+For uniform fills, the two-pass `FD` recipe gave a light, cool gray at 2.8 s. Small pulse or position changes affected some of the paler recipes. [Solid gray samples and pulse measurements](/panels/dke-13-3-inch#uniform-gray-recipes).
 
 ## Setting a custom LUT
 
-**You can edit the grayscale photo LUT in the bench firmware.** It maps image brightness to two-pass pixel recipes. For example, `FD` prepares a pixel with code `F` and drives it with `D` during the timed update. Loading custom voltage waveforms into the NT61522 remains unverified.
+**You can edit the grayscale photo LUT in the bench firmware.** It maps image brightness to two-pass pixel recipes. For example, `FD` prepares a pixel with code `F` and drives it with `D` during the timed update. Loading custom voltage waveforms into the NT61522 remains unverified. [Controller references](/panels/dke-13-3-inch#controller-waveform-references).
 
 1. Save the [example photo LUT (CSV)](/panels/dke-13-3-inch/control/photo-lut.csv?build=6382664) and [Python encoder/decoder](/panels/dke-13-3-inch/control/patch_palette.py) in the same directory.
 2. Edit the two-hex-digit `recipe` and its inclusive brightness limit, `upper_luma` (0–255). Use 16 rows with nondecreasing thresholds ending at 255. Repeat 255 to fill unused rows.
@@ -139,3 +112,25 @@ python3 patch_palette.py photo photo-lut.csv
 ```
 
 Send the printed `FINEPHOTO` line followed by a newline to the bench serial console at 115200 baud. It renders the built-in Apollo photo with your table and a 2.8 s partial pulse. [Photo rendered with the example LUT](/panels/dke-13-3-inch/control/apollo-host-lut.webp?build=6382664).
+
+## Path demos
+
+Each recording starts on a prepared white screen and runs at real speed. A partial update adds a short piece of a curve, a printed character or a Morse symbol. Previously drawn details stay on the page while the next mark can appear anywhere on the panel. [Step counts and drawing times](/panels/dke-13-3-inch#path-demo-timings).
+
+### Midnight Edition
+
+**HOLD THE FRONT PAGE** goes to press first. The headline “The city after dark” appears one letter at a time. Follow the crescent, towers and suspension cables as the bridge is drawn. The East River dateline completes the edition.
+
+<video controls playsInline preload="none" width={1616} height={1232} poster="/panels/dke-13-3-inch/control/midnight-edition.webp" src="/panels/dke-13-3-inch/control/midnight-edition.mp4" aria-label="Midnight Edition on OpenPaper L, from the first printed words to the finished bridge and dateline" />
+
+### Last Train Home
+
+Start at **East End**, on the right. The track turns north to East Market, bends south through Canal and doubles back toward Home. Each station circle closes before its name appears. On the straight stretch by Museum, the joins between blue strokes are slightly darker.
+
+<DemoVideo width={1616} height={1232} poster="/panels/dke-13-3-inch/control/last-train-home.webp" src="/panels/dke-13-3-inch/control/last-train-home.mp4" aria-label="A train route draws itself from East End to Home, with seven stations appearing in travel order" />
+
+### Signal from the Moon
+
+Read the signal outward from the antenna. A dash spells **T**, four dots spell **H**, and one dot spells **E**. Each decoded letter appears below its completed Morse group until the page reads **THE EAGLE HAS LANDED**.
+
+<video controls playsInline preload="none" width={1616} height={1232} poster="/panels/dke-13-3-inch/control/signal-from-the-moon.webp" src="/panels/dke-13-3-inch/control/signal-from-the-moon.mp4" aria-label="Dots and dashes follow a spiral while the decoded message THE EAGLE HAS LANDED appears letter by letter" />

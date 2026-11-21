@@ -191,6 +191,8 @@ The Apollo photo occupied 1040 × 1040 individually addressed pixels. The bright
 
 <PanelPhoto src="/panels/dke-13-3-inch/control/dither-grain.webp" width={1438} height={861} alt="Physical camera crops comparing different spatial mixtures on the astronaut photograph" caption="Corresponding camera crops from the dither trials. Compare samples under the same lighting when judging grain." />
 
+<PanelPhoto src="/panels/dke-13-3-inch/control/bayer-tile.webp" width={1024} height={388} alt="Magnified Bayer tile beside a grayscale rendering" caption="A 4 × 4 Bayer tile mixes two tones by varying how many pixels take the lighter tone. The repeated pattern is visible up close." />
+
 ### Color photo dithering measurements
 
 On 21 November 2026, frame-2 displayed each photograph twice in the same full refresh, once with the six standard image codes and once with all 16 codes. Both used serpentine Floyd–Steinberg error diffusion in linear RGB. The second refresh swapped their positions. Each photograph occupied 224 × 224 native pixels per version. The bench lamp was off. The photographs and 12 uniform target patches occupied the upper part of the panel, clear of the reflection below. [Photographs and enlarged patches](/panels/dke-13-3-inch/display-control#color-photos-with-less-grain).
@@ -224,6 +226,8 @@ The first pair of charts yielded 23 candidate recipes at 2.8 s. On an independen
 ¹ Median camera-relative Lab76 distance between different preparations for the same destination code. At the same clock setting, the early cutoff retained much more of the preparation color. Timing starts at the falling BUSY edge of the second refresh and excludes the complete first pass. The optical trace records how patches changed color during the factory drive. Individual voltage levels, phase durations and a command for uploading custom NT61522 waveforms remain unverified. [Timing measurements (JSON)](/panels/dke-13-3-inch/2026-11-21/drive-timings.json) · [Optical time series (CSV)](/panels/dke-13-3-inch/2026-11-21/optical-trace.csv).
 
 ### Uniform gray recipes
+
+<PanelPhoto src="/panels/dke-13-3-inch/control/uniform-gray.webp" width={1260} height={270} alt="Previous gray, three positions driven with FD for 2.8 seconds, and paper white" caption="The three center fields show the same two-pass light gray recipe at different positions." />
 
 Each field received a preparation code during a full drive, then a target code during a timed partial update. Each of the 256 pairs was sampled at one position per pulse time (2.1, 2.8, 3.6 and 4.6 s). Selected pairs were repeated on larger fields at additional times from 1.85 to 2.45 s.
 

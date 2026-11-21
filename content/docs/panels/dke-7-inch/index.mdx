@@ -3,6 +3,7 @@ title: Test data
 description: Solid colors, dithered mixtures, and measurement setup for the DKE 7-inch panel.
 ---
 
+import { PhotoComparison } from "@/components/panels/photo-comparison";
 import { SolidColorPalette, MixtureColorSwatches, PanelPhoto, PanelPhotoGallery } from "@/components/panels/color-measurements";
 import measurements from "@/public/panels/dke-7-inch/measurements.json";
 
@@ -99,9 +100,20 @@ In the second series the firmware reported full draws of 42.068 and 42.051 secon
 
 The JSON files list the two photographs in portrait, coffee order. Patch order is light skin, darker skin, dark brown, brick red, orange, gray, teal and blue-gray. Within each capture, mode order follows the corresponding two table rows. [Palette readings (JSON)](/panels/dke-7-inch/2026-11-21/six-profile-profiled.json) · [Dithering readings (JSON)](/panels/dke-7-inch/2026-11-21/dithering-profiled.json).
 
+## Default photo settings vs. moderate boost
+
+This comparison uses the **photo editor’s default Auto / Natural settings** in epdoptimize 1.4.1. We rendered the 312 × 208 RGB crop with the editor’s default option builder and `aitjcizeSpectra6Palette`, then converted the result to the native RGB codes. For this image the default selected serpentine Floyd–Steinberg with RGB matching. The tuned version used the same source pixels, the measured six-color palette and the moderate curve below. Firmware 3.0.45 performed an ordinary full refresh in both cases. [Compare the two panel photographs](/panels/dke-7-inch/display-control#default-photo-settings-vs-tuned-rendering).
+
+| Rendering | Chroma C* | Lightness contrast ΔL* | Mean color error ΔE₀₀ |
+| --- | ---: | ---: | ---: |
+| Editor default · Auto / Natural | 48.73 | 9.23 | 20.73 |
+| Measured palette + moderate boost | 34.20 | 12.20 | 5.37 |
+
+Both crops appeared together in two refreshes on frame-1, swapping positions on the second. The bench lamp was off. The slider uses a perspective-corrected camera crop from the same physical position in each refresh, with no color or contrast adjustment. We averaged two settled camera readings per refresh over 498 orange-dominated blocks, using the definitions below. Mean held-out reference-card error ranged from 5.5 to 5.8 ΔE₀₀. The separate trials below also measured grain on uniform patches. [Rendering options and individual readings (JSON)](/panels/dke-7-inch/2026-11-21/oranges/default-comparison.json) · [Original orange photograph by Evan-Amos](https://commons.wikimedia.org/wiki/File:Orange-Fruit-Pieces.jpg).
+
 ## Orange photo contrast and chroma
 
-All three versions of Evan-Amos’s orange photograph shared each full refresh on frame-1. Across three refreshes each version occupied every position once. The bench lamp was off. Each photograph used 312 × 208 native pixels. [Before/after sliders](/panels/dke-7-inch/display-control#more-contrast-and-richer-color) · [Original orange photograph](https://commons.wikimedia.org/wiki/File:Orange-Fruit-Pieces.jpg).
+All three versions of Evan-Amos’s orange photograph shared each full refresh on frame-1. Across three refreshes each version occupied every position once. The bench lamp was off. Each photograph used 312 × 208 native pixels. [Compare the moderate boost](#moderate-boost-against-the-calibrated-reference) · [Compare the strong boost](#strong-boost-against-the-calibrated-reference) · [Original orange photograph](https://commons.wikimedia.org/wiki/File:Orange-Fruit-Pieces.jpg).
 
 | Rendering | Chroma C* | Lightness contrast ΔL* | Photo error ΔE₀₀ | Patch grain |
 | --- | ---: | ---: | ---: | ---: |
@@ -112,6 +124,26 @@ All three versions of Evan-Amos’s orange photograph shared each full refresh o
 Chroma is the mean C* of 498 orange-dominated 8 × 8 pixel blocks. Contrast is the span from the 10th to the 90th percentile of L* in those blocks. Color error compares them with the original scaled to the local paper white and black. Grain measures fine Lab variation on eight uniform orange patches. We averaged two settled camera readings per refresh and then averaged the three positions. [Per-capture measurements (JSON)](/panels/dke-7-inch/2026-11-21/oranges/contrast-measurements.json).
 
 The renderer applied an S-curve to lightness in the measured paper range and scaled Lab chroma around the paper’s gray axis. For normalized lightness `t`, the curve was `t^g / (t^g + (1 − t)^g)`. The moderate setting used `g = 1.25` and a chroma multiplier of 1.30. The strong setting used 1.50 and 1.65.
+
+### Moderate boost against the calibrated reference
+
+Look at the pale rim of the cut fruit and the shadow beneath the whole orange. The peel gains color while the flesh and rind remain distinct.
+
+<PhotoComparison
+  before={{ src: "/panels/dke-7-inch/2026-11-21/oranges/reference.webp", label: "calibrated reference", alt: "Panel photograph of sliced oranges rendered with the calibrated six-color palette" }}
+  after={{ src: "/panels/dke-7-inch/2026-11-21/oranges/moderate.webp", label: "moderate boost", alt: "Sliced oranges with richer peel and a deeper shadow after the moderate contrast and chroma boost" }}
+  width={624} height={416}
+/>
+
+### Strong boost against the calibrated reference
+
+The shadow between the pieces turns deeper red. This setting produced the greatest average contrast, but its colors were further from the source photograph.
+
+<PhotoComparison
+  before={{ src: "/panels/dke-7-inch/2026-11-21/oranges/reference.webp", label: "calibrated reference", alt: "Panel photograph of sliced oranges rendered with the calibrated six-color palette" }}
+  after={{ src: "/panels/dke-7-inch/2026-11-21/oranges/strong.webp", label: "strong boost", alt: "Sliced oranges with deeper red shadows after the strong contrast and chroma boost" }}
+  width={624} height={416}
+/>
 
 ### Pixels used by the moderate boost
 
