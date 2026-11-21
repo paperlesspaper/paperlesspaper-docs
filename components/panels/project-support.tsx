@@ -7,25 +7,35 @@ const actions = [
 
 export function ProjectSupport() {
   return (
-    <aside id="support-the-project" aria-labelledby="project-support-title" className="not-prose my-8 scroll-mt-24 rounded-xl bg-[#104aa1] px-4 py-5 text-center text-white sm:px-6">
-      <h2 id="project-support-title" className="m-0 text-xl font-bold leading-tight">
-        Support the project
-      </h2>
-      <p className="mt-1.5 text-sm leading-relaxed">
-        Help develop open-source e-paper hardware by buying a frame or contributing on GitHub.
-      </p>
-      <div className="mt-3 flex flex-wrap justify-center gap-2">
-        {actions.map(({ label, href, icon: Icon }) => (
-          <a key={href} href={href} className="inline-flex min-h-9 items-center justify-center gap-2 rounded-md bg-white/20 px-3 text-sm font-semibold text-white hover:bg-white/30 focus-visible:outline-2 focus-visible:outline-offset-2">
-            <Icon size={16} aria-hidden="true" />
-            {label}
-          </a>
-        ))}
-      </div>
-      <div className="mt-2 flex flex-wrap items-center justify-center gap-x-4 text-sm underline-offset-4 [&_a]:inline-flex [&_a]:min-h-7 [&_a]:items-center [&_a]:text-white [&_a]:underline">
-        <a href="https://www.instagram.com/paperless.paper/">Instagram</a>
-        <a href="https://social.tchncs.de/@paperlesspaper">Mastodon</a>
-        <a href="https://paperlesspaper.de/en/posts/contact">Contact us</a>
+    <aside id="support-the-project" aria-labelledby="project-support-title" className="not-prose @container relative my-8 scroll-mt-24 rounded-xl bg-[#104aa1] px-4 py-5 text-center text-white sm:px-6">
+      <img
+        src="/panels/openpaper-heart-frame.webp"
+        alt=""
+        width={384}
+        height={491}
+        loading="lazy"
+        className="pointer-events-none absolute -top-3 left-3 h-auto w-14 -rotate-3 drop-shadow-sm @min-[28rem]:-top-4 @min-[28rem]:left-4 @min-[28rem]:w-28"
+      />
+      <div className="@min-[28rem]:pl-32">
+        <h2 id="project-support-title" className="m-0 flex min-h-12 items-center justify-center pl-14 text-xl font-bold leading-tight @min-[28rem]:min-h-0 @min-[28rem]:pl-0">
+          Support the project
+        </h2>
+        <p className="mt-1.5 text-sm leading-relaxed">
+          Help develop open-source e-paper hardware by buying a frame or contributing on GitHub.
+        </p>
+        <div className="mt-3 flex flex-wrap justify-center gap-2">
+          {actions.map(({ label, href, icon: Icon }) => (
+            <a key={href} href={href} className="inline-flex min-h-9 items-center justify-center gap-2 rounded-md bg-white/20 px-3 text-sm font-semibold text-white hover:bg-white/30 focus-visible:outline-2 focus-visible:outline-offset-2">
+              <Icon size={16} aria-hidden="true" />
+              {label}
+            </a>
+          ))}
+        </div>
+        <div className="mt-2 flex flex-wrap items-center justify-center gap-x-4 text-sm underline-offset-4 [&_a]:inline-flex [&_a]:min-h-7 [&_a]:items-center [&_a]:text-white [&_a]:underline">
+          <a href="https://www.instagram.com/paperless.paper/">Instagram</a>
+          <a href="https://social.tchncs.de/@paperlesspaper">Mastodon</a>
+          <a href="https://paperlesspaper.de/en/posts/contact">Contact us</a>
+        </div>
       </div>
     </aside>
   );
