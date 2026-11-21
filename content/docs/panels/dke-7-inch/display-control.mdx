@@ -35,7 +35,7 @@ The default looks yellower and more saturated. The tuned rendering brings red ba
 3. For the orange photo, apply an S-curve to lightness in the paper range (**exponent 1.25**) and multiply Lab chroma around the paper’s neutral axis by **1.30**. Preserve black and white endpoints.
 4. Dither with serpentine Floyd–Steinberg using the measured colors to calculate error. Write each winning color’s **native RGB code** to the output PNG. Keep those pixels at their original size and bypass any second round of dithering. [Curve, stronger setting and photo comparisons](/panels/dke-7-inch#orange-photo-contrast-and-chroma).
 
-Download the [OpenPaper 7 photo renderer (ZIP)](/panels/dke-7-inch/2026-11-21/oranges/openpaper7-renderer.zip). Unzip it, then run the following in that directory on macOS or Linux. The defaults reproduce the tuned side of the slider.
+Download the [OpenPaper 7 photo renderer (ZIP)](/panels/dke-7-inch/2026-11-21/oranges/openpaper7-renderer.zip?download=1). Unzip it, then run the following in that directory on macOS or Linux. The defaults reproduce the tuned side of the slider.
 
 ```sh
 python3 -m pip install numpy Pillow colour-science
