@@ -4,6 +4,7 @@ description: Compare stock and experimental Spectra 6 rendering, find a refresh 
 ---
 
 import { ExperimentalPanelWarning } from "@/components/panels/experimental-panel-warning";
+import { TechniquePreview } from "@/components/panels/technique-preview";
 import { DemoVideo } from "@/components/panels/demo-video";
 import { MovedCalibrationSection } from "@/components/panels/moved-calibration-section";
 import { PhotoComparison } from "@/components/panels/photo-comparison";
@@ -31,13 +32,14 @@ Watch the clock in the upper right and the blue route bar below the timetable. T
 
 ## Choose a display technique
 
-| If your project needs… | Start here | What the panel showed |
-| --- | --- | --- |
-| Richer color in photos | [Default vs. tuned photo on OpenPaper 7](/panels/dke-7-inch/display-control#default-photo-settings-vs-tuned-rendering) | Compare the same orange peel, rind and shadow with a draggable divider. Both versions use one ordinary six-color refresh. |
-| A quicker full-page change | [Normal vs. faster clocks on OpenPaper L](/panels/dke-13-3-inch/display-control#full-frame-speed-flashing-and-color) | Panel drive fell from **35.8 to 14.9 s** in the recorded run. All modes flashed. Blue and green changed visibly. |
-| A live readout on a color background | [Departure board and local updates](/panels/dke-13-3-inch/display-control#berlin-hbf-departure-board) | The seconds and route bar advance together. The rest of the timetable stays in place. |
-| Drawing without a visible full-screen flash | [Letter-by-letter animation](/panels/dke-13-3-inch/display-control#letter-by-letter-animation) | Fourteen letters appeared separately in **6.10 s** after white preparation. |
-| More accurate skin tones | [Default vs. tuned portrait on OpenPaper L](/panels/dke-13-3-inch/display-control#portrait-with-default-and-tuned-rendering) | The tuned portrait gave a closer skin-color match and 32% more facial contrast. The two flat skin colors showed more dither texture. |
+| Technique and result | Before and after |
+| --- | --- |
+| [Richer color in photos · OpenPaper 7](/panels/dke-7-inch/display-control#default-photo-settings-vs-tuned-rendering)<br />The tuned six-color palette brings out the orange peel and its shadow. Both versions use one ordinary refresh. | <TechniquePreview image="orange" height={210} left="Default" right="Tuned" alt="The same orange, yellow-green with the default settings and deeper orange with the tuned palette." /> |
+| [Faster full-page refresh · OpenPaper L](/panels/dke-13-3-inch/display-control#full-frame-speed-flashing-and-color)<br />Panel drive fell from **35.8 to 14.9 s**. Both modes flashed. Compare the blue and green patches after each refresh. | <TechniquePreview image="refresh-clock" height={210} left="Normal" right="120 Hz" alt="At the faster clock, blue is paler and green shifts toward yellow." /> |
+| [Live readouts on a color background · OpenPaper L](/panels/dke-13-3-inch/display-control#berlin-hbf-departure-board)<br />A partial refresh changes the expected departure. The seconds and route bar also advance while the destinations stay in place. | <TechniquePreview image="departures" height={210} left="Initial time" right="Revised time" alt="Two frames from the same recording show the expected departure changing from 18:46 to 18:51." /> |
+| [Drawing without a visible full-screen flash · OpenPaper L](/panels/dke-13-3-inch/display-control#letter-by-letter-animation)<br />After white preparation, the logo took **6.10 s** to appear. Each update added one letter. | <TechniquePreview image="lettering" height={115} left="First letter" right="All 14 letters" alt="Two frames from the 40 ms run show a single blue P and the finished paperlesspaper logo." /> |
+| [More accurate skin tones · OpenPaper L](/panels/dke-13-3-inch/display-control#portrait-with-default-and-tuned-rendering)<br />The tuned portrait gave a closer skin-color match and **32% more facial contrast**. Two flat skin swatches showed more dither texture. | <TechniquePreview image="portrait" height={210} left="Default" right="Tuned" alt="Matching crops around the eyes show stronger shadows and warmer skin in the tuned portrait." /> |
+| [Grayscale text antialiasing · OpenPaper L](/panels/dke-13-3-inch/display-control#grayscale-text-antialiasing)<br />One intermediate gray softens the steps on diagonal strokes. These enlarged source pixels show the tip of the same capital A. | <TechniquePreview image="text-edges" height={216} left="Black / white" right="Gray edges" alt="The same rasterized A has hard black steps on the left and intermediate gray edge pixels on the right." /> |
 
 <span id="panel-guides-and-test-data" />
 

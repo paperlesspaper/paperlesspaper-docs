@@ -6,7 +6,7 @@ description: Refresh speed, partial updates and measured color and grayscale pho
 import { ExperimentalPanelWarning } from "@/components/panels/experimental-panel-warning";
 import { DemoVideo } from "@/components/panels/demo-video";
 import { PhotoComparison } from "@/components/panels/photo-comparison";
-import { PanelPhoto } from "@/components/panels/color-measurements";
+import { PanelPhoto, PanelPhotoGallery } from "@/components/panels/color-measurements";
 
 <ExperimentalPanelWarning />
 
@@ -111,13 +111,24 @@ The six standard image codes produce black, white, red, yellow, blue and green. 
 
 ## Grayscale photographs, text and dithering
 
-Gray edge pixels smoothed text while the white background stayed close to the monochrome reference. In the Apollo photograph, eight mixed levels preserved the folds in the bright sleeve. Sixteen reduced coarse grain but added fine texture. Six directly driven tones without dithering lost detail in the highlights.
+In the Apollo photograph, eight mixed levels preserved the folds in the bright sleeve. Sixteen reduced coarse grain but added fine texture. Six directly driven tones without dithering lost detail in the highlights.
 
 <PanelPhoto src="/panels/dke-13-3-inch/control/suit-tones.webp" width={1391} height={1040} alt="Eight mixed levels, sixteen mixed levels and six uniform recipes, with magnified spacesuit crops" caption="Compare the sleeve folds, glove and chest fittings across the three renderings. NASA, Apollo 11, AS11-40-5903." />
 
 <span id="finding-a-lighter-gray-without-dithering" />
 
 For uniform fills, the two-pass `FD` recipe gave a light, cool gray at 2.8 s. Small pulse or position changes affected some of the paler recipes. [Solid gray samples and pulse measurements](/panels/dke-13-3-inch#uniform-gray-recipes).
+
+### Grayscale text antialiasing
+
+Look at the diagonal strokes of the **A** in “Auf dem Mond.” A black-and-white renderer has to round each partly covered pixel to ink or paper. On the OpenPaper L test unit, one intermediate gray softened those steps while the solid strokes stayed black.
+
+<PanelPhotoGallery>
+  <PanelPhoto src="/panels/dke-13-3-inch/control/apollo-type-layout.webp" width={1300} height={1533} alt="Apollo 11 on the test panel, with a serif headline beside the astronaut photograph and black, gray and white swatches below." caption="At reading distance, the serifs stand out against the white page. The astronaut photograph uses dithering for its shadows. Apollo photograph by Neil Armstrong, NASA (AS11-40-5903)." />
+  <PanelPhoto src="/panels/dke-13-3-inch/control/apollo-type-macro.webp" width={1100} height={1287} alt="Macro photograph of the capital A on the panel, showing individual gray steps along its black diagonal strokes." caption="The same headline under magnification. Follow the outer slope of the A to see the gray edge pixels between the black stroke and the paper." />
+</PanelPhotoGallery>
+
+To reproduce the lettering, render a grayscale glyph mask at **3× the target size**, then downsample it to panel resolution with Lanczos. Map each pixel to the nearest of black, the measured gray or white. The Apollo renderer used **0, 81 and 255** on its relative brightness scale. It quantized the text separately so diffusion errors from the photograph could never add speckles to the letters. The intermediate gray required the experimental panel drive. [Three-level test and white-background measurements](/panels/dke-13-3-inch#color-and-grayscale-comparisons).
 
 ## Setting a custom LUT
 
