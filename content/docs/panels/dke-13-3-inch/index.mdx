@@ -193,6 +193,26 @@ The Apollo photo occupied 1040 × 1040 individually addressed pixels. The bright
 
 <PanelPhoto src="/panels/dke-13-3-inch/control/bayer-tile.webp" width={1024} height={388} alt="Magnified Bayer tile beside a grayscale rendering" caption="A 4 × 4 Bayer tile mixes two tones by varying how many pixels take the lighter tone. The repeated pattern is visible up close." />
 
+### Portrait rendering comparison
+
+We cropped NASA’s portrait of Eileen Collins to the head and shoulders and rendered it at 576 × 512 panel pixels. The **default** used the photo editor’s Auto / Natural options (epdoptimize 1.4.1, `aitjcizeSpectra6Palette`, Stucki error diffusion). The **tuned** version used the measured `raw16` palette and Floyd–Steinberg. Both scanned alternating rows in opposite directions. The comparison uses the same bench firmware and completed normal full-color drive (PLL `0x08`) for both encodings. [Compare the panel photographs](/panels/dke-13-3-inch/display-control#portrait-with-default-and-tuned-rendering) · [Digital source crop](/panels/dke-13-3-inch/2026-11-21/portrait/source.webp).
+
+| Camera measurement, averaged over both positions | Default · Auto / Natural | Tuned · raw16 |
+| --- | ---: | ---: |
+| Skin color error (mean ΔE₀₀, lower is closer) | 13.11 | 3.30 |
+| Face contrast (P90 − P10, ΔL*) | 16.33 | 21.59 |
+| Grain on two cheek-color patches (RMS Lab, lower is smoother) | 0.34 | 1.58 |
+
+On both sides of the panel the tuned rendering gave a closer skin-color match, deeper facial shading and more texture on the flat cheek colors. The default encoded the lighter cheek patch with 98% white pixels and the darker one with 82% white. The remaining pixels in each were yellow. The two rendering options produced quite different mixtures for these pale colors.
+
+The two portraits shared each refresh. We swapped left and right on the second refresh and photographed each settled result with the bench lamp off. The slider uses the left-hand position in both captures. Corner markers align the camera frames to the panel pixels. The slider converts both exposures to sRGB using a separate Spyder Checkr 24 profile for each capture. Mean held-out chart error was 7.4 and 7.8 ΔE₀₀, which limits absolute accuracy. The camera crops before color correction are also available. [Default camera crop](/panels/dke-13-3-inch/2026-11-21/portrait/auto-natural-camera.webp) · [Tuned camera crop](/panels/dke-13-3-inch/2026-11-21/portrait/raw16-camera.webp).
+
+- **Skin color error** compares 8 × 8 pixel averages on the forehead and both cheeks with the same areas in the digital source, scaled to the local paper white and black. Lower ΔE₀₀ means a closer match.
+- **Face contrast** is the span between the 10th and 90th percentile of block lightness (L*) within the face, including the eyes and mouth.
+- **Dither grain** is the RMS of fine Lab variation on two uniform patches sampled from the source cheeks. We rendered each patch with its portrait’s settings, then subtracted a Gaussian blur (σ = 2 panel pixels) from the photographed patch. This avoids counting facial detail as grain.
+
+[Per-capture readings and renderer settings (JSON)](/panels/dke-13-3-inch/2026-11-21/portrait/measurements.json) · [Portrait credit and source](https://scikit-image.org/docs/stable/api/skimage.data.html#skimage.data.astronaut).
+
 ### Color photo dithering measurements
 
 On 21 November 2026, frame-2 displayed each photograph twice in the same full refresh, once with the six standard image codes and once with all 16 codes. Both used serpentine Floyd–Steinberg error diffusion in linear RGB. The second refresh swapped their positions. Each photograph occupied 224 × 224 native pixels per version. The bench lamp was off. The photographs and 12 uniform target patches occupied the upper part of the panel, clear of the reflection below. [Photographs and enlarged patches](/panels/dke-13-3-inch/display-control#color-photos-with-less-grain).

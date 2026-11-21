@@ -1,0 +1,122 @@
+{
+  "source": "NASA portrait of Eileen Collins, scikit-image astronaut",
+  "source_crop_xyxy": [
+    84,
+    0,
+    372,
+    256
+  ],
+  "portrait_size_px": [
+    576,
+    512
+  ],
+  "skin_blocks": 45,
+  "face_blocks": 473,
+  "patch_srgb": [
+    [
+      243,
+      214,
+      199
+    ],
+    [
+      219,
+      190,
+      165
+    ]
+  ],
+  "editor": {
+    "version": "1.4.1",
+    "intent": "natural",
+    "palette": "aitjcizeSpectra6Palette",
+    "options": {
+      "processingEngine": "auto",
+      "adjustmentEngine": "auto",
+      "ditheringType": "errorDiffusion",
+      "errorDiffusionMatrix": "stucki",
+      "serpentine": true,
+      "colorMatching": "rgb"
+    }
+  },
+  "captures": [
+    {
+      "capture": 1,
+      "camera_card_mean_heldout_DE00": 7.385,
+      "registration_rms_px": 0.584,
+      "busy_seconds": 35.637113,
+      "auto-natural": {
+        "skin_DE00": 13.025,
+        "face_contrast_L": 15.5,
+        "skin_patch_grain": 0.361,
+        "patches": [
+          0.381,
+          0.341
+        ],
+        "skin_Lab": [
+          68.048,
+          0.974,
+          9.201
+        ]
+      },
+      "raw16": {
+        "skin_DE00": 3.27,
+        "face_contrast_L": 21.135,
+        "skin_patch_grain": 2.284,
+        "patches": [
+          1.323,
+          3.245
+        ],
+        "skin_Lab": [
+          60.949,
+          7.384,
+          9.943
+        ]
+      }
+    },
+    {
+      "capture": 2,
+      "camera_card_mean_heldout_DE00": 7.763,
+      "registration_rms_px": 0.5,
+      "busy_seconds": 26.72791,
+      "auto-natural": {
+        "skin_DE00": 13.193,
+        "face_contrast_L": 17.169,
+        "skin_patch_grain": 0.321,
+        "patches": [
+          0.29,
+          0.353
+        ],
+        "skin_Lab": [
+          68.741,
+          2.803,
+          8.508
+        ]
+      },
+      "raw16": {
+        "skin_DE00": 3.322,
+        "face_contrast_L": 22.037,
+        "skin_patch_grain": 0.883,
+        "patches": [
+          0.712,
+          1.053
+        ],
+        "skin_Lab": [
+          52.718,
+          6.521,
+          8.059
+        ]
+      }
+    }
+  ],
+  "mean": {
+    "auto-natural": {
+      "skin_DE00": 13.109,
+      "face_contrast_L": 16.334,
+      "skin_patch_grain": 0.341
+    },
+    "raw16": {
+      "skin_DE00": 3.296,
+      "face_contrast_L": 21.586,
+      "skin_patch_grain": 1.583
+    }
+  }
+}

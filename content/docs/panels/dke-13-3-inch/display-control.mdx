@@ -4,6 +4,7 @@ description: Refresh speed, partial updates and measured color and grayscale pho
 ---
 
 import { DemoVideo } from "@/components/panels/demo-video";
+import { PhotoComparison } from "@/components/panels/photo-comparison";
 import { PanelPhoto } from "@/components/panels/color-measurements";
 
 <Callout type="info" title="Choose the update for the job">
@@ -11,7 +12,7 @@ import { PanelPhoto } from "@/components/panels/color-measurements";
 - **Change the whole picture.** The [faster clock](#full-frame-speed-flashing-and-color) cut panel drive from **35.8 to 14.9 s**. See how much blue and green change before using it for photos.
 - **Keep a color background on screen.** The [departure board](#berlin-hbf-departure-board) advances its seconds and route bar locally. For fields that must erase cleanly, compare [both partial-refresh settings](#partial-updates-and-the-area-outside-the-window).
 - **Add marks without a visible full-screen flash.** On prepared white, [14 separate letters](#letter-by-letter-animation) took **6.10 s**. A [one-second clock marker](#early-cutoff-digits-and-a-one-second-hand) showed where ghosting accumulates.
-- **Smooth photographic shading.** An [experimental image palette](#color-photos-with-less-grain) reduced grain by **22%** across 12 test patches in one normal refresh.
+- **Compare photo rendering on the panel.** Drag across the [default and tuned portrait](#portrait-with-default-and-tuned-rendering) to inspect skin tones, facial contrast and dither texture. The [three-photo trial](#color-photos-with-less-grain) explains why we chose the single-pass 16-code profile.
 
 </Callout>
 
@@ -66,6 +67,20 @@ For a photo frame, compare the settled blue and green before choosing a clock. F
 <video controls playsInline preload="none" poster="/panels/dke-13-3-inch/control/refresh-poster.webp" src="/panels/dke-13-3-inch/control/refresh.mp4?build=6382664" aria-label="Real-time side-by-side full refresh in normal, 75 Hz and 120 Hz modes" />
 
 <PanelPhoto src="/panels/dke-13-3-inch/control/refresh-modes.webp" width={1440} height={800} alt="Settled displays photographed after normal, 75 Hz and 120 Hz refresh" caption="The same target after each refresh. The green and blue patches show the largest visible trade-offs." />
+
+## Portrait with default and tuned rendering
+
+Move the divider across Eileen Collins’s face. Look at the color of the cheeks, the shadow beneath the chin and the individual dots where the skin meets the dark collar. Each side is a camera photograph of the same physical spot on OpenPaper L. Both photos use the reference card in the shot to correct the camera colors. Select a label to open the full-size crop or [view the digital source](/panels/dke-13-3-inch/2026-11-21/portrait/source.webp).
+
+<PhotoComparison
+  before={{ src: "/panels/dke-13-3-inch/2026-11-21/portrait/auto-natural.webp", label: "default · Auto / Natural", alt: "Eileen Collins photographed on OpenPaper L using the photo editor’s default six-color rendering" }}
+  after={{ src: "/panels/dke-13-3-inch/2026-11-21/portrait/raw16.webp", label: "tuned · 16 image codes", alt: "The same portrait photographed at the same panel position using the measured 16-code palette" }}
+  width={576} height={512}
+/>
+
+**The tuned portrait keeps more shading in the face.** On the cheeks and forehead, mean color error fell from **13.11 to 3.30 ΔE₀₀**. Facial lightness contrast rose **32%**. On the panel, the two uniform cheek-color patches had **more dither grain** with the tuned profile. The default used mostly paper-white pixels in both patches.
+
+**What changed in the renderer?** The editor’s Auto / Natural setting chose serpentine Stucki dithering with its standard six-color palette for this crop. The tuned version used serpentine Floyd–Steinberg with the measured `raw16` palette. Both ran on frame-2 with the normal full-color waveform. This compares the complete recipes, including the choice of dither algorithm. [Portrait measurements and capture method](/panels/dke-13-3-inch#portrait-rendering-comparison).
 
 ## Color photos with less grain
 
