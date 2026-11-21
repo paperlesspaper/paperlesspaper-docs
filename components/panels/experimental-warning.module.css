@@ -1,21 +1,22 @@
 .banner {
+  --overhang: 2.75rem;
   position: relative;
   isolation: isolate;
   display: grid;
-  grid-template-columns: clamp(5rem, 17%, 8rem) 1fr;
+  grid-template-columns: clamp(9.75rem, 27%, 11rem) minmax(0, 1fr);
   align-items: center;
   gap: 1rem;
   padding: 0 1.25rem 0 .8rem;
   margin: 1.5rem 0;
-  color: #fff;
+  color: #000;
 }
 
 .banner::before {
   position: absolute;
   z-index: -1;
-  inset: .75rem 0 .35rem;
+  inset: var(--overhang) 0 .35rem;
   border-radius: .8rem;
-  background: #a62332;
+  background: #ffda58;
   content: "";
 }
 
@@ -26,7 +27,7 @@
 }
 
 .copy {
-  padding-block: 1.65rem 1.35rem;
+  padding-block: calc(var(--overhang) + 1rem) 1.35rem;
 }
 
 .title {
@@ -48,7 +49,8 @@
 
 @media (max-width: 36rem) {
   .banner {
-    grid-template-columns: 4.4rem 1fr;
+    --overhang: 1.75rem;
+    grid-template-columns: clamp(5rem, 22vw, 7rem) minmax(0, 1fr);
     align-items: start;
     gap: .65rem;
     padding-inline: .45rem .9rem;
