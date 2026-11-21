@@ -1,5 +1,5 @@
 ---
-title: Test data
+title: Color Calibration
 description: Solid colors, dithered mixtures, and measurement setup for the DKE 7-inch panel.
 ---
 
@@ -11,7 +11,7 @@ The DEPG0730RTE730F0HP uses six native colors at 800 × 480 pixels. DKE lists it
 
 For the photo comparisons and advice on palettes, see [Display control](/panels/dke-7-inch/display-control).
 
-The measurements cover six solid colors and 45 dithered mixtures. These are camera-based estimates under the test lighting; see the [Panels overview](/panels/overview) for the shared setup, method, and how to read the swatches.
+The measurements cover six solid colors and 45 dithered mixtures. These are camera-based estimates under the test lighting; see the [shared calibration guide](/panels/color-calibration) for the measurement method and how to read the swatches.
 
 ## Setup
 
@@ -45,7 +45,7 @@ The position differences include residual lighting and camera effects. This test
 
 ## Mixtures
 
-The 45 mixtures use the [shared Bayer patterns](/panels/overview#test-patterns). The mean area-model difference is **4.23 ΔE₀₀**.
+The 45 mixtures use the [shared Bayer patterns](/panels/color-calibration#test-patterns). The mean area-model difference is **4.23 ΔE₀₀**.
 
 <MixtureColorSwatches measurements={measurements.patches} />
 
@@ -73,13 +73,13 @@ These are the original 2160 × 3840 JPEGs, without additional color correction o
 | Camera processing | Saturation 96/255; sharpness 0/255 |
 | White-image spatial reference | The same 24 locations across all three charts |
 
-Exposure, lighting, frame selection, and profiling follow the [shared measurement method](/panels/overview#measurement-method).
+Exposure, lighting, frame selection, and profiling follow the [shared measurement method](/panels/color-calibration#measurement-method).
 
 ## Measurement notes
 
 The reference-card cross-validation is about 6.31 ΔE₀₀ on average, with a largest held-out error of 16.87 ΔE₀₀. Black varies substantially across positions, as shown above. Each mixture was measured at one position, so the solid-color checks do not establish repeatability for every mixture.
 
-See the [measurement limits](/panels/overview#measurement-limits) before using these values for color matching or comparing panels.
+See the [measurement limits](/panels/color-calibration#measurement-limits) before using these values for color matching or comparing panels.
 
 ## Photo rendering tests
 

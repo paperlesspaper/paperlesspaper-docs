@@ -3,9 +3,32 @@ title: Overview
 description: Compare stock and experimental Spectra 6 rendering, find a refresh strategy for your project, and inspect the panel measurements.
 ---
 
+import { DemoVideo } from "@/components/panels/demo-video";
+import { MovedCalibrationSection } from "@/components/panels/moved-calibration-section";
+import { PhotoComparison } from "@/components/panels/photo-comparison";
 import { PanelPhoto, PanelPhotoGallery } from "@/components/panels/color-measurements";
 
-Start with the change your project needs. The **7.3-inch OpenPaper 7** trials change the image sent to stock firmware. The **13.3-inch OpenPaper L** trials also change how the NT61522 drives the panel, using experimental firmware on one test unit.
+<MovedCalibrationSection />
+
+The **7.3-inch OpenPaper 7** trials change the image sent to stock firmware. The **13.3-inch OpenPaper L** trials also change how the NT61522 drives the panel, using experimental firmware on one test unit.
+
+## Portrait on OpenPaper L
+
+Drag the divider across Eileen Collins’s cheeks and the shadow beneath her chin. Both photographs show the same spot on the panel. The tuned rendering brought skin tones closer to the source and increased facial contrast by **32%**. The two uniform skin-color samples showed more dither texture. [Source portrait and measurements](/panels/dke-13-3-inch#portrait-rendering-comparison).
+
+<PhotoComparison
+  before={{ src: "/panels/dke-13-3-inch/2026-11-21/portrait/auto-natural.webp", label: "default · Auto / Natural", alt: "Eileen Collins photographed on OpenPaper L using the photo editor’s default six-color rendering" }}
+  after={{ src: "/panels/dke-13-3-inch/2026-11-21/portrait/raw16.webp", label: "tuned · 16 image codes", alt: "The same portrait photographed at the same panel position using the measured 16-code palette" }}
+  width={576} height={512}
+/>
+
+## Live departure board
+
+Watch the clock in the upper right and the blue route bar below the timetable. They advance together once a second while the destinations and platforms stay in place. Separate partial updates change the expected departure time. The recording plays in real time. [How the departure board updates](/panels/dke-13-3-inch/display-control#berlin-hbf-departure-board).
+
+<DemoVideo width={1616} height={1232} poster="/panels/dke-13-3-inch/control/berlin-departures-progress.webp" src="/panels/dke-13-3-inch/control/berlin-departures-progress.mp4" aria-label="Real-time recording of the Berlin Hbf departure board on frame-2 with a ticking clock, a filling route bar, revised departure times and a blinking wordmark" />
+
+## Choose a display technique
 
 | If your project needs… | Start here | What the panel showed |
 | --- | --- | --- |
@@ -15,12 +38,16 @@ Start with the change your project needs. The **7.3-inch OpenPaper 7** trials ch
 | Drawing without a visible full-screen flash | [Letter-by-letter animation](/panels/dke-13-3-inch/display-control#letter-by-letter-animation) | Fourteen letters appeared separately in **6.10 s** after white preparation. |
 | More accurate skin tones | [Default vs. tuned portrait on OpenPaper L](/panels/dke-13-3-inch/display-control#portrait-with-default-and-tuned-rendering) | The tuned portrait gave a closer skin-color match and 32% more facial contrast. The two flat skin colors showed more dither texture. |
 
-## Panel guides and test data
+<span id="panel-guides-and-test-data" />
+
+## Panel guides and color calibration
 
 | Panel | Native raster | Project guide | Measurements and downloads |
 | --- | --- | --- | --- |
-| OpenPaper 7 · DKE DEPG0730RTE730F0HP | 800 × 480 | [Display control](/panels/dke-7-inch/display-control) | [Test data](/panels/dke-7-inch) |
-| OpenPaper L · DKE DEPG1330RTE133F5HP | 1600 × 1200 | [Display control](/panels/dke-13-3-inch/display-control) | [Test data](/panels/dke-13-3-inch) |
+| OpenPaper 7 · DKE DEPG0730RTE730F0HP | 800 × 480 | [Display control](/panels/dke-7-inch/display-control) | [Color Calibration](/panels/dke-7-inch) |
+| OpenPaper L · DKE DEPG1330RTE133F5HP | 1600 × 1200 | [Display control](/panels/dke-13-3-inch/display-control) | [Color Calibration](/panels/dke-13-3-inch) |
+
+See [Color Calibration](/panels/color-calibration) for the shared test patterns, swatch definitions, measurement method and limitations.
 
 ## Setup
 
@@ -31,50 +58,3 @@ The panels sit beside the reference card, with cameras on small tripods in front
   <PanelPhoto src="/panels/dke-13-3-inch/setup/lighting-and-cameras.jpg" alt="Lighting around the panels and reference card, with two tripod-mounted cameras in front" caption="Lighting and camera positions." width={1350} height={1800} />
   <PanelPhoto src="/panels/dke-13-3-inch/setup/testbench-connections.jpg" alt="OpenPaper testbench screen, USB connections, and camera tripod" caption="The testbench and its connections." width={1350} height={1800} />
 </PanelPhotoGallery>
-
-## Test patterns
-
-Each panel is tested with six solid colors and all 15 pairs of native colors at 25/75, 50/50, and 75/25 percent pixel coverage: 45 mixtures in total. A repeating 4 × 4 Bayer pattern assigns each pixel to one of the two colors, with exact pixel counts.
-
-Three charts place each solid color at three different locations. Each mixture appears once. Moving the solid colors checks position dependence; a separate full-white image measures the brightness gradient. Field locations and exclusions are documented on each panel page.
-
-## Reading the swatches
-
-- **Input code** is the RGB value sent to the panel. **Measured sRGB** is its estimated appearance under the test lighting. Your screen also affects how the swatch looks.
-- **Lab** values are D65-equivalent estimates calculated from the card's nominal sRGB references. They do not establish that the lamp has a measured D65 spectrum.
-- **Max. position ΔE₀₀** is the largest difference between a solid color's three positions after white-image correction. Smaller values mean better agreement across positions, not greater absolute accuracy.
-- **Area-model ΔE₀₀** compares a measured mixture with the pixel-coverage-weighted average of its two measured solid colors in XYZ. Lighting, camera response, field position, and the dither pattern all contribute to the difference.
-
-## Measurement method
-
-| Shared setting | Value |
-| --- | --- |
-| Exposure | Manual, 3.9 ms |
-| White balance | Manual, nominal 6500 K |
-| Focus | Manual |
-| Lamp | 100% brightness, nominal 6500 K; spectrum not measured |
-| Frames per chart | Two startup frames discarded, then three frames measured |
-| Reference | Spyder Checkr 24, nominal Datacolor sRGB values |
-
-The panel pages list their image dimensions, camera-processing details where recorded, and spatial reference grids.
-
-Uploaded images are downloaded again and checked for exact pixel equality. Capture starts after the panel finishes refreshing. The first two camera frames are discarded to avoid the stream's startup brightness transient.
-
-JPEG values are linearized with an assumed sRGB transfer function before averaging. All 24 reference patches are used to fit an affine RGB-to-XYZ model with 12 parameters, optimized in CIELAB. Cross-validation leaves out one reference patch at a time; it checks the fit to the card, not accuracy on the panel's pigments.
-
-A projective mapping locates the fields in the camera image. Only the central 60% of each field's width and height is sampled, avoiding labels and edges. A scalar correction from the white image compensates for uneven brightness. The spatial reference grid differs between the panels and is recorded on each page. Solid-color results average three positions.
-
-## Measurement limits
-
-Nominal card values, JPEG processing, the unmeasured lamp spectrum, and differences in the camera's response to card inks and e-paper pigments limit absolute accuracy. A good fit to the card does not guarantee an equally accurate measurement of the panel.
-
-The white-image correction reduces brightness gradients but cannot remove reflected glare. Moving the fields reveals spatial variation, although these tests do not separate position from refresh history. Each mixture was measured at one position, and the results apply to the tested Bayer pattern.
-
-The panels were measured with different cameras and geometries. Small differences between their palettes should not be read as a precise hardware comparison.
-
-Absolute color measurements require a reflection spectrophotometer and defined lighting and viewing geometry. A production lookup table also needs separate validation fields and testing with the intended dithering method.
-
-## References
-
-- [Datacolor reference color values](https://interfoto.fi/files/pdf/SpyderCheckr_Color_Data_V2.pdf)
-- [Spyder Checkr 24 setup guide](https://www.datacolor.com/spyder/wp-content/uploads/2023/05/Spyder-Checkr-24-QSG.pdf)
