@@ -1,0 +1,15 @@
+.figure { margin: 1.25rem 0 1.75rem; }
+.labels { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: .5rem; font-size: .875rem; font-weight: 600; }
+.labels a:last-child { text-align: end; }
+.labels a:hover { text-decoration: underline; }
+.frame { position: relative; overflow: hidden; isolation: isolate; border-radius: .6rem; background: var(--color-fd-muted); }
+.frame:has(input:focus-visible) { outline: 3px solid var(--color-fd-primary); outline-offset: 3px; }
+.frame img { display: block; width: 100%; height: auto; margin: 0; }
+.before { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--split)) 0 0); }
+.divider { position: absolute; inset-block: 0; left: var(--split); width: 2px; transform: translateX(-50%); background: white; box-shadow: 0 0 4px #000a; }
+.handle { position: absolute; top: 50%; left: clamp(1.2rem, var(--split), calc(100% - 1.2rem)); transform: translate(-50%, -50%); display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border: 2px solid white; border-radius: 50%; background: #222d; color: white; font: 600 1.35rem/1 sans-serif; }
+.frame input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; touch-action: pan-y; direction: ltr; appearance: none; }
+.frame input::-webkit-slider-runnable-track { height: 100%; }
+.frame input::-webkit-slider-thumb { appearance: none; width: 1px; height: 100%; }
+.frame input::-moz-range-track { height: 100%; }
+.frame input::-moz-range-thumb { width: 1px; height: 100%; border: 0; }

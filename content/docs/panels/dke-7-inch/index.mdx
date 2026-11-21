@@ -99,6 +99,38 @@ In the second series the firmware reported full draws of 42.068 and 42.051 secon
 
 The JSON files list the two photographs in portrait, coffee order. Patch order is light skin, darker skin, dark brown, brick red, orange, gray, teal and blue-gray. Within each capture, mode order follows the corresponding two table rows. [Palette readings (JSON)](/panels/dke-7-inch/2026-11-21/six-profile-profiled.json) · [Dithering readings (JSON)](/panels/dke-7-inch/2026-11-21/dithering-profiled.json).
 
+## Orange photo contrast and chroma
+
+All three versions of Evan-Amos’s orange photograph shared each full refresh on frame-1. Across three refreshes each version occupied every position once. The bench lamp was off. Each photograph used 312 × 208 native pixels. [Before/after sliders](/panels/dke-7-inch/display-control#more-contrast-and-richer-color) · [Original orange photograph](https://commons.wikimedia.org/wiki/File:Orange-Fruit-Pieces.jpg).
+
+| Rendering | Chroma C* | Lightness contrast ΔL* | Photo error ΔE₀₀ | Patch grain |
+| --- | ---: | ---: | ---: | ---: |
+| Calibrated reference | 28.56 | 10.63 | 5.30 | 10.04 |
+| Moderate boost | 34.50 | 13.25 | 5.12 | 9.48 |
+| Strong boost | 38.82 | 14.91 | 6.72 | 9.52 |
+
+Chroma is the mean C* of 498 orange-dominated 8 × 8 pixel blocks. Contrast is the span from the 10th to the 90th percentile of L* in those blocks. Color error compares them with the original scaled to the local paper white and black. Grain measures fine Lab variation on eight uniform orange patches. We averaged two settled camera readings per refresh and then averaged the three positions. [Per-capture measurements (JSON)](/panels/dke-7-inch/2026-11-21/oranges/contrast-measurements.json).
+
+The renderer applied an S-curve to lightness in the measured paper range and scaled Lab chroma around the paper’s gray axis. For normalized lightness `t`, the curve was `t^g / (t^g + (1 − t)^g)`. The moderate setting used `g = 1.25` and a chroma multiplier of 1.30. The strong setting used 1.50 and 1.65.
+
+### Pixels used by the moderate boost
+
+These counts come from the transmitted image. The fruit column covers the 36,337 source pixels classified as orange. The full-photo column includes the background.
+
+| Pixel color | Orange areas | Whole photograph (64,896 pixels) |
+| --- | ---: | ---: |
+| Red | 25,903 (71.29%) | 26,221 (40.40%) |
+| Yellow | 8,530 (23.47%) | 8,861 (13.65%) |
+| White | 1,891 (5.20%) | 29,761 (45.86%) |
+| Green | 13 (0.04%) | 53 (0.08%) |
+| Black or blue | 0 | 0 |
+
+## Red/yellow mixtures in the orange photo
+
+A separate trial tuned the mixture to the image’s orange areas. Other pixels kept the reference rendering. Each pair shared a refresh and swapped positions in a repeat. With neutral pixels available, mean orange photo error fell from 4.69 to 2.07 ΔE₀₀ and mean grain across eight patches rose 54%. With only red and yellow in the orange areas, patch grain fell 14%, while photo error rose from 4.51 to 5.04 ΔE₀₀.
+
+<PanelPhoto src="/panels/dke-7-inch/2026-11-21/oranges/mixture-trials.jpg" width={972} height={748} alt="Two paired trials with the calibrated reference at left and each image-specific orange mixture at right" caption="Top right, neutral pixels help match the orange but add visible texture. Bottom right, the peel uses only red and yellow. Each row has its own six-color reference at left." />
+
 ## Downloads
 
 - [Color measurements (JSON)](/panels/dke-7-inch/measurements.json) — all 51 swatches, Lab, XYZ, unclipped sRGB, and comparison metrics.
