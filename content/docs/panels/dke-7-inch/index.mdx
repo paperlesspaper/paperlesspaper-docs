@@ -1,5 +1,5 @@
 ---
-title: DKE 7 Inch (DEPG0730RTE730F0HP)
+title: Test data
 description: Solid colors, dithered mixtures, and measurement setup for the DKE 7-inch panel.
 ---
 
@@ -7,6 +7,8 @@ import { SolidColorPalette, MixtureColorSwatches, PanelPhoto, PanelPhotoGallery 
 import measurements from "@/public/panels/dke-7-inch/measurements.json";
 
 The DEPG0730RTE730F0HP uses six native colors at 800 × 480 pixels. DKE lists it as a [7.3-inch panel](https://customer.dke.top/products/dke-73-inch-six-color-e6-epaper-display); it is used here in the OpenPaper 7.
+
+For the photo comparisons and advice on palettes, see [Display control](/panels/dke-7-inch/display-control).
 
 The measurements cover six solid colors and 45 dithered mixtures. These are camera-based estimates under the test lighting; see the [Panels overview](/panels/overview) for the shared setup, method, and how to read the swatches.
 
@@ -77,6 +79,25 @@ Exposure, lighting, frame selection, and profiling follow the [shared measuremen
 The reference-card cross-validation is about 6.31 ΔE₀₀ on average, with a largest held-out error of 16.87 ΔE₀₀. Black varies substantially across positions, as shown above. Each mixture was measured at one position, so the solid-color checks do not establish repeatability for every mixture.
 
 See the [measurement limits](/panels/overview#measurement-limits) before using these values for color matching or comparing panels.
+
+## Photo rendering tests
+
+On 21 November 2026, OpenPaper 7 (`frame-1`, stock firmware 3.0.45) showed two versions of the same portrait and coffee photograph in one refresh, each at 166 × 166 native pixels. The next refresh swapped their positions. Eight uniform target patches shared the same raster. The bench lamp was off for all four captures. [Side-by-side photo comparisons](/panels/dke-7-inch/display-control#measured-colors-in-the-ditherer).
+
+| Paired test | Renderer | Grain A | Grain B | Mean grain | Mean photo error (ΔE₀₀) |
+| --- | --- | ---: | ---: | ---: | ---: |
+| Palette | Ideal RGB, Floyd–Steinberg | 7.64 | 7.73 | 7.69 | 5.42 |
+| Palette | Measured colors, Floyd–Steinberg | 7.23 | 7.58 | 7.40 | 3.33 |
+| Dithering | Measured colors, Floyd–Steinberg | 7.17 | 7.82 | 7.49 | 3.58 |
+| Dithering | Measured colors, nearest color per pixel | 0.85 | 0.80 | 0.83 | 10.41 |
+
+<PanelPhoto src="/panels/dke-7-inch/2026-11-21/flat-patch-comparison.png" width={848} height={385} alt="Magnified camera crops of darker skin, dark brown, brick red and teal with ideal and measured six-color palettes" caption="Each column pair compares the two palettes. The two rows come from position-swapped refreshes. Dark brown and teal are smoother with the measured palette. Brick red shows more texture." />
+
+Both dithered renderers used serpentine Floyd–Steinberg in linear RGB. Grain is the RMS of the fine Lab variation on flat fields after subtracting a Gaussian blur (σ = 2 panel pixels). Photo error compares 12 × 12 pixel block averages with the source scaled to the local paper white and black. Lower values are better for both measures. Each capture used a Spyder Checkr 24 camera profile. Mean held-out chart error ranged from 5.6 to 6.0 ΔE₀₀, which limits absolute color accuracy. The portrait of Eileen Collins (NASA) and the coffee image (Rachel Michetti) come from [scikit-image](https://scikit-image.org/docs/stable/api/skimage.data.html).
+
+In the second series the firmware reported full draws of 42.068 and 42.051 seconds. It disabled quick refresh at reported main-board temperatures of 19.7 °C and 20.7 °C. The serial start command and USB auto-reset did not establish a ROM loader connection for the separate raw-code trial. All photo results here use the six standard codes.
+
+The JSON files list the two photographs in portrait, coffee order. Patch order is light skin, darker skin, dark brown, brick red, orange, gray, teal and blue-gray. Within each capture, mode order follows the corresponding two table rows. [Palette readings (JSON)](/panels/dke-7-inch/2026-11-21/six-profile-profiled.json) · [Dithering readings (JSON)](/panels/dke-7-inch/2026-11-21/dithering-profiled.json).
 
 ## Downloads
 

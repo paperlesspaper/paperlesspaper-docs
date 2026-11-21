@@ -1,0 +1,30 @@
+---
+title: Display control
+description: Compare six-color photo rendering on the OpenPaper 7 and see how to choose mixtures for an image.
+---
+
+import { PanelPhoto } from "@/components/panels/color-measurements";
+
+<Callout type="info" title="Rendering photos on OpenPaper 7">
+
+Use the six colors measured on the panel when calculating Floyd–Steinberg dithering. On one 7.3-inch OpenPaper 7, this reduced mean photo color error from **5.42 to 3.33 ΔE₀₀** and made dark brown and teal patches smoother. Both versions took one ordinary full refresh.
+
+</Callout>
+
+## Measured colors in the ditherer
+
+The center column of each group models black, white, red, yellow, blue and green by their ideal RGB values. The right column models the same six pixel codes using their measured appearance on this panel. Look at the astronaut’s face and the change in color between the coffee and the rim of the cup. Both versions were on screen together. The second capture swapped their physical positions.
+
+<PanelPhoto src="/panels/dke-7-inch/2026-11-21/six-profile-comparison.jpg" width={958} height={440} alt="Digital originals of an astronaut and a coffee cup beside both six-color renderings photographed on the 7.3-inch panel" caption="Within each group, left to right, the source photograph, dithering with ideal RGB values, and dithering with the measured panel colors." />
+
+Grain fell **3.7% on average across eight uniform patches**. The improvement depended on the color. Dark brown and teal became smoother in both captures, while brick red became grainier. Turning dithering off made the flat patches smoother still, but the face broke into blocks of green and white. [Enlarged patch photographs and measurements](/panels/dke-7-inch#photo-rendering-tests).
+
+<PanelPhoto src="/panels/dke-7-inch/2026-11-21/dithering-comparison.jpg" width={958} height={440} alt="Astronaut and coffee photographs with Floyd–Steinberg dithering and nearest-color rendering using the same six measured colors" caption="Each group shows the original, dithering on, and dithering off. Watch the skin tones and the shaded inside of the cup." />
+
+## Choosing colors for each image
+
+With the stock firmware, each pixel has six standard color choices. For a photo full of oranges, the renderer can vary the proportion of red and yellow pixels to match the fruit. A mixture still occupies several pixels, and the pattern can be visible up close. The OpenPaper 7 charts include measured mixtures with 25%, 50% and 75% red, each paired with yellow. [Measured mixture swatches](/panels/dke-7-inch#mixtures).
+
+For a flat illustration, choosing the closest measured mixture for each large color area could give a more consistent orange. For a photograph, reducing the source to six image-specific colors first can discard shading before dithering starts. A more promising experiment would keep the original gradients and tune the red/yellow mixture where orange matters, while preserving small accents elsewhere. The photo trials above tested a fixed measured palette. Whether image-specific mixtures improve on it remains open.
+
+A uniform orange pixel would require a repeatable drive recipe. If a larger set of solid tones becomes available in one refresh mode, the renderer could select orange for one image and a skin tone for another. Extra solid tones and direct 16-code rendering still await verification on the 7.3-inch panel.
