@@ -3,6 +3,8 @@ title: Color Calibration
 description: How to reproduce the Spectra 6 color measurements and interpret the panel swatches.
 ---
 
+import { ProjectSupport } from "@/components/panels/project-support";
+
 We use the same charts and reference card to measure solid inks and dithered mixtures on both panels. See the [bench setup](/panels/overview#setup) for the lighting and camera positions. The panel pages include the measured colors, original captures and downloadable data for [OpenPaper 7](/panels/dke-7-inch) and [OpenPaper L](/panels/dke-13-3-inch).
 
 ## Test patterns
@@ -17,6 +19,8 @@ Three charts place each solid color at three different locations. Each mixture a
 - **Lab** values are D65-equivalent estimates calculated from the card's nominal sRGB references. They do not establish that the lamp has a measured D65 spectrum.
 - **Max. position ΔE₀₀** is the largest difference between a solid color's three positions after white-image correction. Smaller values mean better agreement across positions, not greater absolute accuracy.
 - **Area-model ΔE₀₀** compares a measured mixture with the pixel-coverage-weighted average of its two measured solid colors in XYZ. Lighting, camera response, field position, and the dither pattern all contribute to the difference.
+
+<ProjectSupport />
 
 ## Measurement method
 

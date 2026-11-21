@@ -3,6 +3,7 @@ title: Display control
 description: Refresh speed, partial updates and measured color and grayscale photo LUTs for the 13.3-inch OpenPaper L.
 ---
 
+import { ProjectSupport } from "@/components/panels/project-support";
 import { ExperimentalPanelWarning } from "@/components/panels/experimental-panel-warning";
 import { DemoVideo } from "@/components/panels/demo-video";
 import { PhotoComparison } from "@/components/panels/photo-comparison";
@@ -86,6 +87,8 @@ Move the divider across Eileen Collins’s face. Look at the color of the cheeks
 **The tuned portrait keeps more shading in the face.** On the cheeks and forehead, mean color error fell from **13.11 to 3.30 ΔE₀₀**. Facial lightness contrast rose **32%**. On the panel, the two uniform cheek-color patches had **more dither grain** with the tuned profile. The default used mostly paper-white pixels in both patches.
 
 **What changed in the renderer?** The editor’s Auto / Natural setting chose serpentine Stucki dithering with its standard six-color palette for this crop. The tuned version used serpentine Floyd–Steinberg with the measured `raw16` palette. Both ran on frame-2 with the normal full-color waveform. This compares the complete recipes, including the choice of dither algorithm. [Portrait measurements and capture method](/panels/dke-13-3-inch#portrait-rendering-comparison).
+
+<ProjectSupport />
 
 ## Color photos with less grain
 

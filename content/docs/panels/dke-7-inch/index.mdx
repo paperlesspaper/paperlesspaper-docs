@@ -3,6 +3,7 @@ title: Color Calibration
 description: Solid colors, dithered mixtures, and measurement setup for the DKE 7-inch panel.
 ---
 
+import { ProjectSupport } from "@/components/panels/project-support";
 import { PhotoComparison } from "@/components/panels/photo-comparison";
 import { SolidColorPalette, MixtureColorSwatches, PanelPhoto, PanelPhotoGallery } from "@/components/panels/color-measurements";
 import measurements from "@/public/panels/dke-7-inch/measurements.json";
@@ -80,6 +81,8 @@ Exposure, lighting, frame selection, and profiling follow the [shared measuremen
 The reference-card cross-validation is about 6.31 ΔE₀₀ on average, with a largest held-out error of 16.87 ΔE₀₀. Black varies substantially across positions, as shown above. Each mixture was measured at one position, so the solid-color checks do not establish repeatability for every mixture.
 
 See the [measurement limits](/panels/color-calibration#measurement-limits) before using these values for color matching or comparing panels.
+
+<ProjectSupport />
 
 ## Photo rendering tests
 
