@@ -1,5 +1,5 @@
 ---
-title: DKE 13.3 inch (DEPG1330RTE133F5HP)
+title: Color Calibration
 description: Color measurements, photo dithering comparisons, refresh timings and pixel recipes for the DKE 13.3-inch Spectra 6 panel.
 ---
 
@@ -8,7 +8,7 @@ import measurements from "@/public/panels/dke-13-3-inch/2026-11-10/measurements.
 
 The DEPG1330RTE133F5HP is a 13.3-inch Spectra 6 panel with a 1600 × 1200 pixel test raster. We measured its six solid colors and 45 dithered mixtures using a camera and a Spyder Checkr 24 reference card.
 
-These are camera-based estimates under the test lighting. See the [Panels overview](/panels/overview) for the shared setup, method, and how to read the swatches.
+These are camera-based estimates under the test lighting. See the [shared calibration guide](/panels/color-calibration) for the measurement method and how to read the swatches.
 
 Jump to the [display control measurements](#display-control-measurements) for the refresh, color photo and grayscale trials. For settings and a working photo LUT example, see [Display control](/panels/dke-13-3-inch/display-control).
 
@@ -47,7 +47,7 @@ Sixteen observations from the original charts overlapped the reflection regions 
 
 ## Mixtures
 
-The 45 mixtures use the [shared Bayer patterns](/panels/overview#test-patterns). The mean area-model difference is **6.10 ΔE₀₀**.
+The 45 mixtures use the [shared Bayer patterns](/panels/color-calibration#test-patterns). The mean area-model difference is **6.10 ΔE₀₀**.
 
 <MixtureColorSwatches measurements={measurements.patches} />
 
@@ -87,13 +87,13 @@ These are the original 2560 × 1440 JPEGs used in the measurement series, with n
 | Camera image | 2560 × 1440 JPEG |
 | White-image spatial reference | Original 54-position grid, used for both layouts |
 
-Exposure, lighting, frame selection, and profiling follow the [shared measurement method](/panels/overview#measurement-method).
+Exposure, lighting, frame selection, and profiling follow the [shared measurement method](/panels/color-calibration#measurement-method).
 
 ## Measurement notes
 
 There is still a brightness gradient across the central fields. White and black vary more with position than some of the saturated colors. The reference-card cross-validation is about 4.5 ΔE₀₀ on average.
 
-See the [measurement limits](/panels/overview#measurement-limits) before using these values for color matching or comparing panels.
+See the [measurement limits](/panels/color-calibration#measurement-limits) before using these values for color matching or comparing panels.
 
 ## Downloads
 
