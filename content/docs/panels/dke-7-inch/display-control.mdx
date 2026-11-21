@@ -6,39 +6,42 @@ description: Compare six-color photo rendering on the OpenPaper 7 and see how to
 import { PhotoComparison } from "@/components/panels/photo-comparison";
 import { PanelPhoto } from "@/components/panels/color-measurements";
 
-<Callout type="info" title="Rendering photos on OpenPaper 7">
+<Callout type="info" title="Better photos with stock firmware">
 
-Use the six colors measured on the panel when calculating Floyd–Steinberg dithering. On one 7.3-inch OpenPaper 7, this reduced mean photo color error from **5.42 to 3.33 ΔE₀₀** and made dark brown and teal patches smoother. Both versions took one ordinary full refresh.
+Tune how your project converts an RGB photo into the six colors of OpenPaper 7. The panel still receives ordinary black, white, red, yellow, blue and green pixels in a single full refresh. Start with the slider below, then use the measured palette and contrast curve to try it on your own image.
 
 </Callout>
 
-## More contrast and richer color
+<span id="more-contrast-and-richer-color" />
 
-**The moderate boost gave the best balance for this photo.** On frame-1, the orange areas gained 21% in chroma and 25% in lightness contrast, with similar average color error. All three versions used the same six measured panel colors and Floyd–Steinberg dithering. Only the contrast and chroma of the target image changed before dithering.
+## Default photo settings vs. tuned rendering
 
-Drag the divider or use the arrow keys to compare the photographs. Each slider shows the same crop photographed at the same physical position on the panel in separate refreshes.
-
-### Moderate boost
-
-Look at the pale rim of the cut fruit and the shadow beneath the whole orange. The peel gains color while the flesh and rind remain distinct.
+Drag across the cut orange, from the pale rind into the flesh. Check the deep shadow under the fruit as well as the brighter peel. Both sides are photographs of the same physical spot on a 7.3-inch panel running stock firmware.
 
 <PhotoComparison
-  before={{ src: "/panels/dke-7-inch/2026-11-21/oranges/reference.webp", label: "calibrated reference", alt: "Panel photograph of sliced oranges rendered with the calibrated six-color palette" }}
-  after={{ src: "/panels/dke-7-inch/2026-11-21/oranges/moderate.webp", label: "moderate boost", alt: "Sliced oranges with richer peel and a deeper shadow after the moderate contrast and chroma boost" }}
+  before={{ src: "/panels/dke-7-inch/2026-11-21/oranges/auto-natural.webp", label: "default · Auto / Natural", alt: "Orange pieces on the panel using the default photo-editor palette and automatic Natural settings" }}
+  after={{ src: "/panels/dke-7-inch/2026-11-21/oranges/paired-moderate.webp", label: "measured palette + moderate boost", alt: "The same orange pieces rendered with the six measured colors and a moderate contrast and chroma adjustment" }}
   width={624} height={416}
 />
 
-### Strong boost
+The default looks yellower and more saturated. The tuned rendering brings red back into the peel and separates light from shadow. Lightness contrast in the orange regions rose **32%**. Average color error against the source fell from **20.73 to 5.37 ΔE₀₀**, even though chroma fell **30%**. Speckle is still visible up close. [Paired measurements and capture conditions](/panels/dke-7-inch#default-photo-settings-vs-moderate-boost).
 
-The shadow between the pieces turns deeper red. This setting produced the greatest average contrast, but its colors were further from the source photograph.
+<span id="moderate-boost" />
 
-<PhotoComparison
-  before={{ src: "/panels/dke-7-inch/2026-11-21/oranges/reference.webp", label: "calibrated reference", alt: "Panel photograph of sliced oranges rendered with the calibrated six-color palette" }}
-  after={{ src: "/panels/dke-7-inch/2026-11-21/oranges/strong.webp", label: "strong boost", alt: "Sliced oranges with deeper red shadows after the strong contrast and chroma boost" }}
-  width={624} height={416}
-/>
+### Use this rendering in a project
 
-**Which colors made the orange?** In the moderate version, the orange parts of the fruit used **71.29% red, 23.47% yellow and 5.20% white** pixels, plus 13 green pixels (0.04%). The white share in the fruit fell from 11.3% in the reference. The white background accounts for most of the white pixels in the complete photo. [Pixel counts, settings and measurements](/panels/dke-7-inch#orange-photo-contrast-and-chroma).
+1. Crop and resize the RGB image to its final pixel dimensions. For a full OpenPaper 7 image, use **800 × 480** in landscape.
+2. Model the six inks with their [measured sRGB values](/panels/dke-7-inch#solid-colors). Convert to linear RGB and normalize each channel to the measured paper black and white.
+3. For the orange photo, apply an S-curve to lightness in the paper range (**exponent 1.25**) and multiply Lab chroma around the paper’s neutral axis by **1.30**. Preserve black and white endpoints.
+4. Dither with serpentine Floyd–Steinberg using the measured colors to calculate error. Write each winning color’s **native RGB code** to the output PNG. Keep those pixels at their original size and bypass any second round of dithering. [Curve, stronger setting and photo comparisons](/panels/dke-7-inch#orange-photo-contrast-and-chroma).
+
+Download the [OpenPaper 7 photo renderer (ZIP)](/panels/dke-7-inch/2026-11-21/oranges/openpaper7-renderer.zip). Unzip it, then run the following in that directory on macOS or Linux. The defaults reproduce the tuned side of the slider.
+
+```sh
+python3 -m pip install numpy Pillow colour-science
+cc -O3 -fPIC -shared diffuse.c -o diffuse.so -lm
+python3 render.py cropped-photo.jpg device.png
+```
 
 ## Measured colors in the ditherer
 
@@ -50,10 +53,10 @@ Grain fell **3.7% on average across eight uniform patches**. The improvement dep
 
 <PanelPhoto src="/panels/dke-7-inch/2026-11-21/dithering-comparison.jpg" width={958} height={440} alt="Astronaut and coffee photographs with Floyd–Steinberg dithering and nearest-color rendering using the same six measured colors" caption="Each group shows the original, dithering on, and dithering off. Watch the skin tones and the shaded inside of the cup." />
 
+<span id="strong-boost" />
+
+The stronger setting deepened the shadows further but increased average color error. [See the strong-boost slider in Test data](/panels/dke-7-inch#strong-boost-against-the-calibrated-reference).
+
 ## Choosing colors for each image
 
-With the stock firmware, each pixel has six standard color choices. For a photo full of oranges, the renderer can vary the proportion of red and yellow pixels to match the fruit. A mixture still occupies several pixels, and the pattern can be visible up close. The OpenPaper 7 charts include measured mixtures with 25%, 50% and 75% red, each paired with yellow. [Measured mixture swatches](/panels/dke-7-inch#mixtures).
-
-We also tested red/yellow mixtures tuned to the oranges in this photograph. Allowing neutral pixels made the orange more accurate but increased grain. Restricting orange areas to red and yellow made uniform patches smoother and slightly increased photo color error. [Photographs and results of the mixture trials](/panels/dke-7-inch#redyellow-mixtures-in-the-orange-photo).
-
-A uniform orange pixel would require a repeatable drive recipe. If a larger set of solid tones becomes available in one refresh mode, the renderer could select orange for one image and a skin tone for another. Extra solid tones and direct 16-code rendering still await verification on the 7.3-inch panel.
+A six-color frame can show an orange area by mixing pixels. In the tuned fruit, **71% of the pixels were red, 23% yellow and 5% white**. Changing the mixture trades texture for accuracy. Restricting the fruit to red and yellow made flat patches smoother, while allowing neutral pixels helped match the source color. For photos with several hues, the measured six-color palette gives the ditherer access to all six inks. [Mixture photographs and results](/panels/dke-7-inch#redyellow-mixtures-in-the-orange-photo).

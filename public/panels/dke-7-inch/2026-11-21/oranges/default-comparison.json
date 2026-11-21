@@ -1,0 +1,90 @@
+{
+  "orange_blocks": 498,
+  "renderer": {
+    "version": "1.4.1",
+    "intent": "natural",
+    "palette": "aitjcizeSpectra6Palette",
+    "options": {
+      "processingEngine": "auto",
+      "adjustmentEngine": "auto",
+      "ditheringType": "errorDiffusion",
+      "errorDiffusionMatrix": "floydSteinberg",
+      "serpentine": true,
+      "colorMatching": "rgb"
+    }
+  },
+  "means": {
+    "default": {
+      "chroma": 48.72628461273118,
+      "contrast": 9.226328967408973,
+      "error": 20.725311864363487
+    },
+    "tuned": {
+      "chroma": 34.202889045175496,
+      "contrast": 12.202323512461687,
+      "error": 5.367737163208402
+    }
+  },
+  "captures": [
+    {
+      "refresh": 1,
+      "shot": 1,
+      "card_validation": 5.548430244885715,
+      "default": {
+        "chroma": 48.32563729110878,
+        "contrast": 10.079593845513045,
+        "error": 20.68535079597505
+      },
+      "tuned": {
+        "chroma": 35.53009887528907,
+        "contrast": 11.609669552057511,
+        "error": 5.546179044278885
+      }
+    },
+    {
+      "refresh": 1,
+      "shot": 2,
+      "card_validation": 5.548781462545237,
+      "default": {
+        "chroma": 48.167574756480505,
+        "contrast": 9.935590191173034,
+        "error": 20.617991747267006
+      },
+      "tuned": {
+        "chroma": 35.59350985538817,
+        "contrast": 11.245407214102471,
+        "error": 5.602890787608173
+      }
+    },
+    {
+      "refresh": 2,
+      "shot": 1,
+      "card_validation": 5.673502196456879,
+      "default": {
+        "chroma": 49.1497383901675,
+        "contrast": 8.402277806332577,
+        "error": 20.921278190164486
+      },
+      "tuned": {
+        "chroma": 32.95734354402474,
+        "contrast": 13.035516587154447,
+        "error": 5.158727650448676
+      }
+    },
+    {
+      "refresh": 2,
+      "shot": 2,
+      "card_validation": 5.758582881984353,
+      "default": {
+        "chroma": 49.262188013167936,
+        "contrast": 8.487854026617235,
+        "error": 20.676626724047413
+      },
+      "tuned": {
+        "chroma": 32.73060390600001,
+        "contrast": 12.91870069653232,
+        "error": 5.163151170497875
+      }
+    }
+  ]
+}
