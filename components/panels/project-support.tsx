@@ -7,17 +7,17 @@ const actions = [
 
 export function ProjectSupport() {
   return (
-    <aside id="support-the-project" aria-labelledby="project-support-title" className="not-prose @container relative my-8 scroll-mt-24 rounded-xl bg-[#104aa1] px-4 py-5 text-center text-white sm:px-6">
+    <aside id="support-the-project" aria-labelledby="project-support-title" className="not-prose @container my-8 flex flex-col items-center gap-3 scroll-mt-24 rounded-xl bg-[#104aa1] px-4 pb-5 text-center text-white sm:px-6">
       <img
         src="/panels/openpaper-heart-frame.webp"
         alt=""
         width={384}
         height={491}
         loading="lazy"
-        className="pointer-events-none absolute -top-3 left-3 h-auto w-14 -rotate-3 drop-shadow-sm @min-[28rem]:-top-4 @min-[28rem]:left-4 @min-[28rem]:w-28"
+        className="pointer-events-none -mt-3 h-auto w-14 -rotate-3 drop-shadow-sm @min-[28rem]:-mt-4 @min-[28rem]:w-28"
       />
-      <div className="@min-[28rem]:pl-32">
-        <h2 id="project-support-title" className="m-0 flex min-h-12 items-center justify-center pl-14 text-xl font-bold leading-tight @min-[28rem]:min-h-0 @min-[28rem]:pl-0">
+      <div className="w-full">
+        <h2 id="project-support-title" className="m-0 text-xl font-bold leading-tight">
           Support the project
         </h2>
         <p className="mt-1.5 text-sm leading-relaxed">
