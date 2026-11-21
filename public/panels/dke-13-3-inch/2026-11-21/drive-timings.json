@@ -1,0 +1,15 @@
+{
+  "confirmCut": {
+    "BUSY_s": 2.800993,
+    "median_prep_effect": 21.654
+  },
+  "controlEnd": {
+    "BUSY_s": 26.712671,
+    "median_prep_effect": 4.281
+  },
+  "pllEnd": {
+    "BUSY_s": 11.122407,
+    "median_prep_effect": 6.383
+  },
+  "PLL07_vs_PLL08_complete_median": 31.362
+}

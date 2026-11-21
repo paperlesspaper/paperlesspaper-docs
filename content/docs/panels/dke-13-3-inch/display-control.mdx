@@ -1,6 +1,6 @@
 ---
 title: Display control
-description: How refresh speed affects color, how a partial update behaves, and how to set a grayscale photo LUT on the 13.3-inch OpenPaper L.
+description: Refresh speed, partial updates and measured color and grayscale photo LUTs for the 13.3-inch OpenPaper L.
 ---
 
 import { PanelPhoto } from "@/components/panels/color-measurements";
@@ -13,7 +13,8 @@ These results come from one 13.3-inch OpenPaper L (`frame-2`, DKE DEPG1330RTE133
 - **Draw letters and curves in place.** The 14-letter paperlesspaper logo appeared in 6.10 s on a prepared white screen, with no full-screen flash visible during drawing. [Watch the path demos](#path-demos).
 - **Update part of the screen.** Repeated black/white updates kept the surrounding colors close to their starting values. A clock marker ticked once per second without a full-screen flash, leaving a yellow ring after one minute.
 - **Render more shades.** Mixing neighboring pixels produced orange, skin tones and up to 16 grayscale levels. A two-pass update also produced a uniform light gray without dithering.
-- **Tune photos and smooth text.** An editable photo LUT lets you choose which gray represents each brightness range. Gray edge pixels smooth the outlines of letters.
+- **Reduce grain in color photos.** Using all 16 image codes in one full refresh reduced measured grain by 22% across 12 color patches. [Compare the photographs](#color-photos-with-less-grain).
+- **Tune grayscale photos and smooth text.** An editable photo LUT sets the gray for each brightness range. Gray edge pixels smooth letter outlines.
 
 </Callout>
 
@@ -91,9 +92,25 @@ Changing `CCSET` (`0xE0`) and the temperature hint produced no fast, red-only up
 
 ## Native colors, orange and skin tones
 
-The panel produces black, white, red, yellow, blue and green. Orange required mixing adjacent red and yellow pixels for a repeatable result. For pale pink, a 4 × 4 tile used 14 white pixels and two red ones.
+The six standard image codes produce black, white, red, yellow, blue and green. Mixing adjacent red and yellow pixels gave repeatable saturated orange. For pale pink, a 4 × 4 tile used 14 white pixels and two red ones. A separate two-pass test produced a **solid peach** suitable for light skin. It prepared the pixel with red (`0x3`) and drove blue (`0x5`) for 2.8 s. [Solid-color measurements](/panels/dke-13-3-inch#two-pass-solid-colors).
 
 <PanelPhoto src="/panels/dke-13-3-inch/control/skin-tones.webp" width={785} height={645} alt="Twenty warm and cool skin-tone mixtures photographed on the physical panel" caption="Twenty skin-tone mixtures photographed on the panel. The tile pattern is visible under magnification." />
+
+## Color photos with less grain
+
+The `raw16` photo profile lets Floyd–Steinberg dithering choose among all 16 four-bit image codes in one normal refresh. On frame-2 those codes produced **seven distinguishable groups of solid colors**, including a muted blue. Across 12 uniform patches, measured grain fell **22%** compared with six-code dithering. Average color error across the three photographs stayed about the same.
+
+<PanelPhoto src="/panels/dke-13-3-inch/2026-11-21/photo-comparison.webp" width={716} height={746} alt="Source, six-code and sixteen-code views of an astronaut, coffee cup and cat. The two panel columns were photographed together." caption="Digital originals at left. The center and right columns come from the same physical refresh. Compare the shading on the astronaut’s cheek and the texture of the cat’s fur." />
+
+<PanelPhoto src="/panels/dke-13-3-inch/2026-11-21/paired-patches.webp" width={836} height={319} alt="Magnified camera crops of darker skin, dark brown, brick red and orange in two captures, each with six codes on the left and sixteen on the right" caption="Dark brown and brick red became smoother in both captures. Orange stayed grainy. A and B are separate refreshes with the physical positions swapped. Each pair is shown in the same order for comparison." />
+
+To encode your own photograph, unpack the [color photo renderer (ZIP)](/panels/dke-13-3-inch/2026-11-21/photo-renderer.zip), install NumPy and Pillow, and run these commands in the extracted directory. The two output folders contain the image RAM for each controller half on the bench. The editable [color LUT (JSON)](/panels/dke-13-3-inch/2026-11-21/palette.json) pairs measured colors with pixel codes. The controller supplies the voltage waveform. [Paired measurements and two-pass photo trials](/panels/dke-13-3-inch#color-photo-dithering-measurements).
+
+```sh
+cc -O3 -fPIC -shared diffuse.c -o diffuse.so -lm
+python3 render_photo.py photo.jpg six-code-output --mode normal
+python3 render_photo.py photo.jpg sixteen-code-output --mode raw16
+```
 
 ## Grayscale photographs, text and dithering
 
@@ -111,7 +128,7 @@ Gray edge pixels smoothed text while the white background stayed close to the mo
 
 ## Setting a custom LUT
 
-**You can edit the photo LUT in the bench firmware.** It maps image brightness to two-pass pixel recipes. For example, `FD` prepares a pixel with code `F` and drives it with `D` during the timed update. Loading custom voltage waveforms into the NT61522 remains unverified.
+**You can edit the grayscale photo LUT in the bench firmware.** It maps image brightness to two-pass pixel recipes. For example, `FD` prepares a pixel with code `F` and drives it with `D` during the timed update. Loading custom voltage waveforms into the NT61522 remains unverified.
 
 1. Save the [example photo LUT (CSV)](/panels/dke-13-3-inch/control/photo-lut.csv?build=6382664) and [Python encoder/decoder](/panels/dke-13-3-inch/control/patch_palette.py) in the same directory.
 2. Edit the two-hex-digit `recipe` and its inclusive brightness limit, `upper_luma` (0–255). Use 16 rows with nondecreasing thresholds ending at 255. Repeat 255 to fill unused rows.

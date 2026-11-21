@@ -1,6 +1,6 @@
 ---
 title: DKE 13.3 inch (DEPG1330RTE133F5HP)
-description: Color measurements, refresh timings, partial updates, and grayscale recipe tests for the DKE 13.3-inch Spectra 6 panel.
+description: Color measurements, photo dithering comparisons, refresh timings and pixel recipes for the DKE 13.3-inch Spectra 6 panel.
 ---
 
 import { SolidColorPalette, MixtureColorSwatches, PanelPhoto } from "@/components/panels/color-measurements";
@@ -10,7 +10,7 @@ The DEPG1330RTE133F5HP is a 13.3-inch Spectra 6 panel with a 1600 × 1200 pixel 
 
 These are camera-based estimates under the test lighting. See the [Panels overview](/panels/overview) for the shared setup, method, and how to read the swatches.
 
-Jump to the [display control measurements](#display-control-measurements) for the refresh and grayscale trials. For settings and a working photo LUT example, see [Display control](/panels/dke-13-3-inch/display-control).
+Jump to the [display control measurements](#display-control-measurements) for the refresh, color photo and grayscale trials. For settings and a working photo LUT example, see [Display control](/panels/dke-13-3-inch/display-control).
 
 ## Setup
 
@@ -190,6 +190,38 @@ The repeated three-level photo and text test gave a white-patch camera luma of 1
 The Apollo photo occupied 1040 × 1040 individually addressed pixels. The bright eight-level version used serpentine Floyd–Steinberg to select the tone and ordered tiles for mixed levels. Both measured ramps in the 16-mixture trial increased monotonically. On matching smooth patches of the suit, coarse brightness variation fell about 7% and fine variation rose about 13% relative to eight levels. Of the six direct recipes, the two darkest nearly coincided. The reference strip below the photo belongs to the test pattern.
 
 <PanelPhoto src="/panels/dke-13-3-inch/control/dither-grain.webp" width={1438} height={861} alt="Physical camera crops comparing different spatial mixtures on the astronaut photograph" caption="Corresponding camera crops from the dither trials. Compare samples under the same lighting when judging grain." />
+
+### Color photo dithering measurements
+
+On 21 November 2026, frame-2 displayed each photograph twice in the same full refresh, once with the six standard image codes and once with all 16 codes. Both used serpentine Floyd–Steinberg error diffusion in linear RGB. The second refresh swapped their positions. Each photograph occupied 224 × 224 native pixels per version. The bench lamp was off. The photographs and 12 uniform target patches occupied the upper part of the panel, clear of the reflection below. [Photographs and enlarged patches](/panels/dke-13-3-inch/display-control#color-photos-with-less-grain).
+
+| Capture | Grain, 6 codes | Grain, 16 codes | Photo ΔE₀₀, 6 codes | Photo ΔE₀₀, 16 codes |
+| --- | ---: | ---: | ---: | ---: |
+| A (6 codes on the left) | 2.944 | 2.310 | 12.982 | 13.184 |
+| B (16 codes on the left) | 2.664 | 2.059 | 10.297 | 10.004 |
+| Mean | **2.80** | **2.18** | **11.64** | **11.59** |
+
+**Grain** measures fine color variation in the 12 flat patches. We subtracted a Gaussian-smoothed image (σ = 2 panel pixels) from the camera-derived Lab image, then measured the RMS residual for each patch. The mean fell 22.1% using 16 codes. **Photo ΔE₀₀** measures color error against the source. We profiled each capture against a Spyder Checkr 24, scaled the source to the local paper white and black, and compared 12 × 12 panel-pixel block averages. Lower values are better for both measures. The small difference in mean ΔE₀₀ is below the precision of this camera comparison. [Per-photo and per-patch readings for both captures (JSON)](/panels/dke-13-3-inch/2026-11-21/paired-captures.json).
+
+We also tested the same three photographs at 432 × 432 pixels in separate refreshes. With dithering off, the 23-recipe palette left visible steps across the face. The same two-pass photograph shifted by an average of 18.22 ΔE₀₀ between repeats. Using ten recipes from two completed refreshes also failed to improve mean color accuracy over the six-code baseline. The benchmark photographs are Eileen Collins (NASA), coffee (Rachel Michetti) and Chelsea the cat (Stefan van der Walt). [All photo trials and camera-profile errors (JSON)](/panels/dke-13-3-inch/2026-11-21/photo-metrics.json) · [Source photographs](https://scikit-image.org/docs/stable/api/skimage.data.html).
+
+<PanelPhoto src="/panels/dke-13-3-inch/2026-11-21/two-pass-portrait.webp" width={824} height={341} alt="Same crop of Eileen Collins on frame-2 with six standard codes, then with dithering enabled and disabled for 23 candidate two-pass recipes" caption="Three separate panel photographs. Look at the transition from the forehead to the cheek in the right-hand crop with dithering off." />
+
+### Two-pass solid colors
+
+A completed single refresh produced seven separated solid-color groups on this panel. Codes `0x4`, `0x7`, `0xC` and `0xF` clustered around the same muted blue. With two passes, each pixel receives a preparation code and a destination code. We tested all 16 × 16 pairs at 100, 1,350 and 2,800 ms, with captures 2 and 12 s after each cutoff. [Measured single-pass codes (CSV)](/panels/dke-13-3-inch/2026-11-21/single-pass-codes.csv) · [All 768 timed trials (CSV)](/panels/dke-13-3-inch/2026-11-21/two-pass-recipes.csv).
+
+The first pair of charts yielded 23 candidate recipes at 2.8 s. On an independently repositioned chart, only three reproduced their first measurement within 7 camera-relative Lab76 units. When we fitted all four positions and required at least 9 units of separation even between the closest observations, two recipes remained distinguishable from each other. Only **`0x3 → 0x5`** also met that distance from every standard-color center. It produced a solid peach closer to the light skin target than any single standard color. Saturated orange remained outside its reach. The tests cover one device and short holds. Panel temperature and long-term stability were unmeasured. [Four-position measurements (CSV)](/panels/dke-13-3-inch/2026-11-21/four-position-check.csv).
+
+<PanelPhoto src="/panels/dke-13-3-inch/2026-11-21/solid-samples.webp" width={568} height={170} alt="Two repeats each of uniform recipes 5D and 35, showing the warmer pinkish tone of 35" caption="Magnified camera crops from two chart layouts. Each field received one code per pass across all of its pixels, with dithering off." />
+
+| Second drive after normal preparation | Active BUSY | Effect of preparation on the final color¹ |
+| --- | ---: | ---: |
+| PLL `0x07`, cut by hardware reset | 2.801 s | 21.65 |
+| PLL `0x07`, completed | 11.122 s | 6.38 |
+| PLL `0x08`, completed | 26.713 s | 4.28 |
+
+¹ Median camera-relative Lab76 distance between different preparations for the same destination code. At the same clock setting, the early cutoff retained much more of the preparation color. Timing starts at the falling BUSY edge of the second refresh and excludes the complete first pass. The optical trace records how patches changed color during the factory drive. Individual voltage levels, phase durations and a command for uploading custom NT61522 waveforms remain unverified. [Timing measurements (JSON)](/panels/dke-13-3-inch/2026-11-21/drive-timings.json) · [Optical time series (CSV)](/panels/dke-13-3-inch/2026-11-21/optical-trace.csv).
 
 ### Uniform gray recipes
 
