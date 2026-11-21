@@ -3,6 +3,7 @@ title: Display control
 description: Compare six-color photo rendering on the OpenPaper 7 and see how to choose mixtures for an image.
 ---
 
+import { ProjectSupport } from "@/components/panels/project-support";
 import { ExperimentalPanelWarning } from "@/components/panels/experimental-panel-warning";
 import { PhotoComparison } from "@/components/panels/photo-comparison";
 import { PanelPhoto } from "@/components/panels/color-measurements";
@@ -45,6 +46,8 @@ python3 -m pip install numpy Pillow colour-science
 cc -O3 -fPIC -shared diffuse.c -o diffuse.so -lm
 python3 render.py cropped-photo.jpg device.png
 ```
+
+<ProjectSupport />
 
 ## Measured colors in the ditherer
 
