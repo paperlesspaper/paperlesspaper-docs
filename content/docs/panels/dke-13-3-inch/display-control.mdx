@@ -106,6 +106,10 @@ python3 render_photo.py photo.jpg six-code-output --mode normal
 python3 render_photo.py photo.jpg sixteen-code-output --mode raw16
 ```
 
+## Spectra35: five-pass color experiments
+
+The later [Spectra35 experiments](/panels/spectra35) use 35 recipe entries, custom 2048-byte LUTs and per-pixel native preparation. They are separate from the ordinary-refresh 16-code profile above. See the dedicated guide for the experimental warning, Epdoptimize palette, token mapping, offline planner and current limitations.
+
 ## Native colors, orange and skin tones
 
 The six standard image codes produce black, white, red, yellow, blue and green. Mixing adjacent red and yellow pixels gave repeatable saturated orange. For pale pink, a 4 × 4 tile used 14 white pixels and two red ones. A separate two-pass test produced a **solid peach** suitable for light skin. It prepared the pixel with red (`0x3`) and drove blue (`0x5`) for 2.8 s. [Solid-color measurements](/panels/dke-13-3-inch#two-pass-solid-colors).

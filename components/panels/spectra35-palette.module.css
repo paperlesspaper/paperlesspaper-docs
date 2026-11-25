@@ -1,0 +1,6 @@
+.caption { margin-bottom: 1rem; font-size: .9rem; line-height: 1.5; }
+.grid { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: .75rem; }
+.item { overflow: hidden; min-width: 0; border: 1px solid var(--color-fd-border, #aaa); border-radius: .5rem; padding: .65rem; display: flex; flex-direction: column; gap: .25rem; font-size: .75rem; }
+.swatch { height: 3.5rem; margin: -.65rem -.65rem .4rem; border-bottom: 1px solid #0002; }
+.item strong { font-size: .85rem; }
+.item code { font-variant-numeric: tabular-nums; }
