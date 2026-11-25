@@ -1,0 +1,69 @@
+{
+  "date": "2026-11-25",
+  "scope": "One 13.3-inch OpenPaper L bench specimen; provisional recipes",
+  "palette_sha256": "c829d104627fcf7e7666ef24b4733809fdeb0947a95900e6df537b3850bf26c0",
+  "runs": [
+    {
+      "label": "refine-lake-r1",
+      "passes": 5,
+      "natural_busy": true,
+      "build_seconds": 255.92103828399559
+    },
+    {
+      "label": "flags-split-r2",
+      "passes": 5,
+      "natural_busy": true,
+      "hashes_verified": true,
+      "build_seconds": 274.36131988902343,
+      "capture_stability": {
+        "0": {
+          "last10_max_channel_range": 2.0,
+          "last10_mean_channel_std": 0.24213997887177321
+        },
+        "4": {
+          "last10_max_channel_range": 2.0,
+          "last10_mean_channel_std": 0.2181019210629494
+        }
+      }
+    },
+    {
+      "label": "balcony-split-r2",
+      "passes": 5,
+      "natural_busy": true,
+      "hashes_verified": true,
+      "build_seconds": 328.52817736699944,
+      "capture_stability": {
+        "0": {
+          "last10_max_channel_range": 2.0,
+          "last10_mean_channel_std": 0.2232534854471755
+        },
+        "4": {
+          "last10_max_channel_range": 4.0,
+          "last10_mean_channel_std": 0.4804817938217476
+        }
+      }
+    },
+    {
+      "label": "geneva-split-r1",
+      "passes": 5,
+      "natural_busy": true,
+      "hashes_verified": true,
+      "build_seconds": 315.1690788489941,
+      "capture_stability": {
+        "0": {
+          "last10_max_channel_range": 3.0,
+          "last10_mean_channel_std": 0.2072519996073438
+        },
+        "4": {
+          "last10_max_channel_range": 3.0,
+          "last10_mean_channel_std": 0.2836908006866845
+        }
+      }
+    }
+  ],
+  "limits": [
+    "Camera-derived RGB; no absolute Source/VCOM voltage measurement.",
+    "Different halves contain different source content; split frames alone cannot rank quality.",
+    "Later v3 preprocessing is scene-tuned and is not part of the palette."
+  ]
+}
