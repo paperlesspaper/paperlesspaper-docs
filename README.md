@@ -39,6 +39,15 @@ Open `http://localhost:3000`.
 - `yarn start` serves the production build.
 - `yarn lint` runs the project linter.
 
+## Production deployment
+
+Dokploy builds this repository with Railpack. `railpack.json` invokes Yarn through
+Corepack explicitly, retaining the Yarn version and SHA-512 checksum in
+`package.json` and the frozen dependency lockfile. This avoids the Mise Yarn shim,
+which otherwise attempts a second package-manager installation and can fail its
+provenance check before the docs build starts. The runtime starts Next.js directly
+so it does not need to install or download a package manager.
+
 ## Content model
 
 - `content/docs` contains the authored MDX pages and sidebar metadata.
