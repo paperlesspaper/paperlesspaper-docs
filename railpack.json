@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schema.railpack.com",
+  "steps": {
+    "install": {
+      "commands": [
+        { "src": "package.json", "dest": "package.json" },
+        { "src": "yarn.lock", "dest": "yarn.lock" },
+        "npm install --global corepack@0.36.0",
+        "corepack yarn install --frozen-lockfile"
+      ]
+    },
+    "build": {
+      "commands": ["corepack yarn run build"]
+    }
+  },
+  "deploy": {
+    "startCommand": "node node_modules/next/dist/bin/next start"
+  }
+}
