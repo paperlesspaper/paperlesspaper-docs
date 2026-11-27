@@ -18,9 +18,51 @@ The clips contain rapid changes in brightness. Press play to start a recording.
 - **Dark / bright flashes** count separate excursions more than 20 camera brightness levels below both endpoints or above both endpoints, respectively. For another flash of the same kind to count, the brightness must first return to within 10 levels of the endpoint range or cross back into it. Expand **Flash timing** to see the first and last camera sample of each excursion, measured from the refresh command. **Brightness reversals** also catch visible changes of direction *between* the endpoints. A peak or trough counts after a counter-movement of at least 20 levels. Two reversals can belong to the same flash. These optical counts describe the camera patch. Electrical pulses can be faster than the camera.
 - The **colour strip** follows the camera's RGB readings. The line above it shows brightness, with dots at detected reversals and a dashed line at the end of electrical drive. Optical measurements use three-frame median smoothing. Timing is always in real seconds, including when the native clip is playing at 4× speed.
 
-## Testing shorter drives for the remaining 20 pairs
+## Yellow and red to white and blue
 
-Of the 20 new directions, **4 matched the target**, **12 were approximations** and **4 missed**. The table shows the selected partial drive for each direction. Use the matrix above to play the corresponding camera clip or switch to its native reference. A count of zero flashes can accompany a missed target.
+Select **Follow-up pulse sequence** in any of these four cells to see the new camera footage alongside the earlier trial and the native reference. Each trial began with a fresh native preparation on both halves of frame-2. We varied the order and length of darkening and lightening pulses, tried short alternating pulses, and tested sequences assembled from previously measured transitions.
+
+| Follow-up recording | Closest native colour (upper / lower) | Result | Drive | Optically stable by | Dark / bright flashes | Reversals |
+| --- | --- | --- | ---: | ---: | ---: | ---: |
+| [Yellow → White](/panels/transition-atlas/yellow-white-follow-up.mp4) | White | Approximation | 2.706 s | 2.18 s | 1 / 0 | 1 |
+| [Yellow → Blue](/panels/transition-atlas/yellow-blue-follow-up.mp4) | Blue | Approximation | 1.883 s | 1.94 s | 0 / 0 | 2 |
+| [Red → White](/panels/transition-atlas/red-white-follow-up.mp4) | White | Approximation | 1.681 s | 1.68 s | 1 / 0 | 2 |
+| [Red → Blue](/panels/transition-atlas/red-blue-follow-up.mp4) | Blue | Approximation | 2.706 s | 2.84 s | 1 / 2 | 3 |
+
+**Shorter options.** These alternatives were at least 10% faster with the same endpoint grade and no additional detected flashes.
+
+- [Yellow → white](/panels/transition-atlas/yellow-white-short-option.mp4) took 1.681 s with 1 dark and 0 bright flashes and 17 brightness reversals. Target distance was 0.156, compared with 0.228 for the selected follow-up.
+- [Yellow → blue](/panels/transition-atlas/yellow-blue-short-option.mp4) took 1.681 s with 0 dark and 0 bright flashes and 12 brightness reversals. Target distance was 0.170, compared with 0.225 for the selected follow-up.
+
+**Closer colour, more movement.** A zero flash count can still accompany flicker between the starting and ending brightness. These recordings pair a smaller colour error with more brightness reversals.
+
+- [Yellow → white](/panels/transition-atlas/yellow-white-colour-option.mp4) reached a target distance of 0.107, compared with 0.228 for the selected clip. The camera detected 27 brightness reversals in 2.521 s.
+- [Yellow → blue](/panels/transition-atlas/yellow-blue-colour-option.mp4) reached a target distance of 0.136, compared with 0.225 for the selected clip. The camera detected 26 brightness reversals in 2.521 s.
+- [Red → white](/panels/transition-atlas/red-white-colour-option.mp4) reached a target distance of 0.171, compared with 0.271 for the selected clip. The camera detected 20 brightness reversals in 2.521 s.
+
+The median camera interval in the follow-up was 33 ms, with a longest gap of 71 ms. Flash counts and settling times describe the upper patch in the clip. Both panel halves determine the endpoint grade.
+
+We scored 77 pulse and timing configurations per direction. A match requires both halves to finish closest to the requested colour with an RMS distance of 0.10 or less. We ranked matches ahead of approximations and misses. For an approximation or miss, we considered endpoints within 0.13 of the best distance in that class. We then preferred fewer brightness reversals, fewer dark or bright excursions beyond the endpoints, and a shorter drive, in that order. This favours a steadier patch when both colours receive the same grade. Both the previous and new clips remain available. The matrix opens the better of the two by these criteria.
+
+[Compare all four-direction measurements, including the pulse recipes and both panel readings (CSV)](/panels/transition-atlas/four-transition-trials.csv).
+
+### Can the panel clock run faster?
+
+Register `0x30` selects the panel clock. In an earlier full-colour comparison, a complete drive at the normal dynamic setting (`0x08`) took 35.8 s, the nominal 75 Hz setting (`0x04`) took 23.9 s and the nominal 120 Hz setting (`0x07`) took 14.9 s. At 120 Hz, blue was paler and showed a vertical band. All the partial-drive trials here already use `0x07`. [Watch the three clocks side by side](/panels/dke-13-3-inch/display-control#full-frame-speed-flashing-and-color).
+
+We also changed the frequency index in the waveform table while holding the PLL at `0x07`. Each run used the same seven 96-period source sequences in the same positions. The controller reported the following times from the refresh command to BUSY-ready.
+
+| Waveform index | Programmed periods | Measured drive |
+| ---: | ---: | ---: |
+| 7 | 96 | 808.2 ms |
+| 6 | 96 | 808.1 ms |
+| 4 | 96 | 808.0 ms |
+
+The three BUSY times differed by less than 0.2 ms across the entire drive. Changing this waveform field produced essentially the same duration at the fixed 120 Hz PLL setting. A waveform period is one stage of pigment drive. A settled colour change can take many periods. Raising the SPI transfer speed would affect image upload time, which falls outside these BUSY measurements. A faster panel PLL mode above 120 Hz has yet to be verified on frame-2.
+
+## Initial partial-drive trials for 20 pairs
+
+In the initial screen of 20 directions, **4 matched the target**, **12 were approximations** and **4 missed**. The table shows the selected partial drive for each direction. Choose **Partial-drive trial** in the matrix to play an initial recording. A count of zero flashes can accompany a missed target.
 
 | Transition | Closest native colour¹ | Result | Drive | Dark / bright flashes |
 | --- | --- | --- | ---: | ---: |
@@ -55,7 +97,7 @@ For each target we compared the final camera RGB of both patches with all six na
 
 A **match** reaches the intended nearest colour on both halves with a worst distance of at most 0.10. An **approximation** reaches that nearest colour but exceeds the tolerance. A **miss** means at least one half ended closest to a different reference. Several requests can therefore select the same physical recipe or patch. Each run started from a freshly prepared native colour. Repeated partial updates can start with a different pigment distribution.
 
-[Download the timings, flash counts and endpoint assessments for every clip (CSV)](/panels/transition-atlas/transition-timings.csv). [Compare all 980 candidate scores for the 20 new pairs (CSV)](/panels/transition-atlas/partial-trial-comparison.csv).
+[Download the timings, flash counts and endpoint assessments for every clip (CSV)](/panels/transition-atlas/transition-timings.csv?revision=four-pulses). [Compare all 980 candidate scores for the 20 new pairs (CSV)](/panels/transition-atlas/partial-trial-comparison.csv).
 
 ## Earlier partial-drive comparisons
 
