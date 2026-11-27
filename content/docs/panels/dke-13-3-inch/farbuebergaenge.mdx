@@ -1,0 +1,39 @@
+---
+title: Farbübergänge auf OpenPaper L
+description: Alle 30 Richtungen zwischen den sechs Grundfarben des 13,3-Zoll-Panels als Kameraaufnahmen, mit Helligkeitsverlauf und gemessenen Zeiten.
+---
+
+import { ColorTransitionAtlas } from "@/components/panels/color-transition-atlas";
+
+Ein blaues Feld lässt sich auf weißem Grund mit einem kurzen Impuls zeichnen und wieder löschen. Bei Weiß → Gelb wurde das Feld im Versuch erst dunkel, bevor sich Gelb zeigte. Wähle unten zwei Farben, um genau diesen Unterschied auf dem Panel zu sehen. Über **Richtung umkehren** lässt sich der Rückweg vergleichen.
+
+Die Filme enthalten schnelle Hell-Dunkel-Wechsel und starten per Klick.
+
+<ColorTransitionAtlas />
+
+## So liest du Aufnahme und Zeitkurve
+
+- **Ansteuerung** ist die gemessene Zeit vom Refresh-Befehl bis zur Freigabe durch den Displaycontroller (BUSY). Alle Zeitangaben auf der Seite beziehen sich auf den realen Versuch. Der native Kurzfilm läuft beim Start vierfach beschleunigt. Mit **Echtzeit** siehst du die tatsächliche Dauer. Die Teilansteuerungen laufen im Originaltempo.
+- **Erste sichtbare Änderung** ist der erste von zwei aufeinanderfolgenden Kamerawerten, bei denen mindestens ein RGB-Kanal mehr als acht Stufen vom Ausgangswert abweicht. **Optisch stabil** ist der erste Zeitpunkt nach der letzten Abweichung von mehr als acht Stufen vom Endwert. Mindestens 0,35 Sekunden Beobachtung müssen danach übrig sein. RGB-Werte haben hier 256 Stufen pro Kanal.
+- **Helligkeitsumkehrungen** sind die Punkte auf der Kurve. Ein Hoch- oder Tiefpunkt zählt, wenn die Helligkeit danach um mindestens 20 von 255 Kamerastufen in die Gegenrichtung läuft. Die Auswertung glättet über drei Kamerabilder. Zwei Umkehrpunkte können zu demselben sichtbaren Blitz gehören. Ein farbiger Umweg bei ähnlicher Helligkeit ist im Farbstreifen unter der Kurve zu erkennen.
+- **Gleiche Ausgangs- und Zielfarbe** liegt auf der Diagonale. Um die Fläche zu halten, kann der Controller ein Update auslassen. Läuft für den Rest des Bildes ein nativer Vollrefresh, kann auch ein Feld mit unverändertem Zielwert aufblitzen.
+
+## Wann lohnt sich ein Kurzimpuls?
+
+**Weiß ↔ Blau** ist ein guter Kandidat für wechselnde Markierungen. Bei **Rot → Gelb** lässt sich ein bereits rotes Feld ruhig aufhellen. **Weiß → Gelb** braucht in den hier gezeigten Teilversuchen einen sichtbaren dunklen Zwischenzustand. Der längere Versuch erreicht ein kräftigeres Gelb. Für **Schwarz → Rot** zeigt die Seite eine Folge aus zwölf Impulsen. Das erreichte Rot fällt heller aus als nach dem nativen Vollrefresh.
+
+Für den Kurzimpuls-Vergleich haben wir acht Ansteuerdauern mit zwei Anordnungen und beiden Panelcontrollern untersucht. Ein direkter Impuls kommt in die Auswahl, wenn in allen vier Messfeldern dieselbe native Zielfarbe am nächsten liegt, der größte normierte RGB-RMS-Abstand höchstens 0,10 beträgt und die Helligkeit den Bereich zwischen Anfang und Ende um höchstens zwei Prozentpunkte des Referenzweiß überschreitet. Unter den qualifizierten Aufnahmen zeigen wir die kürzeste gemessene Ansteuerung. Die Rot- und Gelbversuche sind ergänzende Pulsfolgen mit ihrer jeweiligen Farbabweichung. Wo nur der Vollrefresh angeboten wird, ist dieser Weg auf der Seite belegt. Schnellere Wellenformen können dort noch ungetestet sein.
+
+## Was im E Ink passiert
+
+Das Spectra-6-Panel erzeugt seine sechs sichtbaren Grundfarben mit vier Pigmenten. Eine zeitliche Folge elektrischer Felder verschiebt geladene Pigmentteilchen. Was von der Betrachtungsseite Licht zurückstreut oder absorbiert, hängt von ihrer Verteilung ab. Grün und Schwarz sind so auch ohne ein eigenes grünes oder schwarzes Pigment möglich. Weil die Teilchen bei einer anderen Ausgangsfarbe anders verteilt sind, kann derselbe Impuls zu einer anderen sichtbaren Farbe führen. Die Seite illustriert diesen Mechanismus schematisch. Die Kamera misst das zurückkehrende Licht. [E Ink über elektrophoretische Displays](https://www.eink.com/tech/detail/How_it_works) · [Herstellerangaben zu den vier Spectra-6-Pigmenten](https://jp.eink.com/investor/4724053015xx926151/2023%20-%2006%20-%2029_Annual%20Report)
+
+## Versuchsaufbau
+
+Die Aufnahmen stammen vom OpenPaper L auf **frame-2**, DKE DEPG1330RTE133F5HP, 1600 × 1200 Pixel. Ein erster nativer Refresh setzte sechs Zeilen auf ihre jeweiligen Ausgangsfarben. Der gefilmte zweite Refresh schrieb sechs Spalten in die Zielfarben und dauerte **26,86 Sekunden**. So durchliefen alle 30 Richtungen und die sechs unveränderten Kontrollfelder gleichzeitig denselben Vollrefresh. Die Clips zeigen echte Kameraausschnitte. Aus der Mitte jedes Feldes stammt seine eigene Farb- und Helligkeitskurve. Die 36 Start- und Endfelder wurden gegen die sechs Referenzfarben geprüft, mit einem Weißabgleich pro Spalte. Für die gezeigten Kurven bleiben die Kamerawerte erhalten. [Messzeiten aller gezeigten Übergänge als CSV](/panels/transition-atlas/messzeiten.csv)
+
+<video controls playsInline preload="none" poster="/panels/transition-atlas/raster.webp" src="/panels/transition-atlas/raster.mp4" aria-label="Alle 36 Kamerafelder beim nativen Vollrefresh, vierfaches Tempo" />
+
+*Das gesamte Raster im vierfachen Tempo. Ausgangsfarben laufen von oben nach unten, Zielfarben von links nach rechts, jeweils in der Reihenfolge Weiß, Schwarz, Gelb, Rot, Blau und Grün.*
+
+Die Zeitpunkte beschreiben diesen Lauf unter der Testbeleuchtung. Beim Vollrefresh lagen die Kamerabilder im Median 60 ms auseinander, mit einer größten Lücke von 260 ms. Belichtung und Bildtransport begrenzen die zeitliche Auflösung. Sehr kurze Blitze können zwischen zwei Aufnahmen liegen. Ein kleiner RGB-Abstand bei einem einzelnen Wechsel sagt außerdem wenig über Nachbilder nach vielen Wiederholungen aus. [Farbreferenz und Kalibrierung](/panels/color-calibration) · [Weitere Messungen zur Ansteuerung](/panels/dke-13-3-inch/display-control)

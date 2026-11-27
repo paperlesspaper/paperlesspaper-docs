@@ -1,0 +1,25 @@
+.atlas{margin:1.5rem 0 2.5rem;--line:var(--color-fd-border,#c7ceca);--soft:var(--color-fd-muted,#eff2ee);line-height:1.45}
+.atlas button{cursor:pointer;color:inherit;font:inherit}
+.atlas button:focus-visible{outline:3px solid #3687ce;outline-offset:2px}
+.matrix{width:100%;table-layout:fixed;border-collapse:separate;border-spacing:3px;font-size:.81rem;margin:0}
+.matrix caption{text-align:left;margin-bottom:.6rem;font-size:.93rem}
+.matrix th{font-weight:600;text-align:center}.matrix tr>th:first-child{width:16%;text-align:left}
+.matrix i{display:inline-block;height:.72rem;width:.72rem;border-radius:50%;border:1px solid #758381;vertical-align:baseline;margin-right:.3rem}
+.matrix td{text-align:center;color:var(--color-fd-muted-foreground)}
+.matrix button{display:block;width:100%;height:2rem;border-radius:.3rem;background:var(--soft);font-size:1.2rem}
+.matrix button.alternative{color:var(--color-fd-foreground)}.matrix button:hover{outline:1px solid currentColor}
+.matrix button[aria-pressed=true],.variants button[aria-pressed=true],.speeds button[aria-pressed=true]{background:var(--color-fd-foreground,#212a27);color:var(--color-fd-background,#fff)}
+.legend,.scale,.detail small,.ink small{font-size:.78rem;color:var(--color-fd-muted-foreground);line-height:1.5}
+.legend{margin:.6rem 0 1.7rem}
+.heading,.variants,.speeds,.scale{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.heading{justify-content:space-between;border-top:1px solid var(--line);padding-top:1.2rem;margin-bottom:.8rem}
+.heading h2{font-size:1.65rem;font-weight:650;margin:0}
+.heading button,.variants button,.speeds button{border:1px solid var(--line);border-radius:.4rem;padding:.3rem .65rem;font-size:.82rem}
+.variants{margin:.6rem 0 1rem}.detail{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:1.2rem;align-items:start}
+.detail video{width:100%;aspect-ratio:4/3;display:block;background:#26312e;border-radius:.5rem}
+.speeds,.detail small{margin-top:.5rem}.metrics{margin:0}.metrics div{border-bottom:1px solid var(--line);padding:.3rem 0 .5rem;margin-bottom:.3rem;display:flex;align-items:baseline;justify-content:space-between;gap:.5rem}
+.metrics dt{font-size:.83rem}.metrics dd{font-weight:650;font-variant-numeric:tabular-nums;white-space:nowrap;margin:0}
+.note,.ink p{font-size:.9rem;line-height:1.55;margin:.85rem 0}.curve,.ink{border-top:1px solid var(--line);margin:1.35rem 0 0;padding-top:.85rem}
+.atlas figcaption{font-weight:650;margin-bottom:.5rem}.curve svg,.ink svg{display:block;width:100%}.scale{justify-content:space-between}.phases{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem}.phases>div{text-align:center}.phases svg{max-height:86px}.phases strong,.phases small{display:block}
+@media(max-width:600px){.matrix{font-size:.65rem;border-spacing:2px}.matrix i{display:block;margin:.2rem auto}.matrix tbody i{margin-left:0}.detail{grid-template-columns:1fr}.metrics{display:grid;grid-template-columns:1fr 1fr;column-gap:1rem}.metrics div{display:block}.heading h2{font-size:1.35rem}.scale{font-size:.7rem}}
+.matrix button{font-size:.94rem;font-variant-numeric:tabular-nums}.matrix sup{font-size:.65rem;vertical-align:super;margin-left:1px}
