@@ -1,0 +1,42 @@
+from,to,method,drive_s,first_observed_s,stable_s,brightness_turns,video_speed,recording
+white,black,Nativer Vollrefresh,26.86,0.29,26.72,53,4,white-black.mp4
+white,yellow,Kurzer Gelbversuch,0.605,0.07,0.47,1,1,white-yellow-yellow-short.mp4
+white,yellow,Längerer Gelbversuch,1.612,0.06,1.1,1,1,white-yellow-split-long.mp4
+white,yellow,Nativer Vollrefresh,26.86,0.35,21.69,65,4,white-yellow.mp4
+white,red,Nativer Vollrefresh,26.86,0.29,26.42,46,4,white-red.mp4
+white,blue,Kurzimpuls,0.052,0.05,0.23,0,1,white-blue-partial.mp4
+white,blue,Nativer Vollrefresh,26.86,0.11,26.96,64,4,white-blue.mp4
+white,green,Nativer Vollrefresh,26.86,0.29,25.94,73,4,white-green.mp4
+black,white,Kurzimpuls,0.405,0.05,0.4,0,1,black-white-partial.mp4
+black,white,Nativer Vollrefresh,26.86,0.41,21.81,70,4,black-white.mp4
+black,yellow,Nativer Vollrefresh,26.86,0.35,21.69,64,4,black-yellow.mp4
+black,red,Rote Pulsfolge,0.909,0.31,1.07,0,1,black-red-train.mp4
+black,red,Nativer Vollrefresh,26.86,0.11,26.42,44,4,black-red.mp4
+black,blue,Nativer Vollrefresh,26.86,3.86,26.96,49,4,black-blue.mp4
+black,green,Nativer Vollrefresh,26.86,0.11,25.94,71,4,black-green.mp4
+yellow,white,Nativer Vollrefresh,26.86,0.11,21.81,81,4,yellow-white.mp4
+yellow,black,Kurzimpuls,0.405,0.05,0.35,0,1,yellow-black-partial.mp4
+yellow,black,Nativer Vollrefresh,26.86,0.11,26.66,45,4,yellow-black.mp4
+yellow,red,Nativer Vollrefresh,26.86,0.23,26.42,35,4,yellow-red.mp4
+yellow,blue,Nativer Vollrefresh,26.86,0.05,26.96,56,4,yellow-blue.mp4
+yellow,green,Nativer Vollrefresh,26.86,0.11,25.94,71,4,yellow-green.mp4
+red,white,Nativer Vollrefresh,26.86,0.11,21.81,84,4,red-white.mp4
+red,black,Nativer Vollrefresh,26.86,0.11,26.66,43,4,red-black.mp4
+red,yellow,Kurzimpuls,0.405,0.04,0.32,0,1,red-yellow-partial.mp4
+red,yellow,Nativer Vollrefresh,26.86,0.35,21.69,54,4,red-yellow.mp4
+red,blue,Nativer Vollrefresh,26.86,0.05,26.96,56,4,red-blue.mp4
+red,green,Nativer Vollrefresh,26.86,0.05,26.91,71,4,red-green.mp4
+blue,white,Kurzimpuls,0.027,0.04,0.15,0,1,blue-white-partial.mp4
+blue,white,Nativer Vollrefresh,26.86,0.11,21.81,77,4,blue-white.mp4
+blue,black,Kurzimpuls,1.617,0.04,0.48,0,1,blue-black-partial.mp4
+blue,black,Nativer Vollrefresh,26.86,0.05,26.66,39,4,blue-black.mp4
+blue,yellow,Nativer Vollrefresh,26.86,0.35,21.69,52,4,blue-yellow.mp4
+blue,red,Nativer Vollrefresh,26.86,0.05,26.42,33,4,blue-red.mp4
+blue,green,Nativer Vollrefresh,26.86,0.05,26.91,75,4,blue-green.mp4
+green,white,Nativer Vollrefresh,26.86,0.05,21.75,81,4,green-white.mp4
+green,black,Kurzimpuls,1.617,0.04,0.44,0,1,green-black-partial.mp4
+green,black,Nativer Vollrefresh,26.86,0.05,26.6,37,4,green-black.mp4
+green,yellow,Kurzimpuls,0.405,0.04,0.5,0,1,green-yellow-partial.mp4
+green,yellow,Nativer Vollrefresh,26.86,0.35,21.69,50,4,green-yellow.mp4
+green,red,Nativer Vollrefresh,26.86,0.05,26.42,37,4,green-red.mp4
+green,blue,Nativer Vollrefresh,26.86,0.05,26.96,62,4,green-blue.mp4
