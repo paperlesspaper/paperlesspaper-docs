@@ -49,17 +49,15 @@ The later **v3 input correction** brought the lake's light reflections and blue 
 
 These later photo trials also use a linear-light adapter, gamut compression and a scene-tuned v3 correction. **Those transforms are not built into the palette download or the generic example below.** No additional camera color-correction matrix was applied to these displayed photographs. Reference-card changes between captures remain a source of uncertainty.
 
-## Download the experimental assets
+## Palette and measurements
 
-- [Appearance palette for Epdoptimize — JSON](/panels/spectra35/palette.json)
-- [Recipe mapping — JSON](/panels/spectra35/recipe-map.json)
-- [Offline recipe kit — ZIP](/panels/spectra35/spectra35-recipe-kit.zip): palette, recipe/profile data, four exact 2048-byte LUT binaries, measurements, planner, instructions and SHA-256 manifest
-- [Compact test results — JSON](/panels/spectra35/test-results.json)
-- [Epdoptimize palette PR](https://github.com/paperlesspaper/epdoptimize/pull/35): proposed `spectra35ExperimentalPalette` export and `spectra35-experimental` lookup key
+The 35 appearance values come from the paperlesspaper bench calibration on one 13.3-inch OpenPaper L. We photographed two freshly rendered charts, sampled both display halves and used an in-frame colour reference. The lake and poster comparisons above come from separate camera runs on the same unit.
 
-The kit compiles files locally; it **does not flash firmware or send anything to the panel**. A production driver and ordinary API integration are not included. The downloadable JSON works as a custom palette with the tested Epdoptimize 1.4.1 API. The named export is proposed in the PR; do not assume it is available in an installed release yet.
+- [Download the appearance palette (JSON)](/panels/spectra35/palette.json)
+- [Download the camera readings for all 35 entries (JSON)](/panels/spectra35/measurements.json)
+- [Download the photo-trial results (JSON)](/panels/spectra35/test-results.json)
 
-## 1. Use appearance RGB for dithering
+## Use appearance RGB for dithering
 
 Each entry has two deliberately different values:
 
@@ -75,7 +73,7 @@ This distinction also exists in Spectra6: its measured red can be dark and muted
 
 The source palette SHA-256 is <code style={{ overflowWrap: "anywhere" }}>c829d104627fcf7e7666ef24b4733809fdeb0947a95900e6df537b3850bf26c0</code>. Values retain the measured recipe order. Names such as `black` and `white` identify reference states, not ideal RGB endpoints. Tokens run from `#010000` through `#010022`, corresponding to indices 0–34.
 
-## 2. Generate a preview and an exact token PNG
+## Generate a preview and an exact token PNG
 
 Fit or rotate the original to **1600 × 1200 before dithering**. The example uses four separate canvases: `input`, `adjusted`, `preview` and `tokens`. It uses automatic dither selection with fixed neutral adjustments, rather than the later scene-tuned v3 preprocessing.
 
@@ -105,42 +103,12 @@ const options = {
 await applyImageAdjustments(input, adjusted, options);
 await ditherCanvas(adjusted, preview, options);
 replaceColors(preview, tokens, palette);
-// Export tokens as an opaque, lossless PNG for the offline planner.
+// Export tokens as an opaque, lossless PNG to preserve the recipe IDs.
 ```
 
 The preview uses appearance colors. The token PNG will look almost black because every pixel is an ID near `#010000`. Do not resize, interpolate, JPEG-compress, color-convert or re-dither it after replacement. Unknown or transparent pixels must be rejected, not mapped to the nearest recipe.
 
 For uniform fields or an undithered ramp, set `ditheringType: "quantizationOnly"`. This chooses among the existing states; it does not create a continuously smooth color space.
-
-## 3. Compile the five-pass plan
-
-Unpack the recipe kit, create an environment and compile the exact token image:
-
-```sh
-python3 -m venv .venv
-. .venv/bin/activate
-python -m pip install -r requirements.txt
-python compile_plan.py tokens.png new-plan
-```
-
-The output contains `indices.png` and `passes/plan.json`, five image streams and four LUT binaries. Existing output directories are rejected. This planner retains the full image and all four measured LUT passes even if only a few recipes are used. It does not insert a color strip.
-
-| Pass | Action |
-| --- | --- |
-| 0 | Prepare every pixel using its recipe's native Spectra6 history |
-| 1–4 | Upload the corresponding complete 2048-byte LUT and the exact bank-selection mask, in the recorded order |
-
-A mask value selects a waveform bank; the final color also depends on pigment history. The full measured order is part of the palette definition. A recipe index is **not** a four-bit native pixel code.
-
-## 4. Execute only with a matching experimental driver
-
-The ZIP is an **offline adapter**, not a stock-firmware upload tool. Its transport files rotate the logical raster into two 600 × 1600 controller images, pack two four-bit selections per byte and compress 100 blocks per controller. Each block decodes to 4800 bytes and carries a little-endian 16-bit compressed length. These are bench transport files; other drivers must adapt them explicitly.
-
-Before each refresh, check the complete LUT SHA-256, transport SHA-256 and both controller raster hashes in the plan. Require verified staging and natural BUSY completion for power-on, refresh and power-off. A rejected transfer must not trigger refresh. Inspect saved state before retrying; if the starting pigment history is uncertain, prepare a fresh complete run.
-
-The bench needed paced UART transfers and temporary camera-stream pauses to avoid USB/UART data loss. Packet sizing is a transport detail, not reduced image bit depth. It does not change the 35 recipe values. The later linear-light image adapter does round to 8 bits per channel separately; this can coarsen dark input differences.
-
-During a split comparison, inactive masks use bank 0 / Source0. **Source0 is an experimental hold candidate, not electrically verified HiZ.** Keeping that mask unchanged does not prove the other half is optically unaffected. Compare unchanged regions and the reference card before and after the custom passes.
 
 ## What is confirmed, provisional and still missing
 

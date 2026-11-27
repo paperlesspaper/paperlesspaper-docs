@@ -120,7 +120,7 @@ These trials used the experimental firmware on `frame-2`. BUSY times cover the p
 | Initial 240 × 400 partial window, fast clock | 14.944 s |
 | Direct comparison of refresh arguments `0x00` and `0x01` | 14.948 s each |
 
-Other normal refreshes took about 27 s on this panel. In the initial window trial the exterior faded even when its image RAM contents stayed the same. The “VCOM” label in the comparison identifies the argument byte sent with display refresh `0x12`. With `0x01`, the sampled exterior patches stayed close to their initial readings across repeated changes.
+Other normal refreshes took about 27 s on this panel. In the initial window trial the exterior faded even when its image RAM contents stayed the same. The two recordings compare arguments `0x00` and `0x01` sent with refresh command `0x12`. [Public driver examples and optical comparison](/panels/dke-13-3-inch/display-control#partial-updates-and-the-area-outside-the-window). With `0x01`, the sampled exterior patches stayed close to their initial readings across repeated changes.
 
 ### Digits and clock markers
 

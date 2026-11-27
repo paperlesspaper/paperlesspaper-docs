@@ -46,6 +46,8 @@ Budget for two stages. Preparing white took **38.5 s** in the filmed 60 ms run. 
 
 For a field that must erase as well as draw, write the replacement pixels into a window and let the waveform finish. At the fast clock, a 240 × 400 window covering **5% of the panel still took about 15 seconds**, about as long as the whole screen. Sending `0x01` with the refresh command (`0x12`) kept the surrounding dark, red and blue patches close to their original appearance during repeated black/white updates. The active window still flashed.
 
+Public 13.3-inch drivers show both refresh arguments. The EL133UF1 driver in BigInky sends `0x00`, and Seeed’s T133A01 driver sends `0x01`. Our comparison records the optical effect on one OpenPaper L. The bench did not measure the common-electrode voltage during these updates. [BigInky refresh sequence](https://github.com/HeathenUK/biginky/blob/d946630f6f1ee93aa11c7ade9b4d8e02b4447e8d/lib/EL133UF1/EL133UF1.cpp#L1356-L1360) · [Seeed refresh sequence](https://github.com/Seeed-Studio/Seeed_GFX2/blob/c2a6dd6eafbaf805fff9be0cd4b019e071222f4b/src/driver/epaper/Driver_T133A01.cpp#L153-L159)
+
 <PanelPhoto src="/panels/dke-13-3-inch/control/partial-vcom.webp" width={945} height={1350} alt="Comparison of the center patch and the surrounding chart for refresh arguments 00 and 01" caption="The center changes in both trials. Compare the dark border and colored patches outside it for arguments 0x00 and 0x01." />
 
 <video controls playsInline preload="none" poster="/panels/dke-13-3-inch/control/window-poster.webp" src="/panels/dke-13-3-inch/control/window.mp4" aria-label="Repeated black and white partial refreshes with the surrounding color patches in view" />
@@ -110,7 +112,7 @@ python3 render_photo.py photo.jpg sixteen-code-output --mode raw16
 
 ## Spectra35: five-pass color experiments
 
-The later [Spectra35 experiments](/panels/spectra35) use 35 recipe entries, custom 2048-byte LUTs and per-pixel native preparation. They are separate from the ordinary-refresh 16-code profile above. See the dedicated guide for the experimental warning, Epdoptimize palette, token mapping, offline planner and current limitations.
+The later [Spectra35 experiments](/panels/spectra35) use 35 recipe entries, custom 2048-byte LUTs and per-pixel native preparation. They are separate from the ordinary-refresh 16-code profile above. See the dedicated guide for the experimental warning, Epdoptimize palette, photo comparisons and current limitations.
 
 ## Native colors, orange and skin tones
 
