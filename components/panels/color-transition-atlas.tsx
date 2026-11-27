@@ -14,7 +14,7 @@ type Run = {
   settle: number | null; turns: [number, string][]; trace: number[][];
   darkFlashes: number; brightFlashes: number; flashWindows: [string, number, number][];
   quality?: "match" | "approximation" | "miss";
-  recipe: string; endpoint: string; run: string;
+  endpoint: string; run: string;
 };
 const pairs = observations as unknown as Record<string, { native: Run; partials: Run[] }>;
 const outcomes = {
@@ -106,7 +106,7 @@ export function ColorTransitionAtlas() {
       </div>
       <dl className={styles.metrics}>{[["Drive",sec(run.drive)],["First visible change",sec(run.onset)],["Optically stable by",sec(run.settle)],["Brightness reversals",String(run.turns.length)],["Dark / bright flashes",run.darkFlashes+" / "+run.brightFlashes]].map(([k,v])=><div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
     </div>
-    <p className={styles.note}>{run.quality&&<strong className={styles.outcome} data-assessment={run.quality}>{outcomes[run.quality]}</strong>}<b>{run.recipe}.</b> {run.endpoint} {run.turns.length===0?"No brightness reversal crossed the detection threshold in this patch.":`First measured ${run.turns[0][1]==="bright"?"peak":"trough"} at ${sec(run.turns[0][0])}.`}</p>
+    <p className={styles.note}>{run.quality&&<strong className={styles.outcome} data-assessment={run.quality}>{outcomes[run.quality]}</strong>}{run.endpoint} {run.turns.length===0?"No brightness reversal crossed the detection threshold in this patch.":`First measured ${run.turns[0][1]==="bright"?"peak":"trough"} at ${sec(run.turns[0][0])}.`}</p>
     {run.flashWindows.length>0&&<details className={styles.flashTimes}>
       <summary>Flash timing ({run.flashWindows.length})</summary>
       <ol>{run.flashWindows.map(([kind,start,end],i)=><li key={i}>{kind} · {sec(start)}{end>start?" – "+sec(end):" (one sample)"}</li>)}</ol>
