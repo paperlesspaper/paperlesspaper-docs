@@ -1,0 +1,78 @@
+---
+title: OpenPaper L colour transition atlas
+description: Camera footage for all 30 directions between the six panel colours. Compare partial drives with a native refresh, including endpoint colour, visible flashes and measured timing.
+---
+
+import { ColorTransitionAtlas } from "@/components/panels/color-transition-atlas";
+
+Choose a starting colour and a target. Each pair has a partial-drive recording and a native reference. **Reverse direction** shows what happens when the same field changes back. White → blue, for example, took 52 ms of drive and settled after about 230 ms in the short-pulse test. Starting from blue takes a different pulse to reach white.
+
+The clips contain rapid changes in brightness. Press play to start a recording.
+
+<ColorTransitionAtlas />
+
+## Reading the camera measurements
+
+- **Drive** runs from the refresh command to the controller’s BUSY-ready edge. **First visible change** is the first of two successive camera samples with at least one RGB channel more than eight levels from its starting value. Each channel ranges from 0 to 255.
+- **Optically stable by** is the first sample after the last deviation of more than eight levels in any channel from the final colour. At least 0.35 seconds of observation must remain. A patch can settle at the wrong colour. “Unresolved” means the recording did not establish the timing.
+- **Dark / bright flashes** count separate excursions more than 20 camera brightness levels below both endpoints or above both endpoints, respectively. For another flash of the same kind to count, the brightness must first return to within 10 levels of the endpoint range or cross back into it. Expand **Flash timing** to see the first and last camera sample of each excursion, measured from the refresh command. **Brightness reversals** also catch visible changes of direction *between* the endpoints. A peak or trough counts after a counter-movement of at least 20 levels. Two reversals can belong to the same flash. These optical counts describe the camera patch. Electrical pulses can be faster than the camera.
+- The **colour strip** follows the camera's RGB readings. The line above it shows brightness, with dots at detected reversals and a dashed line at the end of electrical drive. Optical measurements use three-frame median smoothing. Timing is always in real seconds, including when the native clip is playing at 4× speed.
+
+## Testing shorter drives for the remaining 20 pairs
+
+Of the 20 new directions, **4 matched the target**, **12 were approximations** and **4 missed**. The table shows the selected partial drive for each direction. Use the matrix above to play the corresponding camera clip or switch to its native reference. A count of zero flashes can accompany a missed target.
+
+| Transition | Closest native colour¹ | Result | Drive | Dark / bright flashes |
+| --- | --- | --- | ---: | ---: |
+| White → Black | Black | Approximation | 1.412 s | 0 / 0 |
+| White → Red | Red | Approximation | 6.046 s | 8 / 0 |
+| White → Green | Green | Approximation | 0.909 s | 1 / 0 |
+| Black → Yellow | Yellow | Match | 1.614 s | 0 / 0 |
+| Black → Blue | Blue | Approximation | 0.405 s | 0 / 1 |
+| Black → Green | Green | Approximation | 2.017 s | 0 / 1 |
+| Yellow → White | Yellow | Miss | 2.017 s | 1 / 0 |
+| Yellow → Red | Red | Approximation | 6.046 s | 3 / 0 |
+| Yellow → Blue | Green / Blue | Miss | 1.412 s | 1 / 0 |
+| Yellow → Green | Green | Match | 1.412 s | 1 / 0 |
+| Red → White | Yellow | Miss | 2.017 s | 0 / 0 |
+| Red → Black | Black | Match | 1.412 s | 0 / 1 |
+| Red → Blue | Green | Miss | 1.412 s | 0 / 1 |
+| Red → Green | Green | Approximation | 1.614 s | 0 / 1 |
+| Blue → Yellow | Yellow | Match | 6.046 s | 1 / 0 |
+| Blue → Red | Red | Approximation | 6.046 s | 15 / 0 |
+| Blue → Green | Green | Approximation | 0.909 s | 1 / 0 |
+| Green → White | White | Approximation | 2.017 s | 0 / 0 |
+| Green → Red | Red | Approximation | 6.046 s | 3 / 0 |
+| Green → Blue | Blue | Approximation | 0.405 s | 0 / 1 |
+
+¹ A single colour means both panel halves agreed. Two colours give the upper and lower readings, respectively.
+
+For **white → red**, a shorter 4.032 s sequence produced 1 dark and 0 bright flashes. Its target distance was 0.176. The selected clip shows the closer red. The comparison CSV includes both recipes.
+
+On frame-2 we prepared six rows with a native colour refresh before each trial. Seven columns then received different partial-drive recipes simultaneously. The same layout appeared on both panel controllers. A separate column supplied a control. Across 7 trials we tested **49 recipes per starting colour**, including individual selectors, ordered stages and repeated pulses. The programme durations ranged from **0.405 to 6.046 seconds**. The measured drive includes any trailing neutral periods. In the recipe readout, “S” identifies a source selector, the number after × gives the number of periods for that selector, and parentheses group repeated stages.
+
+For each target we compared the final camera RGB of both patches with all six native colours measured in the same column before the partial drive. Each row was normalised to its nearby starting white. **Target distance** is the root-mean-square channel difference in these camera-relative units. Smaller values are closer. Among matches we selected the shortest drive, breaking ties by flash count and then colour distance. If no recipe matched, we preferred candidates that placed the target first on **both** controllers. Among those, or across all recipes if none did, we kept candidates within 0.005 of the lowest worst-controller distance and applied the same tie-breaks. The displayed crop, timing curve and flash counts come from the upper controller. Both halves contribute to the colour assessment.
+
+A **match** reaches the intended nearest colour on both halves with a worst distance of at most 0.10. An **approximation** reaches that nearest colour but exceeds the tolerance. A **miss** means at least one half ended closest to a different reference. Several requests can therefore select the same physical recipe or patch. Each run started from a freshly prepared native colour. Repeated partial updates can start with a different pigment distribution.
+
+[Download the timings, flash counts and endpoint assessments for every clip (CSV)](/panels/transition-atlas/transition-timings.csv). [Compare all 980 candidate scores for the 20 new pairs (CSV)](/panels/transition-atlas/partial-trial-comparison.csv).
+
+## Earlier partial-drive comparisons
+
+For the original short-pulse recordings we screened eight drive durations, two layouts and both controllers. We kept the shortest filmed pulse whose four patches all placed the target first, had a worst RGB RMS distance of at most 0.10, and stayed within two percentage points of the endpoint brightness range relative to reference white.
+
+There are also three earlier pulse-sequence clips. **White → yellow** shows a dark intermediate state in both trials. The longer sequence produces a stronger yellow, though it remains paler than the native reference. **Black → red** uses a train of twelve pulses and finishes warmer and paler than native red. The camera integrates some of the fast pulses.
+
+## What happens inside the ink
+
+Spectra 6 uses four pigments to produce six visible panel colours. An electric field moves charged pigment particles through the ink. Their distribution near the viewing surface changes which wavelengths are scattered back or absorbed. Green and black are possible without dedicated green or black particles. Because the starting distribution differs, applying the same field sequence to two starting colours can give different endpoints. In the illustration, the strip at the top of each cell is a measured colour. The particle positions underneath are a schematic explanation. The camera measures reflected light at the surface. [E Ink’s technology overview](https://www.eink.com/tech/detail/How_it_works) · [Manufacturer’s description of the four Spectra 6 pigments](https://jp.eink.com/investor/4724053015xx926151/2023%20-%2006%20-%2029_Annual%20Report)
+
+## Native reference and test conditions
+
+We used the **1600 × 1200 OpenPaper L** on frame-2 with a DKE DEPG1330RTE133F5HP panel. A native refresh first set the six starting rows. A second native refresh wrote the six target columns in **26.86 seconds**. This captured all 30 directions and the six same-colour controls during a single refresh. The diagonal fields also show why an unchanged area can flash during a full-screen update. When the panel is idle, the same colour can simply be held.
+
+<video controls playsInline preload="none" poster="/panels/transition-atlas/raster.webp" src="/panels/transition-atlas/raster.mp4" aria-label="All 36 camera patches during the native refresh at four times real speed" />
+
+*The full native matrix at 4× speed. Rows give the starting colour and columns give the target, in the order white, black, yellow, red, blue and green.*
+
+We checked the initial and final fields against the six panel references using per-column white normalisation. The curves retain the camera readings. During the native recording the median sample interval was 60 ms and the longest gap was 260 ms. In the new partial-drive trials the pooled median camera interval was 33 ms and the longest gap was 46 ms. For these trials, camera timestamps mark frame arrival at the bench computer and include camera delivery latency. Exposure and frame intervals limit which short flashes can be resolved. These are camera-relative measurements under test lighting. [Colour calibration](/panels/color-calibration) · [Display control experiments](/panels/dke-13-3-inch/display-control)

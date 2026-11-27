@@ -5,18 +5,25 @@ import observations from "./transition-data.json";
 import styles from "./color-transition-atlas.module.css";
 
 const colors = [
-  ["white", "Weiß", "#faf9ec"], ["black", "Schwarz", "#24262c"],
-  ["yellow", "Gelb", "#edcb39"], ["red", "Rot", "#bf4842"],
-  ["blue", "Blau", "#36669e"], ["green", "Grün", "#39806b"],
+  ["white", "White", "#faf9ec"], ["black", "Black", "#24262c"],
+  ["yellow", "Yellow", "#edcb39"], ["red", "Red", "#bf4842"],
+  ["blue", "Blue", "#36669e"], ["green", "Green", "#39806b"],
 ];
 type Run = {
   file: string; source: string; drive: number; rate: number; onset: number | null;
   settle: number | null; turns: [number, string][]; trace: number[][];
+  darkFlashes: number; brightFlashes: number; flashWindows: [string, number, number][];
+  quality?: "match" | "approximation" | "miss";
   recipe: string; endpoint: string; run: string;
 };
 const pairs = observations as unknown as Record<string, { native: Run; partials: Run[] }>;
+const outcomes = {
+  match: "Target matched",
+  approximation: "Approximation",
+  miss: "Target missed",
+};
 const media = "/panels/transition-atlas/";
-const sec = (n: number | null) => n === null ? "offen" : n.toLocaleString("de-DE", {maximumFractionDigits: 2}) + " s";
+const sec = (n: number | null) => n === null ? "Unresolved" : n.toLocaleString("en-GB", {maximumFractionDigits: 3}) + " s";
 const rgb = (p: number[]) => `rgb(${p.slice(1).join(",")})`;
 const luminance = (p: number[]) => .2126*p[1] + .7152*p[2] + .0722*p[3];
 
@@ -28,8 +35,8 @@ function Curve({run}: {run: Run}) {
   const y = (l: number) => 79 - 64*l/255;
   const path = pts.map(p => [x(p[0]), y(luminance(p))].join(",")).join(" ");
   return <figure className={styles.curve}>
-    <figcaption>Farbe und Helligkeit im Kamerafeld</figcaption>
-    <svg viewBox="0 0 600 104" role="img" aria-label={`Gemessene Farbe und Helligkeit über ${sec(end)}. ${run.turns.length} deutliche Helligkeitsumkehrungen.`}>
+    <figcaption>Colour and brightness in the camera patch</figcaption>
+    <svg viewBox="0 0 600 104" role="img" aria-label={`Recorded colour and brightness over ${sec(end)}. ${run.turns.length} brightness reversals.`}>
       <defs><linearGradient id={id}>{pts.map((p,i)=><stop key={i} offset={p[0]/end} stopColor={rgb(p)}/>)}</linearGradient></defs>
       <path d="M12 15H588 M12 47H588 M12 79H588" stroke="currentColor" opacity=".16" fill="none"/>
       <polyline points={path} fill="none" stroke="currentColor" strokeWidth="2"/>
@@ -37,7 +44,7 @@ function Curve({run}: {run: Run}) {
       <path d={`M${x(run.drive)} 8V101`} stroke="currentColor" strokeDasharray="3 3"/>
       {run.turns.map(([t],i)=>{const p=pts.reduce((a,b)=>Math.abs(a[0]-t)<Math.abs(b[0]-t)?a:b);return <circle key={i} cx={x(t)} cy={y(luminance(p))} r="3" fill="currentColor"/>;})}
     </svg>
-    <div className={styles.scale}><span>0 s · Start</span><span>┆ Ende der Ansteuerung</span><span>{sec(end)}</span></div>
+    <div className={styles.scale}><span>0 s · Start</span><span>┆ Drive ends</span><span>{sec(end)}</span></div>
   </figure>;
 }
 
@@ -47,23 +54,23 @@ function Ink({run, from, to}: {run: Run; from: string; to: string}) {
   const intermediate=run.turns[0]?.[0] ?? ((run.onset??0)+(run.settle??run.drive))/2;
   const mid=pts.reduce((a,b)=> Math.abs(a[0]-intermediate)<Math.abs(b[0]-intermediate)?a:b);
   return <figure className={styles.ink}>
-    <figcaption>Was sich im Pixel ändert</figcaption>
+    <figcaption>Inside the pixel</figcaption>
     <div className={styles.phases}>
-      {[[from,"Ausgangszustand",start],["Feld aktiv",sec(mid[0]),mid],[to,"Endzustand",end]].map((entry,i)=>{
+      {[[from,"Starting state",start],["Field applied",sec(mid[0]),mid],[to,"End state",end]].map((entry,i)=>{
         const [label,time,p]=entry as [string,string,number[]];
-        const single=["Weiß","Rot","Gelb","Blau"].indexOf(label);
+        const single=["White","Red","Yellow","Blue"].indexOf(label);
         const mixed=i!==1 && single<0;
-        return <div key={i}><svg viewBox="0 0 120 71" role="img" aria-label={`Schematischer Pixelquerschnitt, ${label}`}>
+        return <div key={i}><svg viewBox="0 0 120 71" role="img" aria-label={`Pixel cross-section (schematic), ${label}`}>
           <rect x="7" y="9" width="106" height="53" rx="6" fill="#eef1ed" stroke="#687472"/>
           <rect x="8" y="10" width="104" height="8" rx="2" fill={rgb(p)}/>
           <path d="M11 66H109" stroke="#596967" strokeWidth="3"/>
           {[0,1,2,3].map((n)=><circle key={n} cx={25+n*22} cy={i===1?[43,27,49,35][n]:n===single?25:mixed?43:47+(n%2)*4} r="5" fill={["#fff","#c34b43","#e5be39","#3866a2"][n]} stroke="#596668"/>)}
-          {mixed&&<text x="60" y="30" textAnchor="middle" fill="#405454" fontSize="10">Mischzustand</text>}
+          {mixed&&label!=="Measured endpoint"&&<text x="60" y="30" textAnchor="middle" fill="#405454" fontSize="10">Mixed state</text>}
           {i===1&&<path d="M36 47V28m-4 4 4-5 4 5m28-7v19m-4-4 4 5 4-5" fill="none" stroke="#354741" strokeWidth="2"/>}
         </svg><strong>{label}</strong><small>{time}</small></div>;
       })}
     </div>
-    <p>Der obere Streifen zeigt die Kamerafarbe. Darunter veranschaulichen die Punkte die vier Pigmente. Das elektrische Feld verschiebt geladene Teilchen. Ihre Verteilung an der Sichtseite bestimmt, welches Licht zurückgestreut wird. Die tatsächlichen Teilchenbahnen und Elektrodenspannungen lassen sich aus der Aufnahme allein nicht bestimmen.</p>
+    <p>The top strip shows the recorded colour. The dots illustrate the four pigments. An electric field moves charged particles through the ink. Their distribution near the viewing surface changes the light reflected back to the camera. The drawing is schematic.</p>
   </figure>;
 }
 
@@ -77,26 +84,33 @@ export function ColorTransitionAtlas() {
   const label=(key:string)=>colors.find(c=>c[0]===key)![1];
   function choose(a:string,b:string){setSelection([a,b]);setVariant(0);setOriginal(false);}
   function speed(real:boolean){setOriginal(real);if(video.current)video.current.playbackRate=real?1/run.rate:1;}
-  return <section className={`not-prose ${styles.atlas}`} lang="de">
-    <table className={styles.matrix}><caption>Zeile wählen für die Ausgangsfarbe, Spalte für die Zielfarbe.</caption>
-      <thead><tr><th scope="col">Von ↓<br/>Nach →</th>{colors.map(([id,name,tint])=><th key={id} scope="col"><i style={{background:tint}}/>{name}</th>)}</tr></thead>
+  return <section className={`not-prose ${styles.atlas}`} lang="en">
+    <table className={styles.matrix}><caption>Choose the starting colour by row and the target by column.</caption>
+      <thead><tr><th scope="col">From ↓<br/>To →</th>{colors.map(([id,name,tint])=><th key={id} scope="col"><i style={{background:tint}}/>{name}</th>)}</tr></thead>
       <tbody>{colors.map(([a,an,ac])=><tr key={a}><th scope="row"><i style={{background:ac}}/>{an}</th>{colors.map(([b,bn])=>{
-        if(a===b)return <td key={b} aria-label="Gleiche Farbe">–</td>;
-        const cell=pairs[a+"-"+b];const partial=cell.partials.length>0;
-        const count=(cell.partials[0]??cell.native).turns.length;
-        return <td key={b}><button type="button" onClick={()=>choose(a,b)} aria-pressed={from===a&&to===b} aria-label={an+" nach "+bn} title={an+" → "+bn+" · "+count+" Helligkeitsumkehrungen"} className={partial?styles.alternative:undefined}>{count}{partial&&<sup>•</sup>}</button></td>;
+        if(a===b)return <td key={b} aria-label="Hold the same colour">–</td>;
+        const cell=pairs[a+"-"+b];
+        const quality=cell.partials[0]?.quality;
+        const offTarget=quality==="approximation" || quality==="miss";
+        const first=cell.partials[0]??cell.native;
+        const count=first.darkFlashes+first.brightFlashes;
+        return <td key={b}><button type="button" onClick={()=>choose(a,b)} aria-pressed={from===a&&to===b} aria-label={an+" to "+bn} title={an+" → "+bn+" · "+count+" flashes"+(quality?" · "+outcomes[quality]:"")} className={styles.alternative}>{count}{offTarget&&<sup>†</sup>}</button></td>;
       })}</tr>)}</tbody>
     </table>
-    <p className={styles.legend}>Zahl = gemessene Helligkeitsumkehrungen im zuerst gezeigten Film. • Teilansteuerung verfügbar. – Farbe halten.</p>
-    <div className={styles.heading}><h2 aria-live="polite">{label(from)} → {label(to)}</h2><button type="button" onClick={()=>choose(to,from)}>Richtung umkehren ↔</button></div>
-    {runs.length>1&&<div className={styles.variants} role="group" aria-label="Ansteuerung">{runs.map((r,i)=><button type="button" key={r.file} aria-pressed={variant===i} onClick={()=>{setVariant(i);setOriginal(false);}}>{r.source}</button>)}</div>}
+    <p className={styles.legend}>Numbers count dark and bright flashes in the partial-drive clip. A dagger (†) marks a trial outside the target tolerance. A dash means the colour can be held.</p>
+    <div className={styles.heading}><h2 aria-live="polite">{label(from)} → {label(to)}</h2><button type="button" onClick={()=>choose(to,from)}>Reverse direction ↔</button></div>
+    {runs.length>1&&<div className={styles.variants} role="group" aria-label="Drive">{runs.map((r,i)=><button type="button" key={r.file} aria-pressed={variant===i} onClick={()=>{setVariant(i);setOriginal(false);}}>{r.source}</button>)}</div>}
     <div className={styles.detail}>
-      <div><video controls playsInline preload="metadata" key={run.file} ref={video} poster={media+run.file+".webp"} src={media+run.file+".mp4"} aria-label={label(from)+" nach "+label(to)+", "+run.source} onLoadedMetadata={()=>{if(video.current)video.current.playbackRate=original?1/run.rate:1;}}/>
-        {run.rate>1?<div className={styles.speeds} role="group" aria-label="Abspieltempo"><button type="button" aria-pressed={!original} onClick={()=>speed(false)}>Kurzfilm · 4×</button><button type="button" aria-pressed={original} onClick={()=>speed(true)}>Echtzeit · 1×</button></div>:<small>Kameraaufnahme in Echtzeit</small>}
+      <div><video controls playsInline preload="metadata" key={run.file} ref={video} poster={media+run.file+".webp"} src={media+run.file+".mp4"} aria-label={label(from)+" to "+label(to)+", "+run.source} onLoadedMetadata={()=>{if(video.current)video.current.playbackRate=original?1/run.rate:1;}}/>
+        {run.rate>1?<div className={styles.speeds} role="group" aria-label="Playback speed"><button type="button" aria-pressed={!original} onClick={()=>speed(false)}>Quick view · 4×</button><button type="button" aria-pressed={original} onClick={()=>speed(true)}>Real time · 1×</button></div>:<small>Camera footage at actual speed</small>}
       </div>
-      <dl className={styles.metrics}>{[["Ansteuerung",sec(run.drive)],["Erste sichtbare Änderung",sec(run.onset)],["Optisch stabil ab",sec(run.settle)],["Helligkeitsumkehrungen",String(run.turns.length)]].map(([k,v])=><div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+      <dl className={styles.metrics}>{[["Drive",sec(run.drive)],["First visible change",sec(run.onset)],["Optically stable by",sec(run.settle)],["Brightness reversals",String(run.turns.length)],["Dark / bright flashes",run.darkFlashes+" / "+run.brightFlashes]].map(([k,v])=><div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
     </div>
-    <p className={styles.note}><b>{run.recipe}.</b> {run.endpoint} {run.turns.length===0?"In diesem Messfeld wurde keine deutliche Helligkeitsumkehr erfasst.":`Erster gemessener ${run.turns[0][1]==="hell"?"Hochpunkt":"Tiefpunkt"} nach ${sec(run.turns[0][0])}.`}</p>
-    <Curve run={run}/><Ink run={run} from={label(from)} to={label(to)}/>
+    <p className={styles.note}>{run.quality&&<strong className={styles.outcome} data-assessment={run.quality}>{outcomes[run.quality]}</strong>}<b>{run.recipe}.</b> {run.endpoint} {run.turns.length===0?"No brightness reversal crossed the detection threshold in this patch.":`First measured ${run.turns[0][1]==="bright"?"peak":"trough"} at ${sec(run.turns[0][0])}.`}</p>
+    {run.flashWindows.length>0&&<details className={styles.flashTimes}>
+      <summary>Flash timing ({run.flashWindows.length})</summary>
+      <ol>{run.flashWindows.map(([kind,start,end],i)=><li key={i}>{kind} · {sec(start)}{end>start?" – "+sec(end):" (one sample)"}</li>)}</ol>
+    </details>}
+    <Curve run={run}/><Ink run={run} from={label(from)} to={run.quality==="miss"||run.quality==="approximation"?"Measured endpoint":label(to)}/>
   </section>;
 }
