@@ -7,6 +7,8 @@ import { ColorTransitionAtlas } from "@/components/panels/color-transition-atlas
 
 Choose a starting colour and a target. Each pair has a partial-drive recording and a native reference. **Reverse direction** shows what happens when the same field changes back. White → blue, for example, took 52 ms of drive and settled after about 230 ms in the short-pulse test. Starting from blue takes a different pulse to reach white.
 
+[Compare the nominal 120 Hz clock with higher register settings on yellow → blue](#yellow-to-blue-above-120-hz).
+
 The clips contain rapid changes in brightness. Press play to start a recording.
 
 <ColorTransitionAtlas />
@@ -48,7 +50,7 @@ We scored 77 pulse and timing configurations per direction. A match requires bot
 
 ### Can the panel clock run faster?
 
-Register `0x30` selects the panel clock. In an earlier full-colour comparison, a complete drive at the normal dynamic setting (`0x08`) took 35.8 s, the nominal 75 Hz setting (`0x04`) took 23.9 s and the nominal 120 Hz setting (`0x07`) took 14.9 s. At 120 Hz, blue was paler and showed a vertical band. All the partial-drive trials here already use `0x07`. [Watch the three clocks side by side](/panels/dke-13-3-inch/display-control#full-frame-speed-flashing-and-color).
+Register `0x30` selects the panel clock. In an earlier full-colour comparison, a complete drive at the normal dynamic setting (`0x08`) took 35.8 s, the nominal 75 Hz setting (`0x04`) took 23.9 s and the nominal 120 Hz setting (`0x07`) took 14.9 s. At 120 Hz, blue was paler and showed a vertical band. The four-direction pulse trials above use `0x07`. [Watch the three clocks side by side](/panels/dke-13-3-inch/display-control#full-frame-speed-flashing-and-color).
 
 We also changed the frequency index in the waveform table while holding the PLL at `0x07`. Each run used the same seven 96-period source sequences in the same positions. The controller reported the following times from the refresh command to BUSY-ready.
 
@@ -58,7 +60,37 @@ We also changed the frequency index in the waveform table while holding the PLL 
 | 6 | 96 | 808.1 ms |
 | 4 | 96 | 808.0 ms |
 
-The three BUSY times differed by less than 0.2 ms across the entire drive. Changing this waveform field produced essentially the same duration at the fixed 120 Hz PLL setting. A waveform period is one stage of pigment drive. A settled colour change can take many periods. Raising the SPI transfer speed would affect image upload time, which falls outside these BUSY measurements. A faster panel PLL mode above 120 Hz has yet to be verified on frame-2.
+The three BUSY times differed by less than 0.2 ms across the entire drive. Changing this waveform field produced essentially the same duration at the fixed 120 Hz PLL setting. A waveform period is one stage of pigment drive. A settled colour change can take many periods. Raising the SPI transfer speed would affect image upload time, which falls outside these BUSY measurements.
+
+### Yellow to blue above 120 Hz
+
+**None of the tested settings produced a measured drive rate above 120 periods per second.** The nominal 120 Hz reference took 1.8834 s for 224 periods and 1.8827 s on repeat. All eight settings from `0x08` through `0x0F` landed between 1.8826 s and 1.8830 s. The quickest measured rate in that group was 118.98 periods/s. The nominal 75 Hz control took 3.0080 s. That slowdown confirms the test can detect a clock change on this panel.
+
+<video controls playsInline preload="metadata" width="740" aria-label="Real-time camera comparison of the yellow to blue patch at nominal 120 Hz and register 0x0F" poster="/panels/transition-atlas/yellow-blue-panel-clock.webp" src="/panels/transition-atlas/yellow-blue-panel-clock.mp4" style={{ maxWidth: "100%", height: "auto" }} />
+
+The two real-time camera crops show the same patch on the upper half of frame-2 in separate runs. Playback aligns the refresh commands at 0.00 s. The bars show the measured electrical drive. The plots beneath them follow the camera brightness on identical time and brightness scales. The reference produced **0 dark and 0 bright flashes**, with 2 brightness reversals. At `0x0F` the camera detected **0 dark and 0 bright flashes**, with 2 reversals. A reversal can be visible as flicker even when brightness stays between the yellow and blue endpoints. In the reference recording, the final patch was closest to blue on both halves. At `0x0F` it was closest to blue on the upper half and black on the lower half. On that lower patch, the camera distances to black (0.223) and blue (0.228) were close. The repeated 120 Hz run gave the same upper/lower classification as the candidate, so this colour difference also occurred at the reference setting.
+
+**What changed.** After a fresh native colour preparation for each run, we wrote register `0x30` on both panel controllers. Each 224-period run used the same 2,048-byte waveform table and pixel data. The pulse sequence was **S2 × 24 → S1 × 64 → S6 × 48 → S2 × 64 → S1 × 24**. The settings `0x04`, `0x07` and `0x08` are the nominal 75 Hz, nominal 120 Hz and dynamic settings used by the driver. We also tested each byte from `0x09` through `0x0F` without assigning it a nominal frequency. [Driver register settings](https://github.com/pimoroni/inky/pull/292/files).
+
+| Recording · PLL | BUSY drive | Periods/s¹ | First change / stable | Dark / bright flashes | Reversals | Closest colour² |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| [Run 01 · 0x07](/panels/transition-atlas/clock-01-r30-07.mp4) · 120 Hz reference | 1.8834 s | 118.93 | 0.25 s / 1.92 s | 0 / 0 | 2 | Blue (approximation) |
+| [Run 02 · 0x0F](/panels/transition-atlas/clock-02-r30-0f.mp4) · Candidate | 1.8827 s | 118.98 | 0.25 s / 1.94 s | 0 / 0 | 2 | Blue / Black (miss) |
+| [Run 03 · 0x09](/panels/transition-atlas/clock-03-r30-09.mp4) · Candidate | 1.8830 s | 118.96 | 0.12 s / 1.94 s | 0 / 0 | 2 | Blue / Black (miss) |
+| [Run 04 · 0x08](/panels/transition-atlas/clock-04-r30-08.mp4) · Dynamic | 1.8828 s | 118.97 | 0.10 s / 1.94 s | 0 / 0 | 2 | Blue (approximation) |
+| [Run 05 · 0x04](/panels/transition-atlas/clock-05-r30-04.mp4) · 75 Hz control | 3.0080 s | 74.47 | 0.10 s / 2.96 s | 0 / 0 | 2 | Black (miss) |
+| [Run 06 · 0x0A](/panels/transition-atlas/clock-06-r30-0a.mp4) · Candidate | 1.8829 s | 118.97 | 0.14 s / 1.94 s | 0 / 0 | 2 | Blue (approximation) |
+| [Run 07 · 0x0B](/panels/transition-atlas/clock-07-r30-0b.mp4) · Candidate | 1.8826 s | 118.98 | 0.12 s / 1.96 s | 0 / 0 | 2 | Blue / Black (miss) |
+| [Run 08 · 0x0C](/panels/transition-atlas/clock-08-r30-0c.mp4) · Candidate | 1.8826 s | 118.98 | 0.15 s / 1.95 s | 0 / 0 | 2 | Blue (approximation) |
+| [Run 09 · 0x0D](/panels/transition-atlas/clock-09-r30-0d.mp4) · Candidate | 1.8827 s | 118.98 | 0.13 s / 1.93 s | 0 / 0 | 2 | Blue / Black (miss) |
+| [Run 10 · 0x0E](/panels/transition-atlas/clock-10-r30-0e.mp4) · Candidate | 1.8830 s | 118.96 | 0.11 s / 1.94 s | 0 / 0 | 2 | Blue (approximation) |
+| [Run 11 · 0x07](/panels/transition-atlas/clock-11-r30-07.mp4) · 120 Hz reference repeat | 1.8827 s | 118.98 | 0.11 s / 1.94 s | 0 / 0 | 2 | Blue / Black (miss) |
+
+¹ Periods/s divides the 224 programmed periods by the refresh-command-to-BUSY-ready time. To estimate the waveform rate with fixed command overhead cancelled, we also ran the five stages at half length (112 periods). At [`0x07` with 112 periods](/panels/transition-atlas/clock-12-r30-07.mp4) the drive took 0.9484 s. At [`0x0F` with 112 periods](/panels/transition-atlas/clock-13-r30-0f.mp4) it took 0.9422 s. Dividing the extra 112 periods by the extra BUSY time gives **119.83 Hz at `0x07` and 119.08 Hz at `0x0F`**, using the mean of the two full-length reference runs. These rates are inferred from the controller's BUSY edges. The test did not directly measure the oscillator pin. The result applies to this panel, waveform and set of register values.
+
+² The camera measured the final colour against six native references on each half of the panel. A single colour indicates agreement. The flash counts and optical timings come from the upper patch at roughly 30 samples/s. The largest interval between camera samples in these full-length runs was 68 ms. A briefer flash can fall between samples.
+
+[Download all clock trials, including flash windows, colour errors and waveform hashes (CSV)](/panels/transition-atlas/yellow-blue-pll.csv).
 
 ## Initial partial-drive trials for 20 pairs
 
@@ -97,7 +129,7 @@ For each target we compared the final camera RGB of both patches with all six na
 
 A **match** reaches the intended nearest colour on both halves with a worst distance of at most 0.10. An **approximation** reaches that nearest colour but exceeds the tolerance. A **miss** means at least one half ended closest to a different reference. Several requests can therefore select the same physical recipe or patch. Each run started from a freshly prepared native colour. Repeated partial updates can start with a different pigment distribution.
 
-[Download the timings, flash counts and endpoint assessments for every clip (CSV)](/panels/transition-atlas/transition-timings.csv?revision=four-pulses). [Compare all 980 candidate scores for the 20 new pairs (CSV)](/panels/transition-atlas/partial-trial-comparison.csv).
+[Download the timings, flash counts and endpoint assessments for every clip in the interactive matrix (CSV)](/panels/transition-atlas/transition-timings.csv?revision=four-pulses). [Compare all 980 candidate scores for the 20 new pairs (CSV)](/panels/transition-atlas/partial-trial-comparison.csv).
 
 ## Earlier partial-drive comparisons
 
