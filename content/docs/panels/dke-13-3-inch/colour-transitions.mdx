@@ -7,7 +7,7 @@ import { ColorTransitionAtlas } from "@/components/panels/color-transition-atlas
 
 Choose a starting colour and a target. Each pair has a partial-drive recording and a native reference. **Reverse direction** shows what happens when the same field changes back. White → blue, for example, took 52 ms of drive and settled after about 230 ms in the short-pulse test. Starting from blue takes a different pulse to reach white.
 
-[Compare the nominal 120 Hz clock with higher register settings on yellow → blue](#yellow-to-blue-above-120-hz).
+[See the repeated short yellow-to-blue drives](#shorter-yellow-to-blue-at-120-hz). [Compare the nominal 120 Hz clock with higher register settings on yellow → blue](#yellow-to-blue-above-120-hz).
 
 The clips contain rapid changes in brightness. Press play to start a recording.
 
@@ -47,6 +47,32 @@ The median camera interval in the follow-up was 33 ms, with a longest gap of 71 
 We scored 77 pulse and timing configurations per direction. A match requires both halves to finish closest to the requested colour with an RMS distance of 0.10 or less. We ranked matches ahead of approximations and misses. For an approximation or miss, we considered endpoints within 0.13 of the best distance in that class. We then preferred fewer brightness reversals, fewer dark or bright excursions beyond the endpoints, and a shorter drive, in that order. This favours a steadier patch when both colours receive the same grade. Both the previous and new clips remain available. The matrix opens the better of the two by these criteria.
 
 [Compare all four-direction measurements, including the pulse recipes and both panel readings (CSV)](/panels/transition-atlas/four-transition-trials.csv).
+
+### Shorter yellow to blue at 120 Hz
+
+On frame-2, **YB-13-1** finished closest to native blue on both panel halves in **4 of 4 runs**. Its median electrical drive was **0.909 s**, 52% shorter than the earlier 1.883 s drive and 46% shorter than the earlier 1.681 s option. Across both halves, the camera counted 0 dark and 0 bright flashes per patch, with 2–4 brightness reversals.
+
+<video controls playsInline preload="metadata" width="680" aria-label="Upper and lower patches during the repeated short yellow to blue drive" poster="/panels/transition-atlas/yb-short-13-1-t16.webp" src="/panels/transition-atlas/yb-short-13-1-t16.mp4" style={{ maxWidth: "100%", height: "auto" }} />
+
+Both crops come from the same camera frame. The swatch beneath each patch shows the native blue measured on that half before the drive. This clip shows the selected run with the smallest blue margin across the two patches. The table links every recording of each finalist in chronological order.
+
+| Candidate | Periods | BUSY drive | Both halves blue | Stable by¹ | Dark / bright flashes¹ | Reversals¹ | Worst blue distance | Camera runs |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| Quietest and fastest · YB-13-1 | 108 | 0.909 s | 4 / 4 | 0.99–1.04 s | 0 / 0 | 2–4 | 0.206 | [1](/panels/transition-atlas/yb-short-13-1-t13.mp4) · [2](/panels/transition-atlas/yb-short-13-1-t16.mp4) · [3](/panels/transition-atlas/yb-short-13-1-t19.mp4) · [4](/panels/transition-atlas/yb-short-13-1-t22.mp4) |
+| Closest blue · YB-11-3 | 174 | 1.463–1.473 s | 4 / 4 | 1.54–1.56 s | 0 / 0 | 6–10 | 0.143 | [1](/panels/transition-atlas/yb-short-11-3-t11.mp4) · [2](/panels/transition-atlas/yb-short-11-3-t23.mp4) · [3](/panels/transition-atlas/yb-short-11-3-t24.mp4) · [4](/panels/transition-atlas/yb-short-11-3-t25.mp4) |
+
+**Measured pulse sequences.** Each count below is in waveform periods.
+
+- **YB-13-1** · 4 × (S1 × 4 → S4 × 14) → S2 × 20 → S1 × 16
+- **YB-11-3** · 7 × (S1 × 4 → S4 × 14) → S2 × 30 → S1 × 18
+
+¹ Ranges cover both halves and all runs listed in the row. Drive runs from the refresh command to BUSY-ready. Optical timing starts at the same command and includes pigment movement after BUSY-ready. We repeated a drive from fresh yellow when its camera capture failed the sampling checks. Only complete captures enter the table. Zero flashes can coincide with visible reversals within the endpoint brightness range.
+
+**Repeatability.** We measured 89 different pulse sequences at nominal 120 Hz. Of those, 28 were measured on at least four separate native-yellow preparations and at four different column positions. For each half we compared the settled patch against all six native colours measured in the same column. To qualify, blue had to win on both halves in every trial by a normalised RGB distance margin of at least 0.015 over the next closest colour. 16 sequences qualified. We ranked qualified sequences by the largest flash count on either half in any repeat. Within the lowest-flash group, the three comparisons favour the fewest reversals, the shortest drive and the smallest worst-case blue distance, respectively. A candidate that leads multiple categories appears once.
+
+The atlas grades native colour fidelity separately. A match requires a blue distance of 0.10 or less on both halves. The table gives the highest distance observed across all repeats. The results apply to the measured patches starting from freshly prepared native yellow on this unit.
+
+[Download every screen and repeat, including per-half colour, first change, settling and flash windows (CSV)](/panels/transition-atlas/yellow-blue-short-repeats.csv).
 
 ### Can the panel clock run faster?
 
@@ -129,7 +155,7 @@ For each target we compared the final camera RGB of both patches with all six na
 
 A **match** reaches the intended nearest colour on both halves with a worst distance of at most 0.10. An **approximation** reaches that nearest colour but exceeds the tolerance. A **miss** means at least one half ended closest to a different reference. Several requests can therefore select the same physical recipe or patch. Each run started from a freshly prepared native colour. Repeated partial updates can start with a different pigment distribution.
 
-[Download the timings, flash counts and endpoint assessments for every clip in the interactive matrix (CSV)](/panels/transition-atlas/transition-timings.csv?revision=four-pulses). [Compare all 980 candidate scores for the 20 new pairs (CSV)](/panels/transition-atlas/partial-trial-comparison.csv).
+[Download the timings, flash counts and endpoint assessments for every clip in the interactive matrix (CSV)](/panels/transition-atlas/transition-timings.csv?revision=yb-short-repeat). [Compare all 980 candidate scores for the 20 new pairs (CSV)](/panels/transition-atlas/partial-trial-comparison.csv).
 
 ## Earlier partial-drive comparisons
 
