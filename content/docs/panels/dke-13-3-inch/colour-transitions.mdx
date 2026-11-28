@@ -46,7 +46,7 @@ The median camera interval in the follow-up was 33 ms, with a longest gap of 71 
 
 We scored 77 pulse and timing configurations per direction. A match requires both halves to finish closest to the requested colour with an RMS distance of 0.10 or less. We ranked matches ahead of approximations and misses. For an approximation or miss, we considered endpoints within 0.13 of the best distance in that class. We then preferred fewer brightness reversals, fewer dark or bright excursions beyond the endpoints, and a shorter drive, in that order. This favours a steadier patch when both colours receive the same grade. Both the previous and new clips remain available. The matrix opens the better of the two by these criteria.
 
-[Compare all four-direction measurements, including both panel readings (CSV)](/panels/transition-atlas/four-transition-trials.csv).
+[Compare all four-direction measurements, including the pulse recipes and both panel readings (CSV)](/panels/transition-atlas/four-transition-trials.csv).
 
 ### Can the panel clock run faster?
 
@@ -70,7 +70,7 @@ The three BUSY times differed by less than 0.2 ms across the entire drive. Chang
 
 The two real-time camera crops show the same patch on the upper half of frame-2 in separate runs. Playback aligns the refresh commands at 0.00 s. The bars show the measured electrical drive. The plots beneath them follow the camera brightness on identical time and brightness scales. The reference produced **0 dark and 0 bright flashes**, with 2 brightness reversals. At `0x0F` the camera detected **0 dark and 0 bright flashes**, with 2 reversals. A reversal can be visible as flicker even when brightness stays between the yellow and blue endpoints. In the reference recording, the final patch was closest to blue on both halves. At `0x0F` it was closest to blue on the upper half and black on the lower half. On that lower patch, the camera distances to black (0.223) and blue (0.228) were close. The repeated 120 Hz run gave the same upper/lower classification as the candidate, so this colour difference also occurred at the reference setting.
 
-**What changed.** After a fresh native colour preparation for each run, we wrote register `0x30` on both panel controllers. Each 224-period run used the same 2,048-byte waveform table and pixel data. The settings `0x04`, `0x07` and `0x08` are the nominal 75 Hz, nominal 120 Hz and dynamic settings used by the driver. We also tested each byte from `0x09` through `0x0F` without assigning it a nominal frequency. [Driver register settings](https://github.com/pimoroni/inky/pull/292/files).
+**What changed.** After a fresh native colour preparation for each run, we wrote register `0x30` on both panel controllers. Each 224-period run used the same 2,048-byte waveform table and pixel data. The pulse sequence was **S2 × 24 → S1 × 64 → S6 × 48 → S2 × 64 → S1 × 24**. The settings `0x04`, `0x07` and `0x08` are the nominal 75 Hz, nominal 120 Hz and dynamic settings used by the driver. We also tested each byte from `0x09` through `0x0F` without assigning it a nominal frequency. [Driver register settings](https://github.com/pimoroni/inky/pull/292/files).
 
 | Recording · PLL | BUSY drive | Periods/s¹ | First change / stable | Dark / bright flashes | Reversals | Closest colour² |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
@@ -121,9 +121,9 @@ In the initial screen of 20 directions, **4 matched the target**, **12 were appr
 
 ¹ A single colour means both panel halves agreed. Two colours give the upper and lower readings, respectively.
 
-For **white → red**, a shorter 4.032 s sequence produced 1 dark and 0 bright flashes. Its target distance was 0.176. The selected clip shows the closer red. The comparison CSV includes measurements for both trials.
+For **white → red**, a shorter 4.032 s sequence produced 1 dark and 0 bright flashes. Its target distance was 0.176. The selected clip shows the closer red. The comparison CSV includes both recipes.
 
-On frame-2 we prepared six rows with a native colour refresh before each trial. Seven columns then received different partial-drive recipes simultaneously. The same layout appeared on both panel controllers. A separate column supplied a control. Across 7 trials we tested **49 recipes per starting colour**, including individual selectors, ordered stages and repeated pulses. The programme durations ranged from **0.405 to 6.046 seconds**. The measured drive includes any trailing neutral periods.
+On frame-2 we prepared six rows with a native colour refresh before each trial. Seven columns then received different partial-drive recipes simultaneously. The same layout appeared on both panel controllers. A separate column supplied a control. Across 7 trials we tested **49 recipes per starting colour**, including individual selectors, ordered stages and repeated pulses. The programme durations ranged from **0.405 to 6.046 seconds**. The measured drive includes any trailing neutral periods. In the recipe readout, “S” identifies a source selector, the number after × gives the number of periods for that selector, and parentheses group repeated stages.
 
 For each target we compared the final camera RGB of both patches with all six native colours measured in the same column before the partial drive. Each row was normalised to its nearby starting white. **Target distance** is the root-mean-square channel difference in these camera-relative units. Smaller values are closer. Among matches we selected the shortest drive, breaking ties by flash count and then colour distance. If no recipe matched, we preferred candidates that placed the target first on **both** controllers. Among those, or across all recipes if none did, we kept candidates within 0.005 of the lowest worst-controller distance and applied the same tie-breaks. The displayed crop, timing curve and flash counts come from the upper controller. Both halves contribute to the colour assessment.
 
